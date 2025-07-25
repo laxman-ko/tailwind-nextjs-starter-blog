@@ -99,12 +99,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
           <SectionContainer>
             <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
-              <Header />
               <main className="mb-auto">
                 <h1>चाँडै आउँदैछ।</h1>
               </main>
             </SearchProvider>
-            <Footer />
           </SectionContainer>
         </ThemeProviders>
       </body>
