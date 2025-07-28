@@ -152,18 +152,19 @@ export const Authors = defineDocumentType(() => ({
 }))
 
 async function getDocumentTypes() {
-
   const ARTICLES_DIR = `${root}/data/blog`
 
-  try{
+  try {
     await fs.rm(ARTICLES_DIR, { recursive: true })
-  } catch (e) {
+  } finally {
     await fs.mkdir(ARTICLES_DIR, { recursive: true })
   }
 
   const contentfulClient = contentful.createClient({
     space: process.env.CONTENTFUL_SPACE_ID!,
-    accessToken: isProduction ? process.env.CONTENTFUL_DELIVERY_TOKEN! : process.env.CONTENTFUL_PREVIEW_TOKEN!,
+    accessToken: isProduction
+      ? process.env.CONTENTFUL_DELIVERY_TOKEN!
+      : process.env.CONTENTFUL_PREVIEW_TOKEN!,
     host: isProduction ? 'cdn.contentful.com' : 'preview.contentful.com',
   })
 
@@ -172,7 +173,11 @@ async function getDocumentTypes() {
   })
 
   contentfulBlogs.items.forEach((blog) => {
-    const { fields: { title, slug, summary, content }, sys: { createdAt, updatedAt, publishedVersion }, metadata: { tags } } = blog
+    const {
+      fields: { title, slug, summary, content },
+      sys: { createdAt, updatedAt, publishedVersion },
+      metadata: { tags },
+    } = blog
 
     const frontmatter = {
       title,

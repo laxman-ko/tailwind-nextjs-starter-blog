@@ -3,7 +3,8 @@ const siteMetadata = {
   title: 'लक्ष्मणको अक्षरहरू',
   author: 'लक्ष्मण शिवाकोटी',
   headerTitle: undefined,
-  description: 'एक विचारक, प्रश्नकर्ता अनि जिज्ञासु - लक्ष्मणका विचार, जिज्ञासा र प्रेरणाले भरिएको अक्षरहरू',
+  description:
+    'एक विचारक, प्रश्नकर्ता अनि जिज्ञासु - लक्ष्मणका विचार, जिज्ञासा र प्रेरणाले भरिएको अक्षरहरू',
   language: 'ne',
   theme: 'system', // system, dark or light
   siteUrl: 'https://akshar.laxmanko.com',

@@ -11,7 +11,7 @@ import {
   Instagram,
   Medium,
   Bluesky,
-  Tiktok
+  Tiktok,
 } from './icons'
 
 const components = {
