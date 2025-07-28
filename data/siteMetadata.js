@@ -1,73 +1,26 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  labels: {
-    latest: 'ताजा पोस्टहरू',
-    allPosts: 'सबै पोस्टहरू',
-    previous: 'अघिल्लो',
-    next: 'अर्को',
-    readMore: 'थप पढ्नुहोस्',
-    learnMore: 'थप जान्नुहोस्',
-    previousArticle: 'अघिल्लो लेख',
-    nextArticle: 'अर्को लेख',
-    publishedOn: 'प्रकाशित मिति',
-    subscribe: 'सदस्यता लिनुहोस्',
-    newsletter: 'समाचार पत्र',
-    search: 'खोज्नुहोस्',
-    system: 'प्रणाली',
-    dark: 'अँध्यारो',
-    light: 'प्रकाशमान',
-    mail: 'इमेल',
-    about: 'बारेमा',
-    projects: 'परियोजनाहरू',
-  },
-  title: 'Next.js Starter Blog',
-  author: 'Tails Azimuth',
-  headerTitle: 'TailwindBlog',
-  description: 'A blog created with Next.js and Tailwind.css',
-  language: 'ne-NP',
+  title: 'लक्ष्मणको अक्षरहरू',
+  author: 'लक्ष्मण शिवाकोटी',
+  headerTitle: 'लक्ष्मणको अक्षरहरू',
+  description: 'लक्ष्मणको अक्षरहरू',
+  language: 'ne',
   theme: 'system', // system, dark or light
-  siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
-  siteRepo: 'https://github.com/timlrx/tailwind-nextjs-starter-blog',
+  siteUrl: 'https://akshar.laxmanko.com',
+  siteRepo: 'https://github.com/laxmanko/akshar',
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.png`,
   socialBanner: `${process.env.BASE_PATH || ''}/static/images/twitter-card.png`,
-  mastodon: 'https://mastodon.social/@mastodonuser',
-  email: 'address@yoursite.com',
-  github: 'https://github.com',
-  x: 'https://twitter.com/x',
+  email: 'akshar@laxmanko.com',
+  x: 'https://twitter.com/laxman_ko',
   // twitter: 'https://twitter.com/Twitter',
-  facebook: 'https://facebook.com',
-  youtube: 'https://youtube.com',
-  linkedin: 'https://www.linkedin.com',
-  threads: 'https://www.threads.net',
-  instagram: 'https://www.instagram.com',
-  medium: 'https://medium.com',
-  bluesky: 'https://bsky.app/',
+  youtube: 'https://youtube.com/@laxman_ko',
   locale: 'ne-NP',
   // set to true if you want a navbar fixed to the top
   stickyNav: false,
   analytics: {
-    // If you want to use an analytics provider you have to add it to the
-    // content security policy in the `next.config.js` file.
-    // supports Plausible, Simple Analytics, Umami, Posthog or Google Analytics.
-    umamiAnalytics: {
-      // We use an env variable for this site to avoid other users cloning our analytics ID
-      umamiWebsiteId: process.env.NEXT_UMAMI_ID, // e.g. 123e4567-e89b-12d3-a456-426614174000
-      // You may also need to overwrite the script if you're storing data in the US - ex:
-      // src: 'https://us.umami.is/script.js'
-      // Remember to add 'us.umami.is' in `next.config.js` as a permitted domain for the CSP
+    googleAnalytics: {
+      googleAnalyticsId: 'G-CLPM8DXYKY', // e.g. G-XXXXXXX
     },
-    // plausibleAnalytics: {
-    //   plausibleDataDomain: '', // e.g. tailwind-nextjs-starter-blog.vercel.app
-    // If you are hosting your own Plausible.
-    //   src: '', // e.g. https://plausible.my-domain.com/js/script.js
-    // },
-    // simpleAnalytics: {},
-    // posthogAnalytics: {
-    //   posthogProjectApiKey: '', // e.g. 123e4567-e89b-12d3-a456-426614174000
-    // },
-    // googleAnalytics: {
-    //   googleAnalyticsId: '', // e.g. G-XXXXXXX
-    // },
   },
   newsletter: {
     // supports mailchimp, buttondown, convertkit, klaviyo, revue, emailoctopus, beehive
@@ -109,14 +62,26 @@ const siteMetadata = {
     kbarConfig: {
       searchDocumentsPath: `${process.env.BASE_PATH || ''}/search.json`, // path to load documents to search
     },
-    // provider: 'algolia',
-    // algoliaConfig: {
-    //   // The application ID provided by Algolia
-    //   appId: 'R2IYF7ETH7',
-    //   // Public API key: it is safe to commit it
-    //   apiKey: '599cec31baffa4868cae4e79f180729b',
-    //   indexName: 'docsearch',
-    // },
+  },
+  translations: {
+    latest: 'ताजा पोस्टहरू',
+    allPosts: 'सबै पोस्टहरू',
+    previous: 'अघिल्लो',
+    next: 'अर्को',
+    readMore: 'थप पढ्नुहोस्',
+    learnMore: 'थप जान्नुहोस्',
+    previousArticle: 'अघिल्लो लेख',
+    nextArticle: 'अर्को लेख',
+    publishedOn: 'प्रकाशित मिति',
+    subscribe: 'सदस्यता लिनुहोस्',
+    newsletter: 'समाचार पत्र',
+    search: 'खोज्नुहोस्',
+    system: 'प्रणाली',
+    dark: 'अँध्यारो',
+    light: 'प्रकाशमान',
+    mail: 'इमेल',
+    about: 'बारेमा',
+    projects: 'परियोजनाहरू',
   },
 }
 

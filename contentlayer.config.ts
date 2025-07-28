@@ -25,6 +25,9 @@ import rehypePresetMinify from 'rehype-preset-minify'
 import siteMetadata from './data/siteMetadata'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
 import prettier from 'prettier'
+import * as contentful from 'contentful'
+import fs from 'fs/promises'
+import yaml from 'js-yaml'
 
 const root = process.cwd()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -147,41 +150,88 @@ export const Authors = defineDocumentType(() => ({
   computedFields,
 }))
 
-export default makeSource({
-  contentDirPath: 'data',
-  documentTypes: [Blog, Authors],
-  mdx: {
-    cwd: process.cwd(),
-    remarkPlugins: [
-      remarkExtractFrontmatter,
-      remarkGfm,
-      remarkCodeTitles,
-      remarkMath,
-      remarkImgToJsx,
-      remarkAlert,
-    ],
-    rehypePlugins: [
-      rehypeSlug,
-      [
-        rehypeAutolinkHeadings,
-        {
-          behavior: 'prepend',
-          headingProperties: {
-            className: ['content-header'],
-          },
-          content: icon,
-        },
+async function getDocumentTypes() {
+
+  const ARTICLES_DIR = `${root}/data/blog`
+
+  try{
+    await fs.rm(ARTICLES_DIR, { recursive: true })
+  } catch (e) {
+    await fs.mkdir(ARTICLES_DIR, { recursive: true })
+  }
+
+  const contentfulClient = contentful.createClient({
+    space: process.env.CONTENTFUL_SPACE_ID!,
+    accessToken: isProduction ? process.env.CONTENTFUL_DELIVERY_TOKEN! : process.env.CONTENTFUL_PREVIEW_TOKEN!,
+    host: isProduction ? 'cdn.contentful.com' : 'preview.contentful.com',
+  })
+
+  const contentfulBlogs = await contentfulClient.getEntries({
+    content_type: 'article',
+  })
+
+  contentfulBlogs.items.forEach((blog) => {
+    const { fields: { title, slug, summary, content }, sys: { createdAt, updatedAt, publishedVersion }, metadata: { tags } } = blog
+
+    const frontmatter = {
+      title,
+      date: createdAt,
+      tags: tags.map((tag) => tag.sys.id),
+      lastmod: updatedAt,
+      draft: !publishedVersion,
+      summary,
+      images: blog.fields.images,
+      authors: blog.fields.authors,
+      layout: 'PostLayout',
+      bibliography: undefined,
+      canonicalUrl: undefined,
+    }
+
+    const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
+    const mdxContent = `${frontmatterYaml}\n\n${content}`
+    fs.writeFile(`${ARTICLES_DIR}/${slug}.mdx`, mdxContent)
+  })
+
+  return [Blog, Authors]
+}
+
+export default makeSource(async () => {
+  return {
+    contentDirPath: 'data',
+    documentTypes: await getDocumentTypes(),
+    mdx: {
+      cwd: process.cwd(),
+      remarkPlugins: [
+        remarkExtractFrontmatter,
+        remarkGfm,
+        remarkCodeTitles,
+        remarkMath,
+        remarkImgToJsx,
+        remarkAlert,
       ],
-      rehypeKatex,
-      rehypeKatexNoTranslate,
-      [rehypeCitation, { path: path.join(root, 'data') }],
-      [rehypePrismPlus, { defaultLanguage: 'js', ignoreMissing: true }],
-      rehypePresetMinify,
-    ],
-  },
-  onSuccess: async (importData) => {
-    const { allBlogs } = await importData()
-    createTagCount(allBlogs)
-    createSearchIndex(allBlogs)
-  },
+      rehypePlugins: [
+        rehypeSlug,
+        [
+          rehypeAutolinkHeadings,
+          {
+            behavior: 'prepend',
+            headingProperties: {
+              className: ['content-header'],
+            },
+            content: icon,
+          },
+        ],
+        rehypeKatex,
+        rehypeKatexNoTranslate,
+        [rehypeCitation, { path: path.join(root, 'data') }],
+        [rehypePrismPlus, { defaultLanguage: 'js', ignoreMissing: true }],
+        rehypePresetMinify,
+      ],
+    },
+    onSuccess: async (importData) => {
+      const { allBlogs } = await importData()
+      createTagCount(allBlogs)
+      createSearchIndex(allBlogs)
+    },
+  }
 })
