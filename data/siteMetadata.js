@@ -2,8 +2,8 @@
 const siteMetadata = {
   title: 'लक्ष्मणको अक्षरहरू',
   author: 'लक्ष्मण शिवाकोटी',
-  headerTitle: 'लक्ष्मणको अक्षरहरू',
-  description: 'लक्ष्मणको अक्षरहरू',
+  headerTitle: undefined,
+  description: 'एक विचारक, प्रश्नकर्ता अनि जिज्ञासु - लक्ष्मणका विचार, जिज्ञासा र प्रेरणाले भरिएको अक्षरहरू',
   language: 'ne',
   theme: 'system', // system, dark or light
   siteUrl: 'https://akshar.laxmanko.com',
@@ -14,6 +14,7 @@ const siteMetadata = {
   x: 'https://twitter.com/laxman_ko',
   // twitter: 'https://twitter.com/Twitter',
   youtube: 'https://youtube.com/@laxman_ko',
+  tiktok: 'https://tiktok.com/@laxman_ko',
   locale: 'ne-NP',
   // set to true if you want a navbar fixed to the top
   stickyNav: false,
