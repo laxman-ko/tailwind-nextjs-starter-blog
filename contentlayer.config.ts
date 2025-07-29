@@ -203,7 +203,7 @@ async function preContent() {
       await fs.writeFile(`${AUTHORS_DIR}/${slug}.mdx`, mdxContent)
     })
   )
-
+ 
   // fetch all articles
   Promise.all(
     (await getListOfAllArticles()).map(async (article) => {
@@ -219,7 +219,7 @@ async function preContent() {
       const frontmatter = {
         title,
         date: articleProperties['Created time'].created_time,
-        tags: [],
+        tags: articleProperties.Tags.multi_select.map((tag) => tag.name),
         lastmod: articleProperties['Last Edited'].last_edited_time,
         draft: articleProperties['Status'].status.name === 'Draft',
         summary: articleProperties['Summary']?.rich_text?.[0]?.plain_text,
@@ -227,12 +227,12 @@ async function preContent() {
         authors: [authorName],
         layout: 'PostLayout',
         bibliography: undefined,
-        canonicalUrl: undefined,
+        canonicalUrl: undefined, 
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
       const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
       await fs.writeFile(`${ARTICLES_DIR}/${slug}.mdx`, mdxContent)
-    })
+    }) 
   )
 
   return [Blog, Authors]
