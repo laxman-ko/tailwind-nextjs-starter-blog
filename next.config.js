@@ -81,7 +81,7 @@ module.exports = () => {
         {
           protocol: 'https',
           hostname: '*.amazonaws.com',
-        }
+        },
       ],
       unoptimized,
     },
