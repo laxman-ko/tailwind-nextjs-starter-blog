@@ -211,6 +211,18 @@ export type AuthorProperties = {
       href: string | null
     }>
   }
+  Person: {
+    id: string
+    type: 'people'
+    people: Array<{
+      id: string
+      name: string
+      type: 'person'
+      person: {
+        email: string
+      }
+    }>
+  };
   Tiktok: {
     id: string
     type: 'url'

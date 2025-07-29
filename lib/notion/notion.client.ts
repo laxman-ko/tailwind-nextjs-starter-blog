@@ -1,6 +1,6 @@
 import { BlockObjectResponse, Client as NotionClient, PageObjectResponse } from '@notionhq/client'
 import { NotionToMarkdown } from 'notion-to-md'
-import { ChildDatabase, Article, ArticleProperties, Author } from './notion.types'
+import { ChildDatabase, Article, Author } from './notion.types'
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
 
 const notion = new NotionClient({ auth: process.env.NOTION_API_KEY })
