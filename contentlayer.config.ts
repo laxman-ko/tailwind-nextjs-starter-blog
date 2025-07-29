@@ -157,7 +157,6 @@ export const Authors = defineDocumentType(() => ({
 }))
 
 async function preContent() {
-
   const DEFAULT_AUTHOR = 'laxman-siwakoti'
 
   const ARTICLES_DIR = `${root}/data/blog`
@@ -186,7 +185,8 @@ async function preContent() {
       if (!personId) throw new Error('Person not found')
 
       const name = authorProperties['Name'].title[0].plain_text
-      const slug = authorProperties['Slug'].url === DEFAULT_AUTHOR ? 'default' : authorProperties['Slug'].url
+      const slug =
+        authorProperties['Slug'].url === DEFAULT_AUTHOR ? 'default' : authorProperties['Slug'].url
 
       authors[personId] = slug
 
@@ -237,7 +237,6 @@ async function preContent() {
 
   return [Blog, Authors]
 }
-
 
 export default makeSource(async () => ({
   contentDirPath: 'data',

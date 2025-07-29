@@ -222,7 +222,7 @@ export type AuthorProperties = {
         email: string
       }
     }>
-  };
+  }
   Tiktok: {
     id: string
     type: 'url'
