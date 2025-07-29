@@ -1,3 +1,4 @@
+import fs from 'fs/promises'
 import { defineDocumentType, ComputedFields, makeSource } from 'contentlayer2/source-files'
 import { writeFileSync } from 'fs'
 import readingTime from 'reading-time'
@@ -25,8 +26,7 @@ import rehypePresetMinify from 'rehype-preset-minify'
 import siteMetadata from './data/siteMetadata'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
 import prettier from 'prettier'
-import * as contentful from 'contentful'
-import fs from 'fs/promises'
+import { getPageMarkDownById, getListOfAllArticles, getListOfAllAuthors } from './lib/notion/notion.client'
 import yaml from 'js-yaml'
 
 const root = process.cwd()
@@ -151,93 +151,106 @@ export const Authors = defineDocumentType(() => ({
   computedFields,
 }))
 
-async function getDocumentTypes() {
+const getDocumentTypes = async () => {
+
   const ARTICLES_DIR = `${root}/data/blog`
+  const AUTHORS_DIR = `${root}/data/authors`
 
   try {
     await fs.rm(ARTICLES_DIR, { recursive: true })
+    await fs.rm(AUTHORS_DIR, { recursive: true })
   } finally {
     await fs.mkdir(ARTICLES_DIR, { recursive: true })
+    await fs.mkdir(AUTHORS_DIR, { recursive: true })
   }
 
-  const contentfulClient = contentful.createClient({
-    space: process.env.CONTENTFUL_SPACE_ID!,
-    accessToken: isProduction
-      ? process.env.CONTENTFUL_DELIVERY_TOKEN!
-      : process.env.CONTENTFUL_PREVIEW_TOKEN!,
-    host: isProduction ? 'cdn.contentful.com' : 'preview.contentful.com',
-  })
+  const articles = await getListOfAllArticles()
 
-  const contentfulBlogs = await contentfulClient.getEntries({
-    content_type: 'article',
-  })
 
-  contentfulBlogs.items.forEach((blog) => {
-    const {
-      fields: { title, slug, summary, content },
-      sys: { createdAt, updatedAt, publishedVersion },
-      metadata: { tags },
-    } = blog
+  const fetchAllArticles = Promise.all(articles.map(async (article) => {
+    const {properties} = article
+    const mdContent = await getPageMarkDownById(article.id)
+
+    const title = properties['Name'].title[0].plain_text
+    const slug = properties['Slug'].url || title
 
     const frontmatter = {
       title,
-      date: createdAt,
-      tags: tags.map((tag) => tag.sys.id),
-      lastmod: updatedAt,
-      draft: !publishedVersion,
-      summary,
-      images: blog.fields.images,
-      authors: blog.fields.authors,
+      date: properties['Created time'].created_time,
+      tags: [],
+      lastmod: properties['Last Edited'].last_edited_time,
+      draft: properties['Status'].status.name === 'Draft',
+      summary: properties['Summary']?.rich_text?.[0]?.plain_text,
+      images: undefined,
+      authors: ['default'],
       layout: 'PostLayout',
       bibliography: undefined,
       canonicalUrl: undefined,
     }
-
     const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
-    const mdxContent = `${frontmatterYaml}\n\n${content}`
-    fs.writeFile(`${ARTICLES_DIR}/${slug}.mdx`, mdxContent)
-  })
+    const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
+    await fs.writeFile(`${ARTICLES_DIR}/${slug}.mdx`, mdxContent)
+  })) 
 
+  const authors = await getListOfAllAuthors()
+  const fetchAllAuthors = Promise.all(authors.map(async (author) => {
+    const {properties} = author
+    const mdContent = await getPageMarkDownById(author.id)
+
+    const name = properties['Name'].title[0].plain_text
+    const slug = properties['Slug'].url
+
+    const frontmatter = {
+      name,
+      avatar: properties['Avatar'].files[0].file.url,
+      occupation: properties['Occupation']?.rich_text?.[0]?.plain_text,
+      company: properties['Company']?.rich_text?.[0]?.plain_text,
+      email: properties['Email'].email,
+      tiktok: properties['Tiktok'].url,
+    }
+    const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
+    const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
+    await fs.writeFile(`${AUTHORS_DIR}/${slug}.mdx`, mdxContent)
+  })) 
+ 
   return [Blog, Authors]
 }
-
-export default makeSource(async () => {
-  return {
-    contentDirPath: 'data',
-    documentTypes: await getDocumentTypes(),
-    mdx: {
-      cwd: process.cwd(),
-      remarkPlugins: [
-        remarkExtractFrontmatter,
-        remarkGfm,
-        remarkCodeTitles,
-        remarkMath,
-        remarkImgToJsx,
-        remarkAlert,
-      ],
-      rehypePlugins: [
-        rehypeSlug,
-        [
-          rehypeAutolinkHeadings,
-          {
-            behavior: 'prepend',
-            headingProperties: {
-              className: ['content-header'],
-            },
-            content: icon,
+ 
+export default makeSource(async () => ({
+  contentDirPath: 'data',
+  documentTypes: await getDocumentTypes(),
+  mdx: {
+    cwd: process.cwd(),
+    remarkPlugins: [
+      remarkExtractFrontmatter,
+      remarkGfm,
+      remarkCodeTitles,
+      remarkMath,
+      remarkImgToJsx,
+      remarkAlert,
+    ],
+    rehypePlugins: [
+      rehypeSlug,
+      [
+        rehypeAutolinkHeadings,
+        {
+          behavior: 'prepend',
+          headingProperties: {
+            className: ['content-header'],
           },
-        ],
-        rehypeKatex,
-        rehypeKatexNoTranslate,
-        [rehypeCitation, { path: path.join(root, 'data') }],
-        [rehypePrismPlus, { defaultLanguage: 'js', ignoreMissing: true }],
-        rehypePresetMinify,
+          content: icon,
+        },
       ],
-    },
-    onSuccess: async (importData) => {
-      const { allBlogs } = await importData()
-      createTagCount(allBlogs)
-      createSearchIndex(allBlogs)
-    },
-  }
-})
+      rehypeKatex,
+      rehypeKatexNoTranslate,
+      [rehypeCitation, { path: path.join(root, 'data') }],
+      [rehypePrismPlus, { defaultLanguage: 'js', ignoreMissing: true }],
+      rehypePresetMinify,
+    ],
+  },
+  onSuccess: async (importData) => {
+    const { allBlogs } = await importData()
+    createTagCount(allBlogs)
+    createSearchIndex(allBlogs)
+  },
+}))

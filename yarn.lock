@@ -2942,6 +2942,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@notionhq/client@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "@notionhq/client@npm:4.0.1"
+  checksum: 61d7d45d8253f530a064ecc9f70696b6b3c2fadcd41c365576379ca37f483e14d1bca16ebfdf8d543cd7fad6c93f879b1c434627fdc50213909f3993dfcc0c61
+  languageName: node
+  linkType: hard
+
 "@npmcli/agent@npm:^3.0.0":
   version: 3.0.0
   resolution: "@npmcli/agent@npm:3.0.0"
@@ -8592,6 +8599,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"markdown-table@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "markdown-table@npm:2.0.0"
+  dependencies:
+    repeat-string: ^1.0.0
+  checksum: 9bb634a9300016cbb41216c1eab44c74b6b7083ac07872e296f900a29449cf0e260ece03fa10c3e9784ab94c61664d1d147da0315f95e1336e2bdcc025615c90
+  languageName: node
+  linkType: hard
+
 "markdown-table@npm:^3.0.0":
   version: 3.0.4
   resolution: "markdown-table@npm:3.0.4"
@@ -9776,7 +9792,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:^2.6.1, node-fetch@npm:^2.7.0":
+"node-fetch@npm:2, node-fetch@npm:^2.6.1, node-fetch@npm:^2.7.0":
   version: 2.7.0
   resolution: "node-fetch@npm:2.7.0"
   dependencies:
@@ -9856,6 +9872,16 @@ __metadata:
   version: 3.0.0
   resolution: "normalize-path@npm:3.0.0"
   checksum: 88eeb4da891e10b1318c4b2476b6e2ecbeb5ff97d946815ffea7794c31a89017c70d7f34b3c2ebf23ef4e9fc9fb99f7dffe36da22011b5b5c6ffa34f4873ec20
+  languageName: node
+  linkType: hard
+
+"notion-to-md@npm:^3.1.9":
+  version: 3.1.9
+  resolution: "notion-to-md@npm:3.1.9"
+  dependencies:
+    markdown-table: ^2.0.0
+    node-fetch: 2
+  checksum: 99e7706a615675b5b505a45aecc411339e1d7e8f1e8d6aa608af8ba7214e583f18f38f900ddce755a15d747d47db4e9405f2a864da1e72d8a92d7834d411d7eb
   languageName: node
   linkType: hard
 
@@ -11244,7 +11270,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"repeat-string@npm:^1.6.1":
+"repeat-string@npm:^1.0.0, repeat-string@npm:^1.6.1":
   version: 1.6.1
   resolution: "repeat-string@npm:1.6.1"
   checksum: 1b809fc6db97decdc68f5b12c4d1a671c8e3f65ec4a40c238bc5200e44e85bcc52a54f78268ab9c29fcf5fe4f1343e805420056d1f30fa9a9ee4c2d93e3cc6c0
@@ -12114,6 +12140,7 @@ __metadata:
     "@eslint/js": ^9.16.0
     "@headlessui/react": 2.2.0
     "@next/bundle-analyzer": 15.2.4
+    "@notionhq/client": ^4.0.1
     "@svgr/webpack": ^8.0.1
     "@tailwindcss/forms": ^0.5.9
     "@tailwindcss/postcss": ^4.0.5
@@ -12141,6 +12168,7 @@ __metadata:
     next: 15.2.4
     next-contentlayer2: 0.5.5
     next-themes: ^0.4.6
+    notion-to-md: ^3.1.9
     pliny: 0.4.1
     postcss: ^8.4.24
     prettier: ^3.0.0
