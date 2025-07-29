@@ -7,7 +7,7 @@ import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoint
 const notion = new NotionClient({ auth: process.env.NOTION_API_KEY })
 const n2m = new NotionToMarkdown({ notionClient: notion });
 
-const listOfTables: ChildDatabase[] = []
+const listOfChildDatabases: ChildDatabase[] = []
 
 export const getListOfAllDatabaseItems = async (query: QueryDatabaseParameters): Promise<PageObjectResponse[]> => {
     const pageItems: PageObjectResponse[] = []
@@ -38,7 +38,7 @@ export const getListOfAllDatabaseItems = async (query: QueryDatabaseParameters):
 export const getListOfChildDatabases = async (databaseId: string): Promise<ChildDatabase[]> => {
     const databaseList: BlockObjectResponse[] = []
 
-    if (listOfTables.length > 0) return listOfTables
+    if (listOfChildDatabases.length > 0) return listOfChildDatabases
 
     try {
         let cursor: string | undefined = undefined;
@@ -59,18 +59,16 @@ export const getListOfChildDatabases = async (databaseId: string): Promise<Child
     }
 
     databaseList.filter((item: BlockObjectResponse) => item.type === 'child_database').forEach((item: BlockObjectResponse) => {
-        listOfTables.push({
+        listOfChildDatabases.push({
             id: item.id,
             title: 'child_database' in item ? item.child_database.title : 'Unknown'
         })
     })
 
-    return listOfTables
+    return listOfChildDatabases
 }
 
 export const getListOfAllArticles = async (): Promise<Article[]> => {
-
-    const listOfChildDatabases = await getListOfChildDatabases(process.env.NOTION_DATABASE_ID!)
 
     const articleDabaseId = listOfChildDatabases.find((item: ChildDatabase) => item.title === 'Articles')?.id
 
@@ -82,7 +80,6 @@ export const getListOfAllArticles = async (): Promise<Article[]> => {
 }
 
 export const getListOfAllAuthors = async (): Promise<Author[]> => {
-    const listOfChildDatabases = await getListOfChildDatabases(process.env.NOTION_AUTHORS_DATABASE_ID!)
 
     const authorDabaseId = listOfChildDatabases.find((item: ChildDatabase) => item.title === 'Authors')?.id
 

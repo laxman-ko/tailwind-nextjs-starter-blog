@@ -9,8 +9,6 @@ import { Metadata } from 'next'
 
 const POSTS_PER_PAGE = 5
 
-export const runtime = 'edge';
-
 export async function generateMetadata(props: {
   params: Promise<{ tag: string }>
 }): Promise<Metadata> {

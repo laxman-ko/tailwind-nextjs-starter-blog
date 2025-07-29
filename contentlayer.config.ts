@@ -26,7 +26,7 @@ import rehypePresetMinify from 'rehype-preset-minify'
 import siteMetadata from './data/siteMetadata'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
 import prettier from 'prettier'
-import { getPageMarkDownById, getListOfAllArticles, getListOfAllAuthors } from './lib/notion/notion.client'
+import { getPageMarkDownById, getListOfAllArticles, getListOfAllAuthors, getListOfChildDatabases } from './lib/notion/notion.client'
 import yaml from 'js-yaml'
 
 const root = process.cwd()
@@ -164,41 +164,23 @@ const getDocumentTypes = async () => {
     await fs.mkdir(AUTHORS_DIR, { recursive: true })
   }
 
-  const articles = await getListOfAllArticles()
+  await getListOfChildDatabases(process.env.NOTION_DATABASE_ID as string)
 
+  const authors: Record<string, string> = {}
 
-  const fetchAllArticles = Promise.all(articles.map(async (article) => {
-    const {properties} = article
-    const mdContent = await getPageMarkDownById(article.id)
-
-    const title = properties['Name'].title[0].plain_text
-    const slug = properties['Slug'].url || title
-
-    const frontmatter = {
-      title,
-      date: properties['Created time'].created_time,
-      tags: [],
-      lastmod: properties['Last Edited'].last_edited_time,
-      draft: properties['Status'].status.name === 'Draft',
-      summary: properties['Summary']?.rich_text?.[0]?.plain_text,
-      images: undefined,
-      authors: ['default'],
-      layout: 'PostLayout',
-      bibliography: undefined,
-      canonicalUrl: undefined,
-    }
-    const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
-    const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
-    await fs.writeFile(`${ARTICLES_DIR}/${slug}.mdx`, mdxContent)
-  })) 
-
-  const authors = await getListOfAllAuthors()
-  const fetchAllAuthors = Promise.all(authors.map(async (author) => {
-    const {properties} = author
+  // fetch all authors
+  Promise.all((await getListOfAllAuthors()).map(async (author) => {
+    const { properties } = author
     const mdContent = await getPageMarkDownById(author.id)
+
+    const personId = author.properties.Person?.people?.[0]?.id
+
+    if (!personId) throw new Error('Person not found')
 
     const name = properties['Name'].title[0].plain_text
     const slug = properties['Slug'].url
+
+    authors[personId] = slug
 
     const frontmatter = {
       name,
@@ -211,11 +193,39 @@ const getDocumentTypes = async () => {
     const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
     const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
     await fs.writeFile(`${AUTHORS_DIR}/${slug}.mdx`, mdxContent)
-  })) 
+  }))
+
+  // fetch all articles
+  Promise.all((await getListOfAllArticles()).map(async (article) => {
+    const { properties } = article
+    const mdContent = await getPageMarkDownById(article.id)
+
+    const title = properties['Name'].title[0].plain_text
+    const slug = properties['Slug'].url || title
  
+    const frontmatter = {
+      title,
+      date: properties['Created time'].created_time,
+      tags: [],
+      lastmod: properties['Last Edited'].last_edited_time,
+      draft: properties['Status'].status.name === 'Draft',
+      summary: properties['Summary']?.rich_text?.[0]?.plain_text,
+      images: undefined,
+      authors: [authors[properties.Author.people?.[0]?.id]],
+      layout: 'PostLayout',
+      bibliography: undefined,
+      canonicalUrl: undefined,
+    }
+    const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
+    const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
+    await fs.writeFile(`${ARTICLES_DIR}/${slug}.mdx`, mdxContent)
+  }))
+
+
+
   return [Blog, Authors]
 }
- 
+
 export default makeSource(async () => ({
   contentDirPath: 'data',
   documentTypes: await getDocumentTypes(),
