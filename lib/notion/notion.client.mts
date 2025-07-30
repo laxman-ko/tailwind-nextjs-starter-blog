@@ -119,7 +119,8 @@ export const getSettings = async (): Promise<Settings> => {
   if (!settingsDabaseId) throw new Error('Settings database not found')
 
   const blockList = await getListofAllPageBlocks(settingsDabaseId)
-  return blockList.find((block: BlockObjectResponse) => block.type === 'code') as BlockObjectResponse
+  
+  return blockList
 }
 
 export const getListOfAllNavigations = async (): Promise<Navigation[]> => {

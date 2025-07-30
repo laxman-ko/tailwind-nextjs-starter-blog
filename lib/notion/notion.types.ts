@@ -304,7 +304,7 @@ export type Translations = PageObjectResponse & {
   properties: TranslationsProperties
 }
 
-export type Settings = BlockObjectResponse
+export type Settings = BlockObjectResponse[]
 
 export type NavigationProperties = {
   Name: {   
