@@ -1,6 +1,6 @@
 import { BlockObjectResponse, Client as NotionClient, PageObjectResponse } from '@notionhq/client'
 import { NotionToMarkdown } from 'notion-to-md'
-import { ChildDatabase, Article, Author, Translations, Settings } from './notion.types'
+import { ChildDatabase, Article, Author, Translations, Settings, Navigation } from './notion.types'
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
 
 const notion = new NotionClient({ auth: process.env.NOTION_API_KEY })
@@ -119,6 +119,25 @@ export const getSettings = async (): Promise<Settings> => {
 
   const blockList = await getListofAllPageBlocks(settingsDabaseId)
   return blockList.find((block: BlockObjectResponse) => block.type === 'code') as BlockObjectResponse
+}
+
+export const getListOfAllNavigations = async (): Promise<Navigation[]> => {
+  const navigationDabaseId = listOfChildDatabases.find(
+    (item: ChildDatabase) => item.title === 'Navigations'
+  )?.id
+
+  if (!navigationDabaseId) throw new Error('Navigation database not found')
+
+  const pages = await getListOfAllDatabaseItems({ database_id: navigationDabaseId })
+
+  // sort page where properties Parent Item's relation is empty array on top
+  const sortPagesByParentItem = pages.sort((a, b) => {
+    if (a.properties['Parent item'].relation.length === 0) return -1
+    if (b.properties['Parent item'].relation.length === 0) return 1
+    return 0
+  })
+
+  return sortPagesByParentItem as Navigation[]
 }
 
 export const getPageMarkDownById = async (id: string): Promise<string | null> => {

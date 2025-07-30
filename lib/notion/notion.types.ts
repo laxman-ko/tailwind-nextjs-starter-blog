@@ -303,5 +303,38 @@ export type TranslationsProperties = {
 export type Translations = PageObjectResponse & {
   properties: TranslationsProperties
 }
- 
+
 export type Settings = BlockObjectResponse
+
+export type NavigationProperties = {
+  Name: {   
+    id: string
+    type: 'title'
+    title: Array<{ 
+      type: 'text'
+      text: {
+        content: string
+        link: string | null
+      }
+      annotations: {
+        bold: boolean
+        italic: boolean
+        strikethrough: boolean
+        underline: boolean
+        code: boolean
+        color: string
+      }
+      plain_text: string
+      href: string | null
+    }>
+  };
+  href: {
+    id: string
+    type: 'url'
+    url: string
+  }
+}
+
+export type Navigation = PageObjectResponse & {
+  properties: NavigationProperties
+}

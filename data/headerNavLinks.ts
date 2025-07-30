@@ -1,7 +1,2 @@
-const headerNavLinks = [
-  { href: '/', title: 'गृह' },
-  { href: '/blog', title: 'लेखहरू' },
-  { href: '/about', title: 'मेरो बारे' },
-]
-
-export default headerNavLinks
+const headerNavLinks = {"Header":[{"href":"/about","title":"मेरो बारे"},{"href":"/blog","title":"लेखहरू"},{"href":"/","title":"गृह"}],"Footer":[]}
+  export default headerNavLinks

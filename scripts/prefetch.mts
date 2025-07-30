@@ -1,5 +1,5 @@
 import fs from 'fs/promises'
-import { getListOfAllAuthors, getListOfChildDatabases, getPageMarkDownById, getListOfAllTranslations, getSettings, getListOfAllArticles } from '../lib/notion/notion.client.mjs'
+import { getListOfAllAuthors, getListOfChildDatabases, getPageMarkDownById, getListOfAllTranslations, getSettings, getListOfAllArticles, getListOfAllNavigations } from '../lib/notion/notion.client.mjs'
 import yaml from 'js-yaml'
 
 async function preContent() {
@@ -13,6 +13,8 @@ async function preContent() {
   const AUTHORS_DIR = `${root}/data/authors`
 
   const SITE_METADATA_FILE = `${root}/data/siteMetadata.js`
+  const HEADER_NAV_LINKS_FILE = `${root}/data/headerNavLinks.ts`
+  const FOOTER_NAV_LINKS_FILE = `${root}/data/footerNavLinks.ts`
 
   try {
     await fs.rm(ARTICLES_DIR, { recursive: true })
@@ -87,6 +89,7 @@ async function preContent() {
     })
   )
 
+  // fetch all translations
   const translations = await getListOfAllTranslations()
   const translationsData = Object.fromEntries(translations.map((translation) => {
     const locales = Object.keys(translation.properties).filter((locale) => locale !== DEFAULT_LOCALE)
@@ -100,6 +103,7 @@ async function preContent() {
   }))
 
 
+  // fetch all settings
   const settings = await getSettings()
   const settingsJson = settings?.code?.rich_text[0].plain_text
   const settingsData = JSON.parse(settingsJson as string) as Record<string, any>
@@ -110,6 +114,30 @@ async function preContent() {
     const siteMetadata = ${JSON.stringify(settingsData)}
     module.exports = siteMetadata;
     `)
+
+  // fetch all navigations
+
+  const hierarchialNavigationList: Record<string, { href: string, title: string }[]> = {};
+  const navigations = await getListOfAllNavigations()
+
+  navigations.forEach((navigation) => {
+    const navigationItemRelation = navigation.properties['Parent item'].relation
+    const isParentItem = navigationItemRelation.length === 0
+    const navigationName = navigation.properties['Name'].title[0].plain_text
+    if (isParentItem) {
+      hierarchialNavigationList[navigationName] = []
+    } else {
+      const parentNavigation = navigations.find((navigation) => navigation.id === navigationItemRelation[0].id) || null
+      const parentNavigationTitle = parentNavigation?.properties['Name'].title[0].plain_text || ''
+      hierarchialNavigationList[parentNavigationTitle].push({
+        href: navigation.properties.href.url,
+        title: navigationName,
+      })
+    }
+  })
+
+  await fs.writeFile(HEADER_NAV_LINKS_FILE, `const headerNavLinks = ${JSON.stringify(hierarchialNavigationList)}
+  export default headerNavLinks`)
 
   console.log('Prefetching of notion database completed')
 }
