@@ -15,6 +15,7 @@ async function preContent() {
   const SITE_METADATA_FILE = `${root}/data/siteMetadata.js`
   const HEADER_NAV_LINKS_FILE = `${root}/data/headerNavLinks.ts`
   const FOOTER_NAV_LINKS_FILE = `${root}/data/footerNavLinks.ts`
+  const LOGO_FILE = `${root}/data/logo.svg`
 
   try {
     await fs.rm(ARTICLES_DIR, { recursive: true })
@@ -105,17 +106,29 @@ async function preContent() {
 
   // fetch all settings
   const settings = await getSettings()
-  // @ts-expect-error 'code'
-  const settingsJson = settings?.code?.rich_text[0].plain_text
-  const settingsData = JSON.parse(settingsJson as string) as Record<string, any>
+  const jsonCode = settings.find((setting) => setting.type === 'code')?.code
 
-  settingsData.translations = translationsData
+  const settingsJson = JSON.parse(jsonCode?.rich_text[0].plain_text as string) as Record<string, any>
+
+  settingsJson.translations = translationsData
 
   await fs.writeFile(SITE_METADATA_FILE, `
     /** @type {import("pliny/config").PlinyConfig } */
-    const siteMetadata = ${JSON.stringify(settingsData)}
+    const siteMetadata = ${JSON.stringify(settingsJson)}
     module.exports = siteMetadata;
     `)
+
+  const logoImage = settings.find((setting) => setting.type === 'image')?.image;
+  // @ts-expect-error 'file'
+  const logo = logoImage?.caption[0].plain_text === 'Logo' ? logoImage?.file.url : ''
+
+ // download content of logo file and save to LOGO_FILE
+ const logoContent = await fetch(logo, {
+  headers: {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+  }
+ }).then(res => res.arrayBuffer()) 
+ await fs.writeFile(LOGO_FILE, Buffer.from(logoContent))
 
   // fetch all navigations
 

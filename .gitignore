@@ -47,6 +47,5 @@ yarn-error.log*
 .contentlayer
 
 # Generated data
-data/*
-!data/logo.svg
-!data/projectsData.ts
+data/blog
+data/authors
