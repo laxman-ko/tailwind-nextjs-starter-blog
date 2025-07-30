@@ -1,4 +1,8 @@
 export type Translations = {
+  "Showcase your projects with a hero image (16 x 9)": {
+    "en": "Showcase your projects with a hero image (16 x 9)",
+    "ne-NP": "आफ्ना प्रोजेक्टहरू १६×९ को हिरो छविसँग प्रस्तुत गर्नुहोस"
+  },
   "Authors": {
     "en": "Authors",
     "ne-NP": "लेखकहरू"
@@ -139,8 +143,8 @@ export type Translations = {
     "en": "Previous",
     "ne-NP": "अघिल्लो"
   },
-  "Latest Posts": {
-    "en": "Latest Posts",
+  "Latest": {
+    "en": "Latest",
     "ne-NP": "ताजा पोस्टहरू"
   }
 }

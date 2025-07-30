@@ -22,6 +22,10 @@ const siteMetadata = {
   comments: {},
   search: { provider: 'kbar', kbarConfig: { searchDocumentsPath: '/search.json' } },
   translations: {
+    'Showcase your projects with a hero image (16 x 9)': {
+      en: 'Showcase your projects with a hero image (16 x 9)',
+      'ne-NP': 'आफ्ना प्रोजेक्टहरू १६×९ को हिरो छविसँग प्रस्तुत गर्नुहोस',
+    },
     Authors: { en: 'Authors', 'ne-NP': 'लेखकहरू' },
     Twitter: { en: 'Twitter', 'ne-NP': 'Twitter' },
     Name: { en: 'Name', 'ne-NP': 'नाम' },
@@ -64,7 +68,7 @@ const siteMetadata = {
     'Read More': { en: 'Read More', 'ne-NP': 'थप पढ्नुहोस्' },
     'All Posts': { en: 'All Posts', 'ne-NP': 'सबै पोस्टहरू' },
     Previous: { en: 'Previous', 'ne-NP': 'अघिल्लो' },
-    'Latest Posts': { en: 'Latest Posts', 'ne-NP': 'ताजा पोस्टहरू' },
+    Latest: { en: 'Latest', 'ne-NP': 'ताजा पोस्टहरू' },
   },
 }
 module.exports = siteMetadata
