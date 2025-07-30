@@ -105,6 +105,7 @@ async function preContent() {
 
   // fetch all settings
   const settings = await getSettings()
+  // @ts-expect-error 'code'
   const settingsJson = settings?.code?.rich_text[0].plain_text
   const settingsData = JSON.parse(settingsJson as string) as Record<string, any>
 
@@ -122,6 +123,7 @@ async function preContent() {
   const navigations = await getListOfAllNavigations()
 
   navigations.forEach((navigation) => {
+    // @ts-expect-error 'relation'
     const navigationItemRelation = navigation.properties['Parent item'].relation
     const isParentItem = navigationItemRelation.length === 0
     const navigationName = navigation.properties['Name'].title[0].plain_text

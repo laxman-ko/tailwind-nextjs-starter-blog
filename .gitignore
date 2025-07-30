@@ -48,3 +48,5 @@ yarn-error.log*
 
 # Generated data
 data/*
+!data/logo.svg
+!data/projectsData.ts
