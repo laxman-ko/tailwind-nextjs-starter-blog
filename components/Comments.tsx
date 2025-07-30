@@ -12,6 +12,7 @@ export default function Comments({ slug }: { slug: string }) {
   }
   return (
     <>
+    {JSON.stringify(siteMetadata.comments)}
       {loadComments ? (
         <CommentsComponent commentsConfig={siteMetadata.comments} slug={slug} />
       ) : (

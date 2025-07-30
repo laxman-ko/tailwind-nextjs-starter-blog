@@ -111,6 +111,7 @@ async function preContent() {
   settingsData.translations = translationsData
 
   await fs.writeFile(SITE_METADATA_FILE, `
+    /** @type {import("pliny/config").PlinyConfig } */
     const siteMetadata = ${JSON.stringify(settingsData)}
     module.exports = siteMetadata;
     `)
