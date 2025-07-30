@@ -124,7 +124,7 @@ async function preContent() {
 
   const settingsJson = JSON.parse(jsonCode?.rich_text[0].plain_text as string) as Record<
     string,
-    any
+    string | object
   >
 
   settingsJson.translations = translationsData
