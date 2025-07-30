@@ -5,7 +5,10 @@ import tagData from 'app/tag-data.json'
 import { genPageMetadata } from 'app/seo'
 import { _t } from '@/lib/translate/translate.util'
 
-export const metadata = genPageMetadata({ title: _t('Tags'), description: _t('Things I blog about') })
+export const metadata = genPageMetadata({
+  title: _t('Tags'),
+  description: _t('Things I blog about'),
+})
 
 export default async function Page() {
   const tagCounts = tagData as Record<string, number>

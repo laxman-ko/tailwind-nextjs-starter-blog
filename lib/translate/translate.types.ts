@@ -1,4 +1,36 @@
 export type Translations = {
+  "Authors": {
+    "en": "Authors",
+    "ne-NP": "लेखकहरू"
+  },
+  "Twitter": {
+    "en": "Twitter",
+    "ne-NP": "Twitter"
+  },
+  "Name": {
+    "en": "Name",
+    "ne-NP": "नाम"
+  },
+  "Discuss on Twitter": {
+    "en": "Discuss on Twitter",
+    "ne-NP": "Twitter मा छलफल गर्नुहोस"
+  },
+  "View on GitHub": {
+    "en": "View on GitHub",
+    "ne-NP": "GitHub मा हेर्नुहोस"
+  },
+  "Back to the blog": {
+    "en": "Back to the blog",
+    "ne-NP": "लेखहरूमा फर्कनुहोस"
+  },
+  "Published on": {
+    "en": "Published on",
+    "ne-NP": "प्रकाशित मिति"
+  },
+  "Search articles": {
+    "en": "Search articles",
+    "ne-NP": "लेखहरू खोज्नुहोस"
+  },
   "No posts found.": {
     "en": "No posts found.",
     "ne-NP": "कुनै लेख फेला परेन।"

@@ -120,9 +120,12 @@ async function preContent() {
     })
   )
 
-  fs.writeFile(TRASNSLATIONS_TYPES_FILE, `export type Translations = ${JSON.stringify(translationsData, null, 2)}
+  fs.writeFile(
+    TRASNSLATIONS_TYPES_FILE,
+    `export type Translations = ${JSON.stringify(translationsData, null, 2)}
   
-  export type TranslationLocale = keyof Translations[keyof Translations]`)
+  export type TranslationLocale = keyof Translations[keyof Translations]`
+  )
 
   // fetch all settings
   const settings = await getSettings()
