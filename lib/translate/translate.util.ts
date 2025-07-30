@@ -1,4 +1,4 @@
-import siteMetadata from '@/data/siteMetadata.ts'
+import siteMetadata from '@/data/siteMetadata'
 import { Translations } from './translate.types'
 
 type TranslationTextKey = keyof Translations
