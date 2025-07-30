@@ -41,7 +41,9 @@
     "**/*.json",
     ".contentlayer/generated",
     ".contentlayer/generated/**/*.json",
-    ".next/types/**/*.ts"
-, "scripts/prefetch.mts", "lib/notion/notion.client.mts"  ],
+    ".next/types/**/*.ts",
+    "scripts/prefetch.mts",
+    "lib/notion/notion.client.mts"
+  ],
   "exclude": ["node_modules"]
 }

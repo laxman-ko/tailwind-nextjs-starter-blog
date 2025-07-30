@@ -1,9 +1,16 @@
 import fs from 'fs/promises'
-import { getListOfAllAuthors, getListOfChildDatabases, getPageMarkDownById, getListOfAllTranslations, getSettings, getListOfAllArticles, getListOfAllNavigations } from '../lib/notion/notion.client.mjs'
+import {
+  getListOfAllAuthors,
+  getListOfChildDatabases,
+  getPageMarkDownById,
+  getListOfAllTranslations,
+  getSettings,
+  getListOfAllArticles,
+  getListOfAllNavigations,
+} from '../lib/notion/notion.client.mjs'
 import yaml from 'js-yaml'
 
 async function preContent() {
-
   console.log('Prefetching of notion database started...')
 
   const root = process.cwd()
@@ -92,49 +99,62 @@ async function preContent() {
 
   // fetch all translations
   const translations = await getListOfAllTranslations()
-  const translationsData = Object.fromEntries(translations.map((translation) => {
-    const locales = Object.keys(translation.properties).filter((locale) => locale !== DEFAULT_LOCALE)
-    const enText = translation.properties[DEFAULT_LOCALE].title[0].plain_text
-    return [
-      enText,
-      Object.fromEntries([[DEFAULT_LOCALE, enText], ...locales.map((locale: 'ne-NP') => {
-        return [locale, translation.properties[locale].rich_text?.[0]?.plain_text]
-      })]),
-    ]
-  }))
-
+  const translationsData = Object.fromEntries(
+    translations.map((translation) => {
+      const locales = Object.keys(translation.properties).filter(
+        (locale) => locale !== DEFAULT_LOCALE
+      )
+      const enText = translation.properties[DEFAULT_LOCALE].title[0].plain_text
+      return [
+        enText,
+        Object.fromEntries([
+          [DEFAULT_LOCALE, enText],
+          ...locales.map((locale: 'ne-NP') => {
+            return [locale, translation.properties[locale].rich_text?.[0]?.plain_text]
+          }),
+        ]),
+      ]
+    })
+  )
 
   // fetch all settings
   const settings = await getSettings()
   const jsonCode = settings.find((setting) => setting.type === 'code')?.code
   if (!jsonCode) throw new Error('JSON code not found')
 
-  const settingsJson = JSON.parse(jsonCode?.rich_text[0].plain_text as string) as Record<string, any>
+  const settingsJson = JSON.parse(jsonCode?.rich_text[0].plain_text as string) as Record<
+    string,
+    any
+  >
 
   settingsJson.translations = translationsData
 
-  await fs.writeFile(SITE_METADATA_FILE, `
+  await fs.writeFile(
+    SITE_METADATA_FILE,
+    `
     /** @type {import("pliny/config").PlinyConfig } */
     const siteMetadata = ${JSON.stringify(settingsJson)}
     module.exports = siteMetadata;
-    `)
+    `
+  )
 
-  const logoImage = settings.find((setting) => setting.type === 'image')?.image;
+  const logoImage = settings.find((setting) => setting.type === 'image')?.image
   if (!logoImage) throw new Error('Logo not found')
   // @ts-expect-error 'file'
   const logo = logoImage?.caption[0].plain_text === 'Logo' ? logoImage?.file.url : ''
 
- // download content of logo file and save to LOGO_FILE
- const logoContent = await fetch(logo, {
-  headers: {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
-  }
- }).then(res => res.arrayBuffer()) 
- await fs.writeFile(LOGO_FILE, Buffer.from(logoContent))
+  // download content of logo file and save to LOGO_FILE
+  const logoContent = await fetch(logo, {
+    headers: {
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+    },
+  }).then((res) => res.arrayBuffer())
+  await fs.writeFile(LOGO_FILE, Buffer.from(logoContent))
 
   // fetch all navigations
 
-  const hierarchialNavigationList: Record<string, { href: string, title: string }[]> = {};
+  const hierarchialNavigationList: Record<string, { href: string; title: string }[]> = {}
   const navigations = await getListOfAllNavigations()
 
   navigations.forEach((navigation) => {
@@ -145,7 +165,8 @@ async function preContent() {
     if (isParentItem) {
       hierarchialNavigationList[navigationName] = []
     } else {
-      const parentNavigation = navigations.find((navigation) => navigation.id === navigationItemRelation[0].id) || null
+      const parentNavigation =
+        navigations.find((navigation) => navigation.id === navigationItemRelation[0].id) || null
       const parentNavigationTitle = parentNavigation?.properties['Name'].title[0].plain_text || ''
       hierarchialNavigationList[parentNavigationTitle].push({
         href: navigation.properties.href.url,
@@ -154,13 +175,19 @@ async function preContent() {
     }
   })
 
-  await fs.writeFile(HEADER_NAV_LINKS_FILE, `
+  await fs.writeFile(
+    HEADER_NAV_LINKS_FILE,
+    `
   const headerNavLinks = ${JSON.stringify(hierarchialNavigationList['Header'])}
-  export default headerNavLinks`)
+  export default headerNavLinks`
+  )
 
-  await fs.writeFile(FOOTER_NAV_LINKS_FILE, `
+  await fs.writeFile(
+    FOOTER_NAV_LINKS_FILE,
+    `
   const footerNavLinks = ${JSON.stringify(hierarchialNavigationList['Footer'])}
-  export default footerNavLinks`)
+  export default footerNavLinks`
+  )
 
   console.log('Prefetching of notion database completed')
 }

@@ -5,7 +5,7 @@ import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoint
 
 import dotenv from 'dotenv'
 dotenv.config({
-  path: process.env.NODE_ENV !== 'production' ? '.env.local' : undefined
+  path: process.env.NODE_ENV !== 'production' ? '.env.local' : undefined,
 })
 
 const notion = new NotionClient({ auth: process.env.NOTION_API_KEY })
@@ -42,7 +42,9 @@ export const getListOfAllDatabaseItems = async (
 }
 
 export const getListofAllPageBlocks = async (id: string): Promise<BlockObjectResponse[]> => {
-  return await notion.blocks.children.list({ block_id: id }).then((res) => res.results as BlockObjectResponse[])
+  return await notion.blocks.children
+    .list({ block_id: id })
+    .then((res) => res.results as BlockObjectResponse[])
 }
 
 export const getListOfChildDatabases = async (databaseId: string): Promise<ChildDatabase[]> => {
@@ -69,7 +71,9 @@ export const getListOfChildDatabases = async (databaseId: string): Promise<Child
   }
 
   databaseList
-    .filter((item: BlockObjectResponse) => item.type === 'child_database' || (item.type === 'child_page'))
+    .filter(
+      (item: BlockObjectResponse) => item.type === 'child_database' || item.type === 'child_page'
+    )
     .forEach((item: BlockObjectResponse) => {
       listOfChildDatabases.push({
         id: item.id,
@@ -124,7 +128,7 @@ export const getSettings = async (): Promise<Settings> => {
   if (!settingsDabaseId) throw new Error('Settings database not found')
 
   const blockList = await getListofAllPageBlocks(settingsDabaseId)
-  
+
   return blockList
 }
 

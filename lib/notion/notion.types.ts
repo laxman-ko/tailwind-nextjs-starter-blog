@@ -307,10 +307,10 @@ export type Translations = PageObjectResponse & {
 export type Settings = BlockObjectResponse[]
 
 export type NavigationProperties = {
-  Name: {   
+  Name: {
     id: string
     type: 'title'
-    title: Array<{ 
+    title: Array<{
       type: 'text'
       text: {
         content: string
@@ -327,7 +327,7 @@ export type NavigationProperties = {
       plain_text: string
       href: string | null
     }>
-  };
+  }
   href: {
     id: string
     type: 'url'
