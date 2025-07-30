@@ -68,6 +68,7 @@ export const getListOfChildDatabases = async (databaseId: string): Promise<Child
     .forEach((item: BlockObjectResponse) => {
       listOfChildDatabases.push({
         id: item.id,
+        // @ts-expect-error 'child_database"
         title: item.child_database?.title || item.child_page?.title || 'Unknown',
       })
     })

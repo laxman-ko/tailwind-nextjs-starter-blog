@@ -137,8 +137,13 @@ async function preContent() {
     }
   })
 
-  await fs.writeFile(HEADER_NAV_LINKS_FILE, `const headerNavLinks = ${JSON.stringify(hierarchialNavigationList)}
+  await fs.writeFile(HEADER_NAV_LINKS_FILE, `
+  const headerNavLinks = ${JSON.stringify(hierarchialNavigationList['Header'])}
   export default headerNavLinks`)
+
+  await fs.writeFile(FOOTER_NAV_LINKS_FILE, `
+  const footerNavLinks = ${JSON.stringify(hierarchialNavigationList['Footer'])}
+  export default footerNavLinks`)
 
   console.log('Prefetching of notion database completed')
 }
