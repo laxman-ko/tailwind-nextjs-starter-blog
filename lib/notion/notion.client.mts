@@ -3,6 +3,11 @@ import { NotionToMarkdown } from 'notion-to-md'
 import { ChildDatabase, Article, Author, Translations, Settings, Navigation } from './notion.types'
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
 
+import dotenv from 'dotenv'
+dotenv.config({
+  path: process.env.NODE_ENV !== 'production' ? '.env.local' : undefined
+})
+
 const notion = new NotionClient({ auth: process.env.NOTION_API_KEY })
 const n2m = new NotionToMarkdown({ notionClient: notion })
 
