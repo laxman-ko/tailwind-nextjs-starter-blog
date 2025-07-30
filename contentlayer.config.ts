@@ -26,13 +26,6 @@ import rehypePresetMinify from 'rehype-preset-minify'
 import siteMetadata from './data/siteMetadata'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
 import prettier from 'prettier'
-import {
-  getPageMarkDownById,
-  getListOfAllArticles,
-  getListOfAllAuthors,
-  getListOfChildDatabases,
-} from './lib/notion/notion.client'
-import yaml from 'js-yaml'
 
 const root = process.cwd()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -156,91 +149,9 @@ export const Authors = defineDocumentType(() => ({
   computedFields,
 }))
 
-async function preContent() {
-  const DEFAULT_AUTHOR = 'laxman-siwakoti'
-
-  const ARTICLES_DIR = `${root}/data/blog`
-  const AUTHORS_DIR = `${root}/data/authors`
-
-  try {
-    await fs.rm(ARTICLES_DIR, { recursive: true })
-    await fs.rm(AUTHORS_DIR, { recursive: true })
-  } finally {
-    await fs.mkdir(ARTICLES_DIR, { recursive: true })
-    await fs.mkdir(AUTHORS_DIR, { recursive: true })
-  }
-
-  await getListOfChildDatabases(process.env.NOTION_DATABASE_ID as string)
-
-  const authors: Record<string, string> = {}
-
-  // fetch all authors
-  Promise.all(
-    (await getListOfAllAuthors()).map(async (author) => {
-      const { properties: authorProperties } = author
-      const mdContent = await getPageMarkDownById(author.id)
-
-      const personId = author.properties.Person?.people?.[0]?.id
-
-      if (!personId) throw new Error('Person not found')
-
-      const name = authorProperties['Name'].title[0].plain_text
-      const slug =
-        authorProperties['Slug'].url === DEFAULT_AUTHOR ? 'default' : authorProperties['Slug'].url
-
-      authors[personId] = slug
-
-      const frontmatter = {
-        name,
-        avatar: authorProperties['Avatar'].files[0].file.url,
-        occupation: authorProperties['Occupation']?.rich_text?.[0]?.plain_text,
-        company: authorProperties['Company']?.rich_text?.[0]?.plain_text,
-        email: authorProperties['Email'].email,
-        tiktok: authorProperties['Tiktok'].url,
-      }
-      const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
-      const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
-      await fs.writeFile(`${AUTHORS_DIR}/${slug}.mdx`, mdxContent)
-    })
-  )
- 
-  // fetch all articles
-  Promise.all(
-    (await getListOfAllArticles()).map(async (article) => {
-      const { properties: articleProperties } = article
-      const mdContent = await getPageMarkDownById(article.id)
-
-      const title = articleProperties['Name'].title[0].plain_text
-      const slug = articleProperties['Slug'].url || title
-      const personId = articleProperties.Author?.people?.[0]?.id
-
-      const authorName = authors[personId] === DEFAULT_AUTHOR ? 'default' : authors[personId]
-
-      const frontmatter = {
-        title,
-        date: articleProperties['Created time'].created_time,
-        tags: articleProperties.Tags.multi_select.map((tag) => tag.name),
-        lastmod: articleProperties['Last Edited'].last_edited_time,
-        draft: articleProperties['Status'].status.name === 'Draft',
-        summary: articleProperties['Summary']?.rich_text?.[0]?.plain_text,
-        images: undefined,
-        authors: [authorName],
-        layout: 'PostLayout',
-        bibliography: undefined,
-        canonicalUrl: undefined, 
-      }
-      const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
-      const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
-      await fs.writeFile(`${ARTICLES_DIR}/${slug}.mdx`, mdxContent)
-    }) 
-  )
-
-  return [Blog, Authors]
-}
-
-export default makeSource(async () => ({
+export default makeSource({
   contentDirPath: 'data',
-  documentTypes: await (async () => await preContent())(),
+  documentTypes: [Blog, Authors],
   mdx: {
     cwd: process.cwd(),
     remarkPlugins: [
@@ -275,4 +186,4 @@ export default makeSource(async () => ({
     createTagCount(allBlogs)
     createSearchIndex(allBlogs)
   },
-}))
+})

@@ -1,4 +1,4 @@
-import { PageObjectResponse } from '@notionhq/client'
+import { BlockObjectResponse, PageObjectResponse } from '@notionhq/client'
 
 export type ChildDatabase = {
   id: string
@@ -254,3 +254,54 @@ export type AuthorProperties = {
 export type Author = PageObjectResponse & {
   properties: AuthorProperties
 }
+
+export type TranslationsProperties = {
+  en: {
+    id: string
+    type: 'title'
+    title: Array<{
+      type: 'text'
+      text: {
+        content: string
+        link: string | null
+      }
+      annotations: {
+        bold: boolean
+        italic: boolean
+        strikethrough: boolean
+        underline: boolean
+        code: boolean
+        color: string
+      }
+      plain_text: string
+      href: string | null
+    }>
+  }
+  'ne-NP': {
+    id: string
+    type: 'rich_text'
+    rich_text: Array<{
+      type: 'text'
+      text: {
+        content: string
+        link: string | null
+      }
+      annotations: {
+        bold: boolean
+        italic: boolean
+        strikethrough: boolean
+        underline: boolean
+        code: boolean
+        color: string
+      }
+      plain_text: string
+      href: string | null
+    }>
+  }
+}
+
+export type Translations = PageObjectResponse & {
+  properties: TranslationsProperties
+}
+ 
+export type Settings = BlockObjectResponse

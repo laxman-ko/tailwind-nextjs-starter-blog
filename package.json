@@ -5,6 +5,7 @@
   "scripts": {
     "start": "next dev",
     "dev": "cross-env INIT_CWD=$PWD next dev",
+    "prefetch": "cross-env INIT_CWD=$PWD tsx --env-file=./.env.local --tsconfig ./tsconfig.json ./scripts/prefetch.mts",
     "build": "cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
@@ -68,6 +69,7 @@
     "lint-staged": "^13.0.0",
     "prettier": "^3.0.0",
     "prettier-plugin-tailwindcss": "^0.6.11",
+    "tsx": "^4.20.3",
     "typescript": "^5.1.3"
   },
   "lint-staged": {

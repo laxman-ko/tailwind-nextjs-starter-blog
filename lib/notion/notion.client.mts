@@ -1,6 +1,6 @@
 import { BlockObjectResponse, Client as NotionClient, PageObjectResponse } from '@notionhq/client'
 import { NotionToMarkdown } from 'notion-to-md'
-import { ChildDatabase, Article, Author } from './notion.types'
+import { ChildDatabase, Article, Author, Translations, Settings } from './notion.types'
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
 
 const notion = new NotionClient({ auth: process.env.NOTION_API_KEY })
@@ -36,6 +36,10 @@ export const getListOfAllDatabaseItems = async (
   return pageItems
 }
 
+export const getListofAllPageBlocks = async (id: string): Promise<BlockObjectResponse[]> => {
+  return await notion.blocks.children.list({ block_id: id }).then((res) => res.results as BlockObjectResponse[])
+}
+
 export const getListOfChildDatabases = async (databaseId: string): Promise<ChildDatabase[]> => {
   const databaseList: BlockObjectResponse[] = []
 
@@ -60,14 +64,13 @@ export const getListOfChildDatabases = async (databaseId: string): Promise<Child
   }
 
   databaseList
-    .filter((item: BlockObjectResponse) => item.type === 'child_database')
+    .filter((item: BlockObjectResponse) => item.type === 'child_database' || (item.type === 'child_page'))
     .forEach((item: BlockObjectResponse) => {
       listOfChildDatabases.push({
         id: item.id,
-        title: 'child_database' in item ? item.child_database.title : 'Unknown',
+        title: item.child_database?.title || item.child_page?.title || 'Unknown',
       })
     })
-
   return listOfChildDatabases
 }
 
@@ -93,6 +96,29 @@ export const getListOfAllAuthors = async (): Promise<Author[]> => {
   const pages = await getListOfAllDatabaseItems({ database_id: authorDabaseId })
 
   return pages as Author[]
+}
+
+export const getListOfAllTranslations = async (): Promise<Translations[]> => {
+  const translationsDabaseId = listOfChildDatabases.find(
+    (item: ChildDatabase) => item.title === 'Translations'
+  )?.id
+
+  if (!translationsDabaseId) throw new Error('Translations database not found')
+
+  const pages = await getListOfAllDatabaseItems({ database_id: translationsDabaseId })
+
+  return pages as Translations[]
+}
+
+export const getSettings = async (): Promise<Settings> => {
+  const settingsDabaseId = listOfChildDatabases.find(
+    (item: ChildDatabase) => item.title === 'Settings'
+  )?.id
+
+  if (!settingsDabaseId) throw new Error('Settings database not found')
+
+  const blockList = await getListofAllPageBlocks(settingsDabaseId)
+  return blockList.find((block: BlockObjectResponse) => block.type === 'code') as BlockObjectResponse
 }
 
 export const getPageMarkDownById = async (id: string): Promise<string | null> => {
