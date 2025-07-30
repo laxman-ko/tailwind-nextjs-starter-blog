@@ -24,12 +24,13 @@ async function preContent() {
   const FOOTER_NAV_LINKS_FILE = `${root}/data/footerNavLinks.ts`
   const LOGO_FILE = `${root}/data/logo.svg`
 
-  try {
-    await fs.rm(ARTICLES_DIR, { recursive: true })
-    await fs.rm(AUTHORS_DIR, { recursive: true })
-  } finally {
-    await fs.mkdir(ARTICLES_DIR, { recursive: true })
-    await fs.mkdir(AUTHORS_DIR, { recursive: true })
+  for (const dir of [ARTICLES_DIR, AUTHORS_DIR]) {
+    try {
+      await fs.rm(dir, { recursive: true, force: true })
+    } catch (e) {
+      console.log(e)
+    }
+    await fs.mkdir(dir, { recursive: true })
   }
 
   await getListOfChildDatabases(process.env.NOTION_DATABASE_ID as string)
