@@ -51,5 +51,4 @@ data/blog
 data/authors
 
 # wrangler.toml
-wrangler.toml
 .dev.vars
