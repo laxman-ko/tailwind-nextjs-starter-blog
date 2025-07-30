@@ -3,6 +3,7 @@ import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import { formatDate } from 'pliny/utils/formatDate'
 import NewsletterForm from 'pliny/ui/NewsletterForm'
+import { _t } from '@/lib/translate/translate.util'
 
 const MAX_DISPLAY = 5
 
@@ -25,7 +26,7 @@ export default function Home({ posts }) {
           </p>
         </div>
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-          {!posts.length && 'No posts found.'}
+          {!posts.length && _t('No posts found.')}
           {posts.slice(0, MAX_DISPLAY).map((post) => {
             const { slug, date, title, summary, tags } = post
             return (
@@ -65,9 +66,9 @@ export default function Home({ posts }) {
                         <Link
                           href={`/blog/${slug}`}
                           className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 text-base leading-6 font-medium"
-                          aria-label={`Read "${title}"`}
+                          aria-label={_t('Read "%%"', title)}
                         >
-                          {siteMetadata.translations.readMore} &rarr;
+                          {_t('Read More')} &rarr;
                         </Link>
                       </div>
                     </div>
@@ -83,9 +84,9 @@ export default function Home({ posts }) {
           <Link
             href="/blog"
             className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-            aria-label="All posts"
+            aria-label={_t('All Posts')}
           >
-            {siteMetadata.translations.allPosts} &rarr;
+            {_t('All Posts')} &rarr;
           </Link>
         </div>
       )}

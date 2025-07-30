@@ -1,0 +1,116 @@
+export type Translations = {
+  "No posts found.": {
+    "en": "No posts found.",
+    "ne-NP": "कुनै लेख फेला परेन।"
+  },
+  "View posts tagged %%": {
+    "en": "View posts tagged %%",
+    "ne-NP": "%% ट्याग गरिएको लेखहरू"
+  },
+  "Tags": {
+    "en": "Tags",
+    "ne-NP": "ट्यागहरू"
+  },
+  "Things I blog about": {
+    "en": "Things I blog about",
+    "ne-NP": "म जे बारेमा लेख्छु"
+  },
+  "tagged content": {
+    "en": "tagged content",
+    "ne-NP": "ट्याग गरिएको सामग्री"
+  },
+  "Blog": {
+    "en": "Blog",
+    "ne-NP": "लेखहरू"
+  },
+  "Back to homepage": {
+    "en": "Back to homepage",
+    "ne-NP": "गृहपृष्ठमा फर्किनुहोस"
+  },
+  "But dont worry, you can find plenty of other things on our homepage.": {
+    "en": "But dont worry, you can find plenty of other things on our homepage.",
+    "ne-NP": "तर चिन्ता नलिनुहोस्, तपाईं हाम्रो गृहपृष्ठमा धेरै अरू सामग्रीहरू फेला पार्न सक्नुहुन्छ।"
+  },
+  "Sorry we couldn't find this page.": {
+    "en": "Sorry we couldn't find this page.",
+    "ne-NP": "माफ गर्नुहोस्, हामी यो पृष्ठ फेला पार्न सकिएनौं।"
+  },
+  "Read \"%%\"": {
+    "en": "Read \"%%\"",
+    "ne-NP": "\"%%\" पढ्नुहोस्"
+  },
+  "Projects": {
+    "en": "Projects",
+    "ne-NP": "परियोजनाहरू"
+  },
+  "About": {
+    "en": "About",
+    "ne-NP": "मेरो बारेमा"
+  },
+  "Mail": {
+    "en": "Mail",
+    "ne-NP": "इमेल"
+  },
+  "Light": {
+    "en": "Light",
+    "ne-NP": "प्रकाशमान"
+  },
+  "Dark": {
+    "en": "Dark",
+    "ne-NP": "अँध्यारो"
+  },
+  "System": {
+    "en": "System",
+    "ne-NP": "प्रणाली"
+  },
+  "Search": {
+    "en": "Search",
+    "ne-NP": "खोज्नुहोस्"
+  },
+  "Subscribe": {
+    "en": "Subscribe",
+    "ne-NP": "सदस्यता लिनुहोस्"
+  },
+  "Newsletter": {
+    "en": "Newsletter",
+    "ne-NP": "समाचार पत्र"
+  },
+  "Next Article": {
+    "en": "Next Article",
+    "ne-NP": "अर्को लेख"
+  },
+  "Published On": {
+    "en": "Published On",
+    "ne-NP": "प्रकाशित मिति"
+  },
+  "Previous Article": {
+    "en": "Previous Article",
+    "ne-NP": "अघिल्लो लेख"
+  },
+  "Learn More": {
+    "en": "Learn More",
+    "ne-NP": "थप जान्नुहोस्"
+  },
+  "Next": {
+    "en": "Next",
+    "ne-NP": "अर्को"
+  },
+  "Read More": {
+    "en": "Read More",
+    "ne-NP": "थप पढ्नुहोस्"
+  },
+  "All Posts": {
+    "en": "All Posts",
+    "ne-NP": "सबै पोस्टहरू"
+  },
+  "Previous": {
+    "en": "Previous",
+    "ne-NP": "अघिल्लो"
+  },
+  "Latest Posts": {
+    "en": "Latest Posts",
+    "ne-NP": "ताजा पोस्टहरू"
+  }
+}
+  
+  export type TranslationLocale = keyof Translations[keyof Translations]

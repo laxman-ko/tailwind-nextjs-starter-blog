@@ -1,8 +1,9 @@
 import projectsData from '@/data/projectsData'
 import Card from '@/components/Card'
 import { genPageMetadata } from 'app/seo'
+import { _t } from '@/lib/translate/translate.util'
 
-export const metadata = genPageMetadata({ title: 'Projects' })
+export const metadata = genPageMetadata({ title: _t('Projects') })
 
 export default function Projects() {
   return (

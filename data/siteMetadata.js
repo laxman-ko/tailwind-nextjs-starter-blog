@@ -22,8 +22,25 @@ const siteMetadata = {
   comments: {},
   search: { provider: 'kbar', kbarConfig: { searchDocumentsPath: '/search.json' } },
   translations: {
+    'No posts found.': { en: 'No posts found.', 'ne-NP': 'कुनै लेख फेला परेन।' },
+    'View posts tagged %%': { en: 'View posts tagged %%', 'ne-NP': '%% ट्याग गरिएको लेखहरू' },
+    Tags: { en: 'Tags', 'ne-NP': 'ट्यागहरू' },
+    'Things I blog about': { en: 'Things I blog about', 'ne-NP': 'म जे बारेमा लेख्छु' },
+    'tagged content': { en: 'tagged content', 'ne-NP': 'ट्याग गरिएको सामग्री' },
+    Blog: { en: 'Blog', 'ne-NP': 'लेखहरू' },
+    'Back to homepage': { en: 'Back to homepage', 'ne-NP': 'गृहपृष्ठमा फर्किनुहोस' },
+    'But dont worry, you can find plenty of other things on our homepage.': {
+      en: 'But dont worry, you can find plenty of other things on our homepage.',
+      'ne-NP':
+        'तर चिन्ता नलिनुहोस्, तपाईं हाम्रो गृहपृष्ठमा धेरै अरू सामग्रीहरू फेला पार्न सक्नुहुन्छ।',
+    },
+    "Sorry we couldn't find this page.": {
+      en: "Sorry we couldn't find this page.",
+      'ne-NP': 'माफ गर्नुहोस्, हामी यो पृष्ठ फेला पार्न सकिएनौं।',
+    },
+    'Read "%%"': { en: 'Read "%%"', 'ne-NP': '"%%" पढ्नुहोस्' },
     Projects: { en: 'Projects', 'ne-NP': 'परियोजनाहरू' },
-    About: { en: 'About', 'ne-NP': 'बारेमा' },
+    About: { en: 'About', 'ne-NP': 'मेरो बारेमा' },
     Mail: { en: 'Mail', 'ne-NP': 'इमेल' },
     Light: { en: 'Light', 'ne-NP': 'प्रकाशमान' },
     Dark: { en: 'Dark', 'ne-NP': 'अँध्यारो' },

@@ -24,6 +24,8 @@ async function preContent() {
   const FOOTER_NAV_LINKS_FILE = `${root}/data/footerNavLinks.ts`
   const LOGO_FILE = `${root}/data/logo.svg`
 
+  const TRASNSLATIONS_TYPES_FILE = `${root}/lib/translate/translate.types.ts`
+
   for (const dir of [ARTICLES_DIR, AUTHORS_DIR]) {
     try {
       await fs.rm(dir, { recursive: true, force: true })
@@ -117,6 +119,10 @@ async function preContent() {
       ]
     })
   )
+
+  fs.writeFile(TRASNSLATIONS_TYPES_FILE, `export type Translations = ${JSON.stringify(translationsData, null, 2)}
+  
+  export type TranslationLocale = keyof Translations[keyof Translations]`)
 
   // fetch all settings
   const settings = await getSettings()

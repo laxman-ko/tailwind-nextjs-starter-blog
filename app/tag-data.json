@@ -1,7 +1,9 @@
 {
-  "thought-leadership": 1,
-  "marketing": 2,
-  "product": 1,
+  "thought-leadership": 2,
+  "marketing": 3,
+  "product": 2,
   "case-study": 1,
+  "tutorial": 1,
+  "research": 1,
   "news": 1
 }
