@@ -107,6 +107,7 @@ async function preContent() {
   // fetch all settings
   const settings = await getSettings()
   const jsonCode = settings.find((setting) => setting.type === 'code')?.code
+  if (!jsonCode) throw new Error('JSON code not found')
 
   const settingsJson = JSON.parse(jsonCode?.rich_text[0].plain_text as string) as Record<string, any>
 
@@ -119,6 +120,7 @@ async function preContent() {
     `)
 
   const logoImage = settings.find((setting) => setting.type === 'image')?.image;
+  if (!logoImage) throw new Error('Logo not found')
   // @ts-expect-error 'file'
   const logo = logoImage?.caption[0].plain_text === 'Logo' ? logoImage?.file.url : ''
 
