@@ -24,7 +24,7 @@ async function preContent() {
   const FOOTER_NAV_LINKS_FILE = `${root}/data/footerNavLinks.ts`
   const LOGO_FILE = `${root}/data/logo.svg`
 
-  const TRASNSLATIONS_TEXT_FILE = `${root}/lib/translations/translations.text.json`
+  const TRASNSLATIONS_TEXT_FILE = `${root}/data/translations.json`
 
   for (const dir of [ARTICLES_DIR, AUTHORS_DIR]) {
     try {

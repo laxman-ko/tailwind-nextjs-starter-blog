@@ -1,8 +1,8 @@
 import siteMetadata from '@/data/siteMetadata'
-import translationsText from './translations.text.json'
+import translationsText from '@/data/translations.json'
 
 type TranslationTextKey = keyof typeof translationsText
-type TranslationLocale = keyof typeof translationsText[TranslationTextKey]
+type TranslationLocale = keyof (typeof translationsText)[TranslationTextKey]
 
 export const _t = (text: TranslationTextKey, ...args: (string | number)[]): string => {
   const template = translationsText[text][siteMetadata.locale as TranslationLocale] || text
