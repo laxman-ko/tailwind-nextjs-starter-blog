@@ -8,7 +8,7 @@ import type { Blog } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
-import { _t } from '@/lib/translation/translate.util'
+import { _t } from '@/lib/translations/translations.util'
 
 interface PaginationProps {
   totalPages: number

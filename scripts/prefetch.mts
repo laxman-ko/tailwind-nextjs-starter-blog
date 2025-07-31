@@ -10,10 +10,28 @@ import {
 } from '../lib/notion/notion.client.mjs'
 import yaml from 'js-yaml'
 
+export const downloadAsset = async (url: string, relativeSavePathWithoutExt: string, root = ''): Promise<string> => {
+  const urlObj = new URL(url)
+  const isPublic = relativeSavePathWithoutExt.includes('/public/')
+  const fileContent = await fetch(urlObj.href).then((res) => res.arrayBuffer())
+
+  const extension = urlObj.pathname.split('.').pop()
+
+  const savedFileName = `${relativeSavePathWithoutExt}.${extension}`
+  await fs.writeFile(savedFileName, Buffer.from(fileContent))
+
+  const rootDir = isPublic ? root + '/public' : root
+
+  return savedFileName.replace(rootDir, '')
+}
+
 async function preContent() {
   console.log('Prefetching of notion database started...')
 
   const root = process.cwd()
+
+  const PUBLIC_IMAGES_DIR = `${root}/public/static/images`
+
   const DEFAULT_AUTHOR = 'laxman-siwakoti'
   const DEFAULT_LOCALE = 'en'
   const ARTICLES_DIR = `${root}/data/blog`
@@ -22,7 +40,6 @@ async function preContent() {
   const SITE_METADATA_FILE = `${root}/data/siteMetadata.js`
   const HEADER_NAV_LINKS_FILE = `${root}/data/headerNavLinks.ts`
   const FOOTER_NAV_LINKS_FILE = `${root}/data/footerNavLinks.ts`
-  const LOGO_FILE = `${root}/data/logo.svg`
 
   const TRASNSLATIONS_TEXT_FILE = `${root}/data/translations.json`
 
@@ -50,14 +67,14 @@ async function preContent() {
       if (!personId) throw new Error('Person not found')
 
       const name = authorProperties['Name'].title[0].plain_text
-      const slug =
-        authorProperties['Slug'].url === DEFAULT_AUTHOR ? 'default' : authorProperties['Slug'].url
+      const authorSlug = authorProperties['Slug'].url
+      const slug = authorSlug === DEFAULT_AUTHOR ? 'default' : authorSlug
 
       authors[personId] = slug
 
       const frontmatter = {
         name,
-        avatar: authorProperties['Avatar'].files[0].file.url,
+        avatar: await downloadAsset(authorProperties['Avatar'].files[0].file.url, `${PUBLIC_IMAGES_DIR}/${authorSlug}`, root),
         occupation: authorProperties['Occupation']?.rich_text?.[0]?.plain_text,
         company: authorProperties['Company']?.rich_text?.[0]?.plain_text,
         email: authorProperties['Email'].email,
@@ -149,13 +166,7 @@ async function preContent() {
   const logo = logoImage?.caption[0].plain_text === 'Logo' ? logoImage?.file.url : ''
 
   // download content of logo file and save to LOGO_FILE
-  const logoContent = await fetch(logo, {
-    headers: {
-      'User-Agent':
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-    },
-  }).then((res) => res.arrayBuffer())
-  await fs.writeFile(LOGO_FILE, Buffer.from(logoContent))
+  await downloadAsset(logo, `${root}/data/logo`, root)
 
   // fetch all navigations
 
