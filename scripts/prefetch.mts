@@ -121,7 +121,20 @@ async function preContent() {
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
       const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
-      await fs.writeFile(`${ARTICLES_DIR}/${slug}.mdx`, mdxContent)
+      const mdxFile = `${ARTICLES_DIR}/${slug}.mdx`
+      try {
+        await fs.access(mdxFile)
+      } catch (e) {
+        console.log({
+          slug,
+          mdxFile,
+          title,
+        })
+        throw new Error(`File ${mdxFile} already exists`)
+      }
+
+      await fs.writeFile(mdxFile, mdxContent)
+
     })
   )
 
