@@ -124,13 +124,13 @@ async function preContent() {
       const mdxFile = `${ARTICLES_DIR}/${slug}.mdx`
       try {
         await fs.access(mdxFile)
+        throw new Error(`File ${mdxFile} already exists`)
       } catch (e) {
-        console.log({
+        console.log('New article found', {
           slug,
           mdxFile,
           title,
         })
-        throw new Error(`File ${mdxFile} already exists`)
       }
 
       await fs.writeFile(mdxFile, mdxContent)

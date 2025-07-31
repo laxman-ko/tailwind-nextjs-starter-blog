@@ -73,7 +73,7 @@
   },
   "Read \"%%\"": {
     "en": "Read \"%%\"",
-    "ne-NP": "\"%%\" पढ्नुहोस्"
+    "ne-NP": "\"%%\" पढ्नुहोस"
   },
   "Projects": {
     "en": "Projects",
@@ -101,11 +101,11 @@
   },
   "Search": {
     "en": "Search",
-    "ne-NP": "खोज्नुहोस्"
+    "ne-NP": "खोज्नुहोस"
   },
   "Subscribe": {
     "en": "Subscribe",
-    "ne-NP": "सदस्यता लिनुहोस्"
+    "ne-NP": "सदस्यता लिनुहोस"
   },
   "Newsletter": {
     "en": "Newsletter",
@@ -125,7 +125,7 @@
   },
   "Learn More": {
     "en": "Learn More",
-    "ne-NP": "थप जान्नुहोस्"
+    "ne-NP": "थप जान्नुहोस"
   },
   "Next": {
     "en": "Next",
@@ -133,11 +133,11 @@
   },
   "Read More": {
     "en": "Read More",
-    "ne-NP": "थप पढ्नुहोस्"
+    "ne-NP": "थप पढ्नुहोस"
   },
   "All Posts": {
     "en": "All Posts",
-    "ne-NP": "सबै पोस्टहरू"
+    "ne-NP": "सबै लेखहरु"
   },
   "Previous": {
     "en": "Previous",
@@ -145,6 +145,6 @@
   },
   "Latest": {
     "en": "Latest",
-    "ne-NP": "ताजा पोस्टहरू"
+    "ne-NP": "ताजा लेखहरु"
   }
 }
