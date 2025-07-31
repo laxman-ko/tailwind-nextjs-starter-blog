@@ -9,6 +9,9 @@ import {
   getListOfAllNavigations,
 } from '../lib/notion/notion.client.mjs'
 import yaml from 'js-yaml'
+import { PageObjectResponse } from '@notionhq/client'
+
+type HierarchialListItem = { title: string, properties: PageObjectResponse['properties'], children: HierarchialListItem[] }
 
 export const downloadAsset = async (
   url: string,
@@ -27,6 +30,33 @@ export const downloadAsset = async (
   const rootDir = isPublic ? root + '/public' : root
 
   return savedFileName.replace(rootDir, '')
+}
+
+export const sortedHierarchialList = (list: PageObjectResponse[]) => {
+
+  // sort page where properties Parent Item's relation is empty array on top
+  const sortListByParentItem = list.sort((a, b) => {
+    // @ts-expect-error 'relation'
+    if (a.properties['Parent item'].relation.length === 0) return -1
+    // @ts-expect-error 'relation'
+    if (b.properties['Parent item'].relation.length === 0) return 1
+    return 0
+  })
+
+    const hierarchialList: Record<string, HierarchialListItem> = {}
+    sortListByParentItem.forEach((item) => {
+        const { properties } = item
+        // @ts-expect-error 'relation'
+        const parentId = properties['Parent item']?.relation?.[0]?.id
+        // @ts-expect-error 'title'
+        const title = properties['Name'].title[0].plain_text
+        if (parentId) {
+          hierarchialList[parentId].children.push({ title, properties, children: [] })
+        } else {
+          hierarchialList[item.id] = { title, properties, children: [] }
+        }
+    })
+    return hierarchialList
 }
 
 async function preContent() {
@@ -202,23 +232,22 @@ async function preContent() {
   const hierarchialNavigationList: Record<string, { href: string; title: string }[]> = {}
   const navigations = await getListOfAllNavigations()
 
-  navigations.forEach((navigation) => {
-    // @ts-expect-error 'relation'
-    const navigationItemRelation = navigation.properties['Parent item'].relation
-    const isParentItem = navigationItemRelation.length === 0
-    const navigationName = navigation.properties['Name'].title[0].plain_text
-    if (isParentItem) {
-      hierarchialNavigationList[navigationName] = []
-    } else {
-      const parentNavigation =
-        navigations.find((navigation) => navigation.id === navigationItemRelation[0].id) || null
-      const parentNavigationTitle = parentNavigation?.properties['Name'].title[0].plain_text || ''
-      hierarchialNavigationList[parentNavigationTitle].push({
-        href: navigation.properties.href.url,
-        title: navigationName,
-      })
-    }
+  const sortedNavigations = sortedHierarchialList(navigations)
+
+  Object.entries(sortedNavigations).forEach(([_, navigationItem]) => {
+    // @ts-expect-error 'title'
+    const navigationName = navigationItem.properties.Name.title[0].plain_text
+    hierarchialNavigationList[navigationName] = navigationItem.children.map((item) => {
+      return {
+        // @ts-expect-error 'url'
+        href: item.properties.href.url,
+        // @ts-expect-error 'title'
+        title: item.properties.Name.title[0].plain_text,
+      }
+    })
   })
+
+console.log(hierarchialNavigationList)
 
   await fs.writeFile(
     HEADER_NAV_LINKS_FILE,

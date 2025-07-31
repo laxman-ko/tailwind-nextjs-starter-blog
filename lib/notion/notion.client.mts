@@ -141,16 +141,7 @@ export const getListOfAllNavigations = async (): Promise<Navigation[]> => {
 
   const pages = await getListOfAllDatabaseItems({ database_id: navigationDabaseId })
 
-  // sort page where properties Parent Item's relation is empty array on top
-  const sortPagesByParentItem = pages.sort((a, b) => {
-    // @ts-expect-error 'relation'
-    if (a.properties['Parent item'].relation.length === 0) return -1
-    // @ts-expect-error 'relation'
-    if (b.properties['Parent item'].relation.length === 0) return 1
-    return 0
-  })
-
-  return sortPagesByParentItem as Navigation[]
+  return pages as Navigation[]
 }
 
 export const getPageMarkDownById = async (id: string): Promise<string | null> => {
