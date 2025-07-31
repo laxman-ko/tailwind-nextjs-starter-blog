@@ -9,6 +9,6 @@ export const _t = (text: TranslationTextKey, ...args: (string | number)[]): stri
 
   let i = 0
   return template.replace(/%%/g, () => {
-    return args[i++]?.toString() || ''     
+    return args[i++]?.toString() || ''        
   })
 }
