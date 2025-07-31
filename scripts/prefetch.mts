@@ -128,8 +128,11 @@ async function preContent() {
   )
 
   // fetch all articles
+  const articles = await getListOfAllArticles()
+  const sortedArticles = sortedHierarchialList(articles)
+  console.log(sortedArticles)
   Promise.all(
-    (await getListOfAllArticles()).map(async (article) => {
+    articles.map(async (article) => {
       const { properties: articleProperties } = article
       const mdContent = await getPageMarkDownById(article.id)
 
