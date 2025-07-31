@@ -104,6 +104,15 @@ async function preContent() {
       const slug = articleProperties['Slug'].url || title
       const personId = articleProperties.Author?.people?.[0]?.id
 
+      if (!slug) {
+        console.log('Slug not found', {
+          title,
+          slug,
+          personId,
+        })
+        return
+      }
+
       const authorName = authors[personId] === DEFAULT_AUTHOR ? 'default' : authors[personId]
 
       const frontmatter = {
