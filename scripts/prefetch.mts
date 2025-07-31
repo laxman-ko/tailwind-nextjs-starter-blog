@@ -10,7 +10,11 @@ import {
 } from '../lib/notion/notion.client.mjs'
 import yaml from 'js-yaml'
 
-export const downloadAsset = async (url: string, relativeSavePathWithoutExt: string, root = ''): Promise<string> => {
+export const downloadAsset = async (
+  url: string,
+  relativeSavePathWithoutExt: string,
+  root = ''
+): Promise<string> => {
   const urlObj = new URL(url)
   const isPublic = relativeSavePathWithoutExt.includes('/public/')
   const fileContent = await fetch(urlObj.href).then((res) => res.arrayBuffer())
@@ -74,7 +78,11 @@ async function preContent() {
 
       const frontmatter = {
         name,
-        avatar: await downloadAsset(authorProperties['Avatar'].files[0].file.url, `${PUBLIC_IMAGES_DIR}/${authorSlug}`, root),
+        avatar: await downloadAsset(
+          authorProperties['Avatar'].files[0].file.url,
+          `${PUBLIC_IMAGES_DIR}/${authorSlug}`,
+          root
+        ),
         occupation: authorProperties['Occupation']?.rich_text?.[0]?.plain_text,
         company: authorProperties['Company']?.rich_text?.[0]?.plain_text,
         email: authorProperties['Email'].email,
