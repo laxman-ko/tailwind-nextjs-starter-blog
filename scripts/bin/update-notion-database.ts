@@ -1,39 +1,39 @@
-import { Client as NotionClient } from "@notionhq/client";
-import dotenv from "dotenv";
+import { Client as NotionClient } from '@notionhq/client'
+import dotenv from 'dotenv'
 
 dotenv.config({
-    path: "./.env.local"
-});
+  path: './.env.local',
+})
 
 const notion = new NotionClient({
-    auth: process.env.NOTION_API_KEY,
-});
+  auth: process.env.NOTION_API_KEY,
+})
 
-
-notion.databases.update({
+notion.databases
+  .update({
     database_id: '23f072d93d028025b142ceba5b7029db',
-properties: {
-    'Locale' : {
+    properties: {
+      Locale: {
         name: 'Locale',
         type: 'select',
         select: {
-            options: [
-                {
-                    name: 'ne-NP',
-                    color: 'green'
-                },
-                {
-                    name: 'en',
-                    color: 'brown'
-                },
-            ],
+          options: [
+            {
+              name: 'ne-NP',
+              color: 'green',
+            },
+            {
+              name: 'en',
+              color: 'brown',
+            },
+          ],
         },
-    }
-}
-}).then((res) => {
+      },
+    },
+  })
+  .then((res) => {
     console.log(res)
-})
-
+  })
 
 // notion.databases.query({
 //     database_id: '23f072d93d028025b142ceba5b7029db',

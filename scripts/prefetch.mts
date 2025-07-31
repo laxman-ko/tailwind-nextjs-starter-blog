@@ -11,7 +11,11 @@ import {
 import yaml from 'js-yaml'
 import { PageObjectResponse } from '@notionhq/client'
 
-type HierarchialListItem = { title: string, properties: PageObjectResponse['properties'], children: HierarchialListItem[] }
+type HierarchialListItem = {
+  title: string
+  properties: PageObjectResponse['properties']
+  children: HierarchialListItem[]
+}
 
 export const downloadAsset = async (
   url: string,
@@ -33,7 +37,6 @@ export const downloadAsset = async (
 }
 
 export const sortedHierarchialList = (list: PageObjectResponse[]) => {
-
   // sort page where properties Parent Item's relation is empty array on top
   const sortListByParentItem = list.sort((a, b) => {
     // @ts-expect-error 'relation'
@@ -43,20 +46,20 @@ export const sortedHierarchialList = (list: PageObjectResponse[]) => {
     return 0
   })
 
-    const hierarchialList: Record<string, HierarchialListItem> = {}
-    sortListByParentItem.forEach((item) => {
-        const { properties } = item
-        // @ts-expect-error 'relation'
-        const parentId = properties['Parent item']?.relation?.[0]?.id
-        // @ts-expect-error 'title'
-        const title = properties['Name'].title[0].plain_text
-        if (parentId) {
-          hierarchialList[parentId].children.push({ title, properties, children: [] })
-        } else {
-          hierarchialList[item.id] = { title, properties, children: [] }
-        }
-    })
-    return hierarchialList
+  const hierarchialList: Record<string, HierarchialListItem> = {}
+  sortListByParentItem.forEach((item) => {
+    const { properties } = item
+    // @ts-expect-error 'relation'
+    const parentId = properties['Parent item']?.relation?.[0]?.id
+    // @ts-expect-error 'title'
+    const title = properties['Name'].title[0].plain_text
+    if (parentId) {
+      hierarchialList[parentId].children.push({ title, properties, children: [] })
+    } else {
+      hierarchialList[item.id] = { title, properties, children: [] }
+    }
+  })
+  return hierarchialList
 }
 
 async function preContent() {
@@ -247,7 +250,7 @@ async function preContent() {
     })
   })
 
-console.log(hierarchialNavigationList)
+  console.log(hierarchialNavigationList)
 
   await fs.writeFile(
     HEADER_NAV_LINKS_FILE,
