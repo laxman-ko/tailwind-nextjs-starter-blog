@@ -2,7 +2,7 @@ import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { allBlogs } from 'contentlayer/generated'
 import { genPageMetadata } from 'app/seo'
 import ListLayout from '@/layouts/ListLayoutWithTags'
-import { _t } from '@/lib/translate/translate.util'
+import { _t } from '@/lib/translation/translate.util'
 
 const POSTS_PER_PAGE = 5
 

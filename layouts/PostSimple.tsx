@@ -8,7 +8,7 @@ import PageTitle from '@/components/PageTitle'
 import SectionContainer from '@/components/SectionContainer'
 import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
-import { _t } from '@/lib/translate/translate.util'
+import { _t } from '@/lib/translation/translate.util'
 
 interface LayoutProps {
   content: CoreContent<Blog>

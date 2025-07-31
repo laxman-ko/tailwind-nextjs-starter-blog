@@ -9,7 +9,7 @@ import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import tagData from 'app/tag-data.json'
-import { _t } from '@/lib/translate/translate.util'
+import { _t } from '@/lib/translation/translate.util'
 
 interface PaginationProps {
   totalPages: number
