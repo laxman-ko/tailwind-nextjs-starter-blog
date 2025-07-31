@@ -1,8 +1,10 @@
+import { NextRequest } from 'next/server'
+
 export const runtime = 'edge'
 
-export const POST = async (req: Request) => {
+export const POST = async (req: NextRequest) => {
   try {
-    const url = new URL(req.url)
+    const url = req.nextUrl
     const cfEnv = url.searchParams.get('cfEnv')
 
     const redeployHookUrl =
@@ -23,4 +25,8 @@ export const POST = async (req: Request) => {
     console.error(error)
     return new Response('Failed to deploy', { status: 500 })
   }
+}
+
+export async function GET(request: NextRequest) {
+  return new Response('nothing here', { status: 200 })
 }
