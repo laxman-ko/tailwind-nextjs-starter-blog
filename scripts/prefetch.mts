@@ -134,7 +134,6 @@ async function preContent() {
       }
 
       await fs.writeFile(mdxFile, mdxContent)
-
     })
   )
 
