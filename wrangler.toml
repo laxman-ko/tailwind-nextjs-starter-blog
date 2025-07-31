@@ -6,7 +6,3 @@ compatibility_flags = [ "nodejs_compat" ]
 
 [env]
 production = { }
-
-[hook]
-https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/065a4b52-b960-4f41-a398-5da36c8e2757
-https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/935bed83-9f22-42c9-9fb8-90d1acf5004f
