@@ -33,7 +33,7 @@ interface LayoutProps {
 export default function PostLayout({ content, authorDetails, next, prev, children }: LayoutProps) {
   const { filePath, path, slug, date, title, tags } = content
   const basePath = path.split('/')[0]
-
+  console.log(new Date(date).toLocaleDateString(siteMetadata.locale, postDateTemplate))
   return (
     <SectionContainer>
       <ScrollTopAndComment />

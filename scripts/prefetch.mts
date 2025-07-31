@@ -10,6 +10,7 @@ import {
 } from '../lib/notion/notion.client.mjs'
 import yaml from 'js-yaml'
 import { PageObjectResponse } from '@notionhq/client'
+import { TranslationsProperties } from '@/lib/notion/notion.types'
 
 type HierarchialListItem = {
   title: string
@@ -70,7 +71,6 @@ async function preContent() {
   const PUBLIC_IMAGES_DIR = `${root}/public/static/images`
 
   const DEFAULT_AUTHOR = 'laxman-siwakoti'
-  const DEFAULT_LOCALE = 'en'
   const ARTICLES_DIR = `${root}/data/blog`
   const AUTHORS_DIR = `${root}/data/authors`
 
@@ -79,6 +79,9 @@ async function preContent() {
   const FOOTER_NAV_LINKS_FILE = `${root}/data/footerNavLinks.ts`
 
   const TRASNSLATIONS_TEXT_FILE = `${root}/data/translations.json`
+
+  const LOCALES = []
+  const DEFAULT_LOCALE_FOR_TRANSLATIONS = 'en'
 
   for (const dir of [ARTICLES_DIR, AUTHORS_DIR]) {
     try {
@@ -131,6 +134,7 @@ async function preContent() {
   const articles = await getListOfAllArticles()
   const sortedArticles = sortedHierarchialList(articles)
   console.log(sortedArticles)
+
   Promise.all(
     articles.map(async (article) => {
       const { properties: articleProperties } = article
@@ -187,17 +191,17 @@ async function preContent() {
   const translationsData = Object.fromEntries(
     translations.map((translation) => {
       const locales = Object.keys(translation.properties).filter(
-        (locale) => locale !== DEFAULT_LOCALE
+        (locale) => locale !== DEFAULT_LOCALE_FOR_TRANSLATIONS
       )
-      const enText = translation.properties[DEFAULT_LOCALE].title[0].plain_text
+      const enText = translation.properties[DEFAULT_LOCALE_FOR_TRANSLATIONS].title[0].plain_text
       return [
         enText,
-        Object.fromEntries([
-          [DEFAULT_LOCALE, enText],
-          ...locales.map((locale: 'ne-NP') => {
+        Object.fromEntries(
+          locales.map((locale: keyof TranslationsProperties) => {
+            // @ts-expect-error 'rich_text'
             return [locale, translation.properties[locale].rich_text?.[0]?.plain_text]
-          }),
-        ]),
+          })
+        ),
       ]
     })
   )
