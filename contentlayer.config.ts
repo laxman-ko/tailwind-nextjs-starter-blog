@@ -110,6 +110,7 @@ export const Blog = defineDocumentType(() => ({
     layout: { type: 'string' },
     bibliography: { type: 'string' },
     canonicalUrl: { type: 'string' },
+    locale: { type: 'string' },
   },
   computedFields: {
     ...computedFields,
@@ -124,6 +125,7 @@ export const Blog = defineDocumentType(() => ({
         description: doc.summary,
         image: doc.images ? doc.images[0] : siteMetadata.socialBanner,
         url: `${siteMetadata.siteUrl}/${doc._raw.flattenedPath}`,
+        inLanguage: doc.locale,
       }),
     },
   },
@@ -145,6 +147,7 @@ export const Authors = defineDocumentType(() => ({
     github: { type: 'string' },
     layout: { type: 'string' },
     tiktok: { type: 'string' },
+    locale: { type: 'string' },
   },
   computedFields,
 }))

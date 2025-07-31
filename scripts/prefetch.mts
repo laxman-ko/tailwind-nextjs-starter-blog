@@ -123,6 +123,7 @@ async function preContent() {
         company: authorProperties['Company']?.rich_text?.[0]?.plain_text,
         email: authorProperties['Email'].email,
         tiktok: authorProperties['Tiktok'].url,
+        locale: authorProperties['Locale'].select?.name,
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
       const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
@@ -141,14 +142,25 @@ async function preContent() {
       const mdContent = await getPageMarkDownById(article.id)
 
       const title = articleProperties['Name'].title[0].plain_text
-      const slug = articleProperties['Slug'].url || title
+      const slug = articleProperties['Slug'].url
       const personId = articleProperties.Author?.people?.[0]?.id
+      const locale = articleProperties['Locale'].select?.name
 
       if (!slug) {
         console.log('Slug not found', {
           title,
           slug,
           personId,
+        })
+        return
+      }
+
+      if (!locale) {
+        console.log('Locale not found', {
+          title,
+          slug,
+          personId,
+          a: articleProperties['Locale'],
         })
         return
       }
@@ -167,6 +179,7 @@ async function preContent() {
         layout: 'PostLayout',
         bibliography: undefined,
         canonicalUrl: undefined,
+        locale,
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
       const mdxContent = `${frontmatterYaml}\n\n${mdContent}`

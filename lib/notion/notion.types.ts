@@ -110,6 +110,14 @@ export type ArticleProperties = {
       }
     }>
   }
+  Locale: {
+    id: string
+    type: 'select'
+    select: {
+      name: string
+      color: string
+    }
+  }
 }
 
 export type Article = PageObjectResponse & {
@@ -248,6 +256,14 @@ export type AuthorProperties = {
         url: string
       }
     }>
+  }
+  Locale: {
+    id: string
+    type: 'select'
+    select: {
+      name: string
+      color: string
+    }
   }
 }
 

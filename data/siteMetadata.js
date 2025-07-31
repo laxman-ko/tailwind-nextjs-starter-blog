@@ -65,7 +65,7 @@ const siteMetadata = {
     'Read More': { 'ne-NP': 'थप पढ्नुहोस' },
     'All Posts': { 'ne-NP': 'सबै लेखहरु' },
     Previous: { 'ne-NP': 'अघिल्लो' },
-    Latest: { 'ne-NP': 'ताजा लेखहरु' },
+    Latest: { 'en-US': 'Latest Articles', 'ne-NP': 'ताजा लेखहरु' },
   },
 }
 module.exports = siteMetadata
