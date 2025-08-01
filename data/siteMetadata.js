@@ -6,7 +6,7 @@ const siteMetadata = {
   description:
     'एक विचारक, प्रश्नकर्ता अनि जिज्ञासु - लक्ष्मणका विचार, जिज्ञासा र प्रेरणाले भरिएको अक्षरहरू',
   language: 'ne',
-  locale: 'ne-NP',
+  locale: 'ne',
   theme: 'system',
   siteUrl: 'https://akshar.laxmanko.com',
   siteRepo: 'https://github.com/laxmanko/akshar',

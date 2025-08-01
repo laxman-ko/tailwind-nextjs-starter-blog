@@ -189,7 +189,7 @@ async function preContent() {
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
       const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
-      await fs.writeFile(`${AUTHORS_DIR}/${slug}.${locale}.mdx`, mdxContent)
+      await fs.writeFile(`${AUTHORS_DIR}/${slug}__${locale}.mdx`, mdxContent)
     })
   })
 
@@ -262,7 +262,7 @@ async function preContent() {
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
       const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
-      const mdxFile = `${ARTICLES_DIR}/${slug}.${locale}.mdx`
+      const mdxFile = `${ARTICLES_DIR}/${slug}__${locale}.mdx`
       try {
         await fs.access(mdxFile)
         throw new Error(`File ${mdxFile} already exists`)

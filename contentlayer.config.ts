@@ -52,11 +52,12 @@ const computedFields: ComputedFields = {
   readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
   slug: {
     type: 'string',
-    resolve: (doc) => doc._raw.flattenedPath.replace(/^.+?(\/)/, ''),
+    resolve: (doc) =>
+      doc._raw.flattenedPath.replace(/^.+?(\/)/, '').replace(/\__[a-z]{2}(-[A-Z]{2})?$/, ''),
   },
   path: {
     type: 'string',
-    resolve: (doc) => doc._raw.flattenedPath,
+    resolve: (doc) => doc._raw.flattenedPath.replace(/\__[a-z]{2}(-[A-Z]{2})?$/, ''),
   },
   filePath: {
     type: 'string',

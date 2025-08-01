@@ -10,6 +10,9 @@ export function middleware(request: NextRequest) {
 
   if (!locale) return NextResponse.next()
 
+  // if locale is not valid, return 400
+  if (locale === 400) return NextResponse.json({ error: 'Bad Request' }, { status: 400 })
+
   // remove locale from pathname
   nextUrl.pathname = pathname.replace(LANGUAGE_COUNTRY_MATCH_REGEX, '')
 
