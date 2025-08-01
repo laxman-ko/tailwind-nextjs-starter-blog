@@ -1,114 +1,150 @@
 {
   "Showcase your projects with a hero image (16 x 9)": {
-    "ne-NP": "आफ्ना प्रोजेक्टहरू १६×९ को हिरो छविसँग प्रस्तुत गर्नुहोस"
+    "en": "Showcase your projects with a hero image (16 x 9)",
+    "ne": "आफ्ना प्रोजेक्टहरू १६×९ को हिरो छविसँग प्रस्तुत गर्नुहोस"
   },
   "Authors": {
-    "ne-NP": "लेखकहरू"
+    "en": "Authors",
+    "ne": "लेखकहरू"
   },
   "Twitter": {
-    "ne-NP": "Twitter"
+    "en": "Twitter",
+    "ne": "Twitter"
   },
   "Name": {
-    "ne-NP": "नाम"
+    "en": "Name",
+    "ne": "नाम"
   },
   "Discuss on Twitter": {
-    "ne-NP": "Twitter मा छलफल गर्नुहोस"
+    "en": "Discuss on Twitter",
+    "ne": "Twitter मा छलफल गर्नुहोस"
   },
   "View on GitHub": {
-    "ne-NP": "GitHub मा हेर्नुहोस"
+    "en": "View on GitHub",
+    "ne": "GitHub मा हेर्नुहोस"
   },
   "Back to the blog": {
-    "ne-NP": "लेखहरूमा फर्कनुहोस"
+    "en": "Back to the blog",
+    "ne": "लेखहरूमा फर्कनुहोस"
   },
   "Published on": {
-    "ne-NP": "प्रकाशित मिति"
+    "en": "Published on",
+    "ne": "प्रकाशित मिति"
   },
   "Search articles": {
-    "ne-NP": "लेखहरू खोज्नुहोस"
+    "en": "Search articles",
+    "ne": "लेखहरू खोज्नुहोस"
   },
   "No posts found.": {
-    "ne-NP": "कुनै लेख फेला परेन।"
+    "en": "No posts found.",
+    "ne": "कुनै लेख फेला परेन।"
   },
   "View posts tagged %%": {
-    "ne-NP": "%% ट्याग गरिएको लेखहरू"
+    "en": "View posts tagged %%",
+    "ne": "%% ट्याग गरिएको लेखहरू"
   },
   "Tags": {
-    "ne-NP": "ट्यागहरू"
+    "en": "Tags",
+    "ne": "ट्यागहरू"
   },
   "Things I blog about": {
-    "ne-NP": "म जे बारेमा लेख्छु"
+    "en": "Things I blog about",
+    "ne": "म जे बारेमा लेख्छु"
   },
   "tagged content": {
-    "ne-NP": "ट्याग गरिएको सामग्री"
+    "en": "tagged content",
+    "ne": "ट्याग गरिएको सामग्री"
   },
   "Blog": {
-    "ne-NP": "लेखहरू"
+    "en": "Blog",
+    "ne": "लेखहरू"
   },
   "Back to homepage": {
-    "ne-NP": "गृहपृष्ठमा फर्किनुहोस"
+    "en": "Back to homepage",
+    "ne": "गृहपृष्ठमा फर्किनुहोस"
   },
   "But dont worry, you can find plenty of other things on our homepage.": {
-    "ne-NP": "तर चिन्ता नलिनुहोस्, तपाईं हाम्रो गृहपृष्ठमा धेरै अरू सामग्रीहरू फेला पार्न सक्नुहुन्छ।"
+    "en": "But dont worry, you can find plenty of other things on our homepage.",
+    "ne": "तर चिन्ता नलिनुहोस्, तपाईं हाम्रो गृहपृष्ठमा धेरै अरू सामग्रीहरू फेला पार्न सक्नुहुन्छ।"
   },
   "Sorry we couldn't find this page.": {
-    "ne-NP": "माफ गर्नुहोस्, हामी यो पृष्ठ फेला पार्न सकिएनौं।"
+    "en": "Sorry we couldn't find this page.",
+    "ne": "माफ गर्नुहोस्, हामी यो पृष्ठ फेला पार्न सकिएनौं।"
   },
   "Read \"%%\"": {
-    "ne-NP": "\"%%\" पढ्नुहोस"
+    "en": "Read \"%%\"",
+    "ne": "\"%%\" पढ्नुहोस"
   },
   "Projects": {
-    "ne-NP": "परियोजनाहरू"
+    "en": "Projects",
+    "ne": "परियोजनाहरू"
   },
   "About": {
-    "ne-NP": "मेरो बारेमा"
+    "en": "About",
+    "ne": "मेरो बारेमा"
   },
   "Mail": {
-    "ne-NP": "इमेल"
+    "en": "Mail",
+    "ne": "इमेल"
   },
   "Light": {
-    "ne-NP": "प्रकाशमान"
+    "en": "Light",
+    "ne": "प्रकाशमान"
   },
   "Dark": {
-    "ne-NP": "अँध्यारो"
+    "en": "Dark",
+    "ne": "अँध्यारो"
   },
   "System": {
-    "ne-NP": "प्रणाली"
+    "en": "System",
+    "ne": "प्रणाली"
   },
   "Search": {
-    "ne-NP": "खोज्नुहोस"
+    "en": "Search",
+    "ne": "खोज्नुहोस"
   },
   "Subscribe": {
-    "ne-NP": "सदस्यता लिनुहोस"
+    "en": "Subscribe",
+    "ne": "सदस्यता लिनुहोस"
   },
   "Newsletter": {
-    "ne-NP": "समाचार पत्र"
+    "en": "Newsletter",
+    "ne": "समाचार पत्र"
   },
   "Next Article": {
-    "ne-NP": "अर्को लेख"
+    "en": "Next Article",
+    "ne": "अर्को लेख"
   },
   "Published On": {
-    "ne-NP": "प्रकाशित मिति"
+    "en": "Published On",
+    "ne": "प्रकाशित मिति"
   },
   "Previous Article": {
-    "ne-NP": "अघिल्लो लेख"
+    "en": "Previous Article",
+    "ne": "अघिल्लो लेख"
   },
   "Learn More": {
-    "ne-NP": "थप जान्नुहोस"
+    "en": "Learn More",
+    "ne": "थप जान्नुहोस"
   },
   "Next": {
-    "ne-NP": "अर्को"
+    "en": "Next",
+    "ne": "अर्को"
   },
   "Read More": {
-    "ne-NP": "थप पढ्नुहोस"
+    "en": "Read More",
+    "ne": "थप पढ्नुहोस"
   },
   "All Posts": {
-    "ne-NP": "सबै लेखहरु"
+    "en": "All Posts",
+    "ne": "सबै लेखहरु"
   },
   "Previous": {
-    "ne-NP": "अघिल्लो"
+    "en": "Previous",
+    "ne": "अघिल्लो"
   },
   "Latest": {
-    "en-US": "Latest Articles",
-    "ne-NP": "ताजा लेखहरु"
+    "en": "Latest",
+    "ne": "ताजा लेखहरु"
   }
 }

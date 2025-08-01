@@ -21,5 +21,6 @@ const siteMetadata = {
   newsletter: { provider: '' },
   comments: {},
   search: { provider: 'kbar', kbarConfig: { searchDocumentsPath: '/search.json' } },
+  locales: { en: 'English', ne: 'Nepali' },
 }
 module.exports = siteMetadata

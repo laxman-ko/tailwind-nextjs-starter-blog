@@ -11,12 +11,24 @@ import {
 import yaml from 'js-yaml'
 import { PageObjectResponse } from '@notionhq/client'
 import { TranslationsProperties } from '@/lib/notion/notion.types'
-import { getLocaleByName, LOCALE_NAME } from 'i18n/i18n.locales'
+import { PlinyConfig } from 'pliny/config'
 
 type HierarchialListItem = {
   title: string
   properties: PageObjectResponse['properties']
   children: HierarchialListItem[]
+}
+
+let siteMetadata = {} as PlinyConfig & { locales: Record<string, string> }
+
+export const getLocaleByName = (language: string): string => {
+  return Object.keys(siteMetadata.locales).find(
+    (locale: string) => siteMetadata.locales[locale] === language
+  ) as string
+}
+
+export const getLocaleName = (locale: string): string => {
+  return siteMetadata.locales[locale]
 }
 
 export const downloadAsset = async (
@@ -82,8 +94,6 @@ async function preContent() {
   const TRASNSLATIONS_TEXT_FILE = `${root}/data/translations.json`
   const TYPES_FILE = `${root}/data/types.ts`
 
-  const DEFAULT_LANGUAGE_FOR_TRANSLATIONS = 'en'
-
   for (const dir of [ARTICLES_DIR, AUTHORS_DIR]) {
     try {
       await fs.rm(dir, { recursive: true, force: true })
@@ -94,6 +104,35 @@ async function preContent() {
   }
 
   await getListOfChildDatabases(process.env.NOTION_DATABASE_ID as string)
+
+  // fetch all settings
+  const settings = await getSettings()
+  const jsonCode = settings.find((setting) => setting.type === 'code')?.code
+  if (!jsonCode) throw new Error('JSON code not found')
+
+  const settingsJson = JSON.parse(jsonCode?.rich_text[0].plain_text as string) as Record<
+    string,
+    string | object
+  >
+
+  siteMetadata = settingsJson as PlinyConfig & { locales: Record<string, string> }
+
+  await fs.writeFile(
+    SITE_METADATA_FILE,
+    `
+    /** @type {import("pliny/config").PlinyConfig } */
+    const siteMetadata = ${JSON.stringify(siteMetadata)}
+    module.exports = siteMetadata;
+    `
+  )
+
+  const logoImage = settings.find((setting) => setting.type === 'image')?.image
+  if (!logoImage) throw new Error('Logo not found')
+  // @ts-expect-error 'file'
+  const logo = logoImage?.caption[0].plain_text === 'Logo' ? logoImage?.file.url : ''
+
+  // download content of logo file and save to LOGO_FILE
+  await downloadAsset(logo, `${root}/data/logo`, root)
 
   const authors: Record<string, string> = {}
 
@@ -126,7 +165,7 @@ async function preContent() {
         company: authorProperties['Company']?.rich_text?.[0]?.plain_text,
         email: authorProperties['Email'].email,
         tiktok: authorProperties['Tiktok'].url,
-        locale: getLocaleByName(localeName as LOCALE_NAME),
+        locale: getLocaleByName(localeName),
         localizedSlugs: undefined,
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
@@ -182,7 +221,7 @@ async function preContent() {
         layout: 'PostLayout',
         bibliography: undefined,
         canonicalUrl: undefined,
-        locale: getLocaleByName(localeName as LOCALE_NAME),
+        locale: getLocaleByName(localeName),
         localizedSlugs: undefined,
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
@@ -207,50 +246,29 @@ async function preContent() {
   const translations = await getListOfAllTranslations()
   const translationsData = Object.fromEntries(
     translations.map((translation) => {
+      const defaultLocaleName = 'English'
       const locales = Object.keys(translation.properties).filter(
-        (locale) => locale !== DEFAULT_LANGUAGE_FOR_TRANSLATIONS
+        (locale) => locale !== defaultLocaleName
       )
-      const enText = translation.properties[DEFAULT_LANGUAGE_FOR_TRANSLATIONS].title[0].plain_text
+      // @ts-expect-error 'title'
+      const enText = translation.properties[defaultLocaleName].title[0].plain_text
       return [
         enText,
-        Object.fromEntries(
-          locales.map((locale: keyof TranslationsProperties) => {
+        Object.fromEntries([
+          [getLocaleByName(defaultLocaleName), enText],
+          ...locales.map((localeName: string) => {
             // @ts-expect-error 'rich_text'
-            return [locale, translation.properties[locale].rich_text?.[0]?.plain_text]
-          })
-        ),
+            return [
+              getLocaleByName(localeName),
+              translation.properties[localeName].rich_text?.[0]?.plain_text,
+            ]
+          }),
+        ]),
       ]
     })
   )
 
   fs.writeFile(TRASNSLATIONS_TEXT_FILE, JSON.stringify(translationsData, null, 2))
-
-  // fetch all settings
-  const settings = await getSettings()
-  const jsonCode = settings.find((setting) => setting.type === 'code')?.code
-  if (!jsonCode) throw new Error('JSON code not found')
-
-  const settingsJson = JSON.parse(jsonCode?.rich_text[0].plain_text as string) as Record<
-    string,
-    string | object
-  >
-
-  await fs.writeFile(
-    SITE_METADATA_FILE,
-    `
-    /** @type {import("pliny/config").PlinyConfig } */
-    const siteMetadata = ${JSON.stringify(settingsJson)}
-    module.exports = siteMetadata;
-    `
-  )
-
-  const logoImage = settings.find((setting) => setting.type === 'image')?.image
-  if (!logoImage) throw new Error('Logo not found')
-  // @ts-expect-error 'file'
-  const logo = logoImage?.caption[0].plain_text === 'Logo' ? logoImage?.file.url : ''
-
-  // download content of logo file and save to LOGO_FILE
-  await downloadAsset(logo, `${root}/data/logo`, root)
 
   // fetch all navigations
 

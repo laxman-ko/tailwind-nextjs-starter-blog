@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { getLocaleByPathname } from './i18n/i18n.utils'
-import { LANGUAGE_COUNTRY_MATCH_REGEX } from './i18n/i18n.utils'
+import { getLocaleByPathname, LANGUAGE_COUNTRY_MATCH_REGEX } from './i18n/i18n.utils'
 
 export function middleware(request: NextRequest) {
   const { nextUrl } = request
