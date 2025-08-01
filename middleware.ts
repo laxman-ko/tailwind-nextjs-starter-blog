@@ -1,17 +1,22 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { getLocaleByPathname } from './lib/i18n/i18n.utils'
+import { LANGUAGE_COUNTRY_MATCH_REGEX } from './lib/i18n/i18n.utils'
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
+  const { nextUrl } = request
+  const { pathname } = nextUrl
 
-  // Match locale from path, e.g., /ne-NP/about → locale = 'ne-NP'
-  const localeMatch = pathname.match(/^\/(en|ne|ne-NP|en-US)(\/|$)/)
-  const locale = localeMatch?.[1] ?? 'en'
+  const locale = getLocaleByPathname(pathname)
 
-  const response = NextResponse.next()
-  response.cookies.set('locale', locale) // optionally set a cookie
+  if (!locale) return NextResponse.next()
 
-  request.headers.set('x-locale', locale) // custom header to pass to server components
+  // remove locale from pathname
+  nextUrl.pathname = pathname.replace(LANGUAGE_COUNTRY_MATCH_REGEX, '')
+
+  const response = NextResponse.rewrite(nextUrl)
+
+  response.headers.set('x-locale', locale)
   return response
 }
 
