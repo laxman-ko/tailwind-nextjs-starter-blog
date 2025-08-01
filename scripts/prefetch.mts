@@ -10,7 +10,7 @@ import {
 } from '../lib/notion/notion.client.mjs'
 import yaml from 'js-yaml'
 import { PageObjectResponse } from '@notionhq/client'
-import { ArticleProperties } from '@/lib/notion/notion.types'
+import { ArticleProperties, AuthorProperties } from '@/lib/notion/notion.types'
 import { PlinyConfig } from 'pliny/config'
 
 type HierarchialListItem = {
@@ -138,13 +138,29 @@ async function preContent() {
   const authors: Record<string, string> = {}
 
   // fetch all authors
-  Promise.all(
-    (await getListOfAllAuthors()).map(async (author) => {
-      const { properties: authorProperties } = author
+  const authorsList = await getListOfAllAuthors()
+  const sortedAuthorsList = sortedHierarchialList(authorsList)
+
+  Object.keys(sortedAuthorsList).forEach(async (authorId) => {
+    const author = sortedAuthorsList[authorId]
+    const allAuthors = [author, ...author.children]
+
+    const localizedSlugs = Object.fromEntries(
+      allAuthors.map((author) => {
+        // @ts-expect-error 'select'
+        const localeName = author.properties['Locale']?.select?.name
+        if (!localeName) return []
+        // @ts-expect-error 'url'
+        return [getLocaleByName(localeName), author.properties['Slug']?.url]
+      })
+    )
+
+    allAuthors.forEach(async (author) => {
+      const authorProperties = author.properties as unknown as AuthorProperties
       const mdContent = await getPageMarkDownById(author.id)
 
-      const personId = author.properties.Person?.people?.[0]?.id
-      const localeName = authorProperties['Locale'].select?.name
+      const personId = authorProperties.Person?.people?.[0]?.id
+      const localeName = authorProperties['Locale']?.select?.name
 
       if (!personId) throw new Error('Person not found')
       if (!localeName) return
@@ -167,13 +183,13 @@ async function preContent() {
         email: authorProperties['Email'].email,
         tiktok: authorProperties['Tiktok'].url,
         locale: getLocaleByName(localeName),
-        localizedSlugs: undefined,
+        localizedSlugs,
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
       const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
       await fs.writeFile(`${AUTHORS_DIR}/${slug}.mdx`, mdxContent)
     })
-  )
+  })
 
   // fetch all articles
   const articles = await getListOfAllArticles()
@@ -194,8 +210,6 @@ async function preContent() {
         return [getLocaleByName(localeName), article.properties['Slug']?.url]
       })
     )
-
-    console.log({ localizedSlugs })
 
     allArticles.forEach(async (article) => {
       const articleProperties = article.properties as unknown as ArticleProperties
