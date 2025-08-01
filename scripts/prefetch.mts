@@ -165,6 +165,8 @@ async function preContent() {
       if (!personId) throw new Error('Person not found')
       if (!localeName) return
 
+      const locale = getLocaleByName(localeName)
+
       const name = authorProperties['Name'].title[0].plain_text
       const authorSlug = authorProperties['Slug'].url
       const slug = authorSlug === DEFAULT_AUTHOR ? 'default' : authorSlug
@@ -182,12 +184,12 @@ async function preContent() {
         company: authorProperties['Company']?.rich_text?.[0]?.plain_text,
         email: authorProperties['Email'].email,
         tiktok: authorProperties['Tiktok'].url,
-        locale: getLocaleByName(localeName),
+        locale,
         localizedSlugs,
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
       const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
-      await fs.writeFile(`${AUTHORS_DIR}/${slug}.mdx`, mdxContent)
+      await fs.writeFile(`${AUTHORS_DIR}/${slug}.${locale}.mdx`, mdxContent)
     })
   })
 
@@ -241,6 +243,8 @@ async function preContent() {
 
       const authorName = authors[personId] === DEFAULT_AUTHOR ? 'default' : authors[personId]
 
+      const locale = getLocaleByName(localeName)
+
       const frontmatter = {
         title,
         date: articleProperties['Created time'].created_time,
@@ -253,12 +257,12 @@ async function preContent() {
         layout: 'PostLayout',
         bibliography: undefined,
         canonicalUrl: undefined,
-        locale: getLocaleByName(localeName),
+        locale,
         localizedSlugs,
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
       const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
-      const mdxFile = `${ARTICLES_DIR}/${slug}.mdx`
+      const mdxFile = `${ARTICLES_DIR}/${slug}.${locale}.mdx`
       try {
         await fs.access(mdxFile)
         throw new Error(`File ${mdxFile} already exists`)
