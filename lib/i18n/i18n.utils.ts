@@ -1,5 +1,6 @@
 import { Locale } from '@/data/types'
 import siteMetadata from '@/data/siteMetadata'
+import { headers } from 'next/headers'
 
 export const LOCALES = siteMetadata.locales
 
@@ -28,13 +29,12 @@ export const getLocaleByPathname = (pathname: string): Locale | 400 | null => {
   return locale
 }
 
-export const getSiteLocale = (req: Request): Locale | null => {
-  const { headers } = req
-  const locale = headers.get('x-locale') || siteMetadata.locale
+export const getSiteLocale = async (): Promise<Locale | null> => {
+  const locale = (await headers()).get('x-locale') || siteMetadata.locale
   return locale as Locale
 }
 
-export const getSiteLanguage = (req: Request): string => {
-  const locale = getSiteLocale(req)
+export const getSiteLanguage = async (): Promise<string> => {
+  const locale = await getSiteLocale()
   return locale?.split('-')[0] || siteMetadata.language
 }
