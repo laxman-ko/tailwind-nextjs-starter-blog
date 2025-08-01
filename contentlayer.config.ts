@@ -116,6 +116,7 @@ export const Blog = defineDocumentType(() => ({
     bibliography: { type: 'string' },
     canonicalUrl: { type: 'string' },
     locale: { type: 'string' },
+    localizedSlugs: { type: 'json' },
   },
   computedFields: {
     ...computedFields,
@@ -153,6 +154,7 @@ export const Authors = defineDocumentType(() => ({
     layout: { type: 'string' },
     tiktok: { type: 'string' },
     locale: { type: 'string' },
+    localizedSlugs: { type: 'json' },
   },
   computedFields,
 }))

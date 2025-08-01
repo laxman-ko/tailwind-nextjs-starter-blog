@@ -63,15 +63,6 @@ export const sortedHierarchialList = (list: PageObjectResponse[]) => {
   return hierarchialList
 }
 
-export const localeFields = (locale: string) => {
-  // convert en-US to /us/en/
-  const localeSlugRaw = locale.toLowerCase().split('-').reverse().join('/')
-  return {
-    locale,
-    localeSlug: `/${localeSlugRaw}`,
-  }
-}
-
 async function preContent() {
   console.log('Prefetching of notion database started...')
 
@@ -88,6 +79,7 @@ async function preContent() {
   const FOOTER_NAV_LINKS_FILE = `${root}/data/footerNavLinks.ts`
 
   const TRASNSLATIONS_TEXT_FILE = `${root}/data/translations.json`
+  const TYPES_FILE = `${root}/data/types.ts`
 
   const LOCALES = []
   const DEFAULT_LOCALE_FOR_TRANSLATIONS = 'en'
@@ -132,7 +124,8 @@ async function preContent() {
         company: authorProperties['Company']?.rich_text?.[0]?.plain_text,
         email: authorProperties['Email'].email,
         tiktok: authorProperties['Tiktok'].url,
-        ...localeFields(authorProperties['Locale'].select?.name as string),
+        locale: authorProperties['Locale'].select?.name,
+        localizedSlugs: undefined,
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
       const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
@@ -143,7 +136,6 @@ async function preContent() {
   // fetch all articles
   const articles = await getListOfAllArticles()
   const sortedArticles = sortedHierarchialList(articles)
-  console.log(sortedArticles)
 
   Promise.all(
     articles.map(async (article) => {
@@ -188,7 +180,8 @@ async function preContent() {
         layout: 'PostLayout',
         bibliography: undefined,
         canonicalUrl: undefined,
-        ...localeFields(locale),
+        locale,
+        localizedSlugs: undefined,
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
       const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
@@ -292,6 +285,8 @@ async function preContent() {
   const footerNavLinks = ${JSON.stringify(hierarchialNavigationList['Footer'])}
   export default footerNavLinks`
   )
+
+  await fs.writeFile(TYPES_FILE, `export type Locale = 'en' | 'ne-NP' | 'en-US'`)
 
   console.log('Prefetching of notion database completed')
 }

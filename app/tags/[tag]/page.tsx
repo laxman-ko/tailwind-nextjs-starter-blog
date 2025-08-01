@@ -6,7 +6,7 @@ import { allBlogs } from 'contentlayer/generated'
 import tagData from 'app/tag-data.json'
 import { genPageMetadata } from 'app/seo'
 import { Metadata } from 'next'
-import { _t } from '@/lib/translations/translations.util'
+import { _t } from '@/lib/translations/translations.utils'
 
 const POSTS_PER_PAGE = 5
 

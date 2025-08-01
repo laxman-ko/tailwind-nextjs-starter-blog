@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import type { Authors } from 'contentlayer/generated'
 import SocialIcon from '@/components/social-icons'
 import Image from '@/components/Image'
-import { _t } from '@/lib/translations/translations.util'
+import { _t } from '@/lib/translations/translations.utils'
 
 interface Props {
   children: ReactNode

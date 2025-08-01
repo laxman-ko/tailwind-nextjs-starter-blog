@@ -1,5 +1,5 @@
 import Link from '@/components/Link'
-import { _t } from '@/lib/translations/translations.util'
+import { _t } from '@/lib/translations/translations.utils'
 
 export default function NotFound() {
   return (
