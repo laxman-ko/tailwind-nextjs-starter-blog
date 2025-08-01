@@ -11,6 +11,7 @@ import {
 import yaml from 'js-yaml'
 import { PageObjectResponse } from '@notionhq/client'
 import { TranslationsProperties } from '@/lib/notion/notion.types'
+import { getLocaleByName, LOCALE_NAME } from 'i18n/i18n.locales'
 
 type HierarchialListItem = {
   title: string
@@ -81,8 +82,7 @@ async function preContent() {
   const TRASNSLATIONS_TEXT_FILE = `${root}/data/translations.json`
   const TYPES_FILE = `${root}/data/types.ts`
 
-  const LOCALES = []
-  const DEFAULT_LOCALE_FOR_TRANSLATIONS = 'en'
+  const DEFAULT_LANGUAGE_FOR_TRANSLATIONS = 'en'
 
   for (const dir of [ARTICLES_DIR, AUTHORS_DIR]) {
     try {
@@ -104,8 +104,10 @@ async function preContent() {
       const mdContent = await getPageMarkDownById(author.id)
 
       const personId = author.properties.Person?.people?.[0]?.id
+      const localeName = authorProperties['Locale'].select?.name
 
       if (!personId) throw new Error('Person not found')
+      if (!localeName) return
 
       const name = authorProperties['Name'].title[0].plain_text
       const authorSlug = authorProperties['Slug'].url
@@ -124,7 +126,7 @@ async function preContent() {
         company: authorProperties['Company']?.rich_text?.[0]?.plain_text,
         email: authorProperties['Email'].email,
         tiktok: authorProperties['Tiktok'].url,
-        locale: authorProperties['Locale'].select?.name,
+        locale: getLocaleByName(localeName as LOCALE_NAME),
         localizedSlugs: undefined,
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
@@ -145,7 +147,7 @@ async function preContent() {
       const title = articleProperties['Name'].title[0].plain_text
       const slug = articleProperties['Slug'].url
       const personId = articleProperties.Author?.people?.[0]?.id
-      const locale = articleProperties['Locale'].select?.name
+      const localeName = articleProperties['Locale'].select?.name
 
       if (!slug) {
         console.log('Slug not found', {
@@ -156,7 +158,7 @@ async function preContent() {
         return
       }
 
-      if (!locale) {
+      if (!localeName) {
         console.log('Locale not found', {
           title,
           slug,
@@ -180,7 +182,7 @@ async function preContent() {
         layout: 'PostLayout',
         bibliography: undefined,
         canonicalUrl: undefined,
-        locale,
+        locale: getLocaleByName(localeName as LOCALE_NAME),
         localizedSlugs: undefined,
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
@@ -206,9 +208,9 @@ async function preContent() {
   const translationsData = Object.fromEntries(
     translations.map((translation) => {
       const locales = Object.keys(translation.properties).filter(
-        (locale) => locale !== DEFAULT_LOCALE_FOR_TRANSLATIONS
+        (locale) => locale !== DEFAULT_LANGUAGE_FOR_TRANSLATIONS
       )
-      const enText = translation.properties[DEFAULT_LOCALE_FOR_TRANSLATIONS].title[0].plain_text
+      const enText = translation.properties[DEFAULT_LANGUAGE_FOR_TRANSLATIONS].title[0].plain_text
       return [
         enText,
         Object.fromEntries(

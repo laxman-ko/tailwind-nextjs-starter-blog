@@ -21,11 +21,11 @@ const localesProperty = {
     select: {
       options: [
         {
-          name: 'ne-NP',
+          name: 'Nepali',
           color: 'green',
         },
         {
-          name: 'en-US',
+          name: 'English',
           color: 'brown',
         },
       ],
@@ -33,10 +33,10 @@ const localesProperty = {
   },
 }
 
-const runUpdates = async () => {
+const runUpdates = async (database_id: string) => {
   await notion.databases
     .update({
-      database_id: AUTHORS_DATABASE_ID,
+      database_id,
       properties: {
         ...localesProperty,
       },
@@ -44,12 +44,7 @@ const runUpdates = async () => {
     .then((res) => {
       console.log(res)
     })
-
-  // notion.databases.query({
-  //     database_id: '23f072d93d028025b142ceba5b7029db',
-  // }).then((res) => {
-  //     console.log(res.results[0].properties['Locale'].select)
-  // })
 }
 
-runUpdates()
+runUpdates(ARTICLES_DATABASE_ID)
+runUpdates(AUTHORS_DATABASE_ID)
