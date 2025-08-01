@@ -178,6 +178,18 @@ async function preContent() {
   const articles = await getListOfAllArticles()
   const sortedArticles = sortedHierarchialList(articles)
 
+  Object.keys(sortedArticles).forEach((articleId) => {
+    const hierarchialArticle = sortedArticles[articleId]
+    if (!hierarchialArticle) return
+
+    const localizedSlugs = hierarchialArticle.children.map((child) => {
+      return child.properties['Slug'].url
+    })
+
+    console.log({ localizedSlugs })
+    throw new Error('Localized slugs not found')
+  })
+
   Promise.all(
     articles.map(async (article) => {
       const { properties: articleProperties } = article

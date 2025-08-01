@@ -19,3 +19,9 @@ export const getLocaleByPathname = (pathname: string): Locale | null => {
 
   return `${languageCode}-${countryOrLanguageCode.toUpperCase()}` as Locale
 }
+
+export const getLocale = (req: Request): Locale | null => {
+  const { headers } = req
+  const locale = headers.get('x-locale') || null
+  return locale as Locale
+}
