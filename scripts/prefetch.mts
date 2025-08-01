@@ -10,10 +10,11 @@ import {
 } from '../lib/notion/notion.client.mjs'
 import yaml from 'js-yaml'
 import { PageObjectResponse } from '@notionhq/client'
-import { TranslationsProperties } from '@/lib/notion/notion.types'
+import { ArticleProperties } from '@/lib/notion/notion.types'
 import { PlinyConfig } from 'pliny/config'
 
 type HierarchialListItem = {
+  id: string
   title: string
   properties: PageObjectResponse['properties']
   children: HierarchialListItem[]
@@ -68,9 +69,9 @@ export const sortedHierarchialList = (list: PageObjectResponse[]) => {
     // @ts-expect-error 'title'
     const title = properties['Name'].title[0].plain_text
     if (parentId) {
-      hierarchialList[parentId].children.push({ title, properties, children: [] })
+      hierarchialList[parentId].children.push({ id: item.id, title, properties, children: [] })
     } else {
-      hierarchialList[item.id] = { title, properties, children: [] }
+      hierarchialList[item.id] = { id: item.id, title, properties, children: [] }
     }
   })
   return hierarchialList
@@ -182,17 +183,22 @@ async function preContent() {
     const hierarchialArticle = sortedArticles[articleId]
     if (!hierarchialArticle) return
 
-    const localizedSlugs = hierarchialArticle.children.map((child) => {
-      return child.properties['Slug'].url
-    })
+    const allArticles = [hierarchialArticle, ...hierarchialArticle.children]
+
+    const localizedSlugs = Object.fromEntries(
+      allArticles.map((article) => {
+        // @ts-expect-error 'select'
+        const localeName = article.properties['Locale']?.select?.name
+        if (!localeName) return []
+        // @ts-expect-error 'url'
+        return [getLocaleByName(localeName), article.properties['Slug']?.url]
+      })
+    )
 
     console.log({ localizedSlugs })
-    throw new Error('Localized slugs not found')
-  })
 
-  Promise.all(
-    articles.map(async (article) => {
-      const { properties: articleProperties } = article
+    allArticles.forEach(async (article) => {
+      const articleProperties = article.properties as unknown as ArticleProperties
       const mdContent = await getPageMarkDownById(article.id)
 
       const title = articleProperties['Name'].title[0].plain_text
@@ -234,7 +240,7 @@ async function preContent() {
         bibliography: undefined,
         canonicalUrl: undefined,
         locale: getLocaleByName(localeName),
-        localizedSlugs: undefined,
+        localizedSlugs,
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
       const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
@@ -252,7 +258,7 @@ async function preContent() {
 
       await fs.writeFile(mdxFile, mdxContent)
     })
-  )
+  })
 
   // fetch all translations
   const translations = await getListOfAllTranslations()
