@@ -257,9 +257,9 @@ async function preContent() {
         Object.fromEntries([
           [getLocaleByName(defaultLocaleName), enText],
           ...locales.map((localeName: string) => {
-            // @ts-expect-error 'rich_text'
             return [
               getLocaleByName(localeName),
+              // @ts-expect-error 'rich_text'
               translation.properties[localeName].rich_text?.[0]?.plain_text,
             ]
           }),
