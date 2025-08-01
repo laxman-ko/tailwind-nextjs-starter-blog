@@ -63,6 +63,15 @@ export const sortedHierarchialList = (list: PageObjectResponse[]) => {
   return hierarchialList
 }
 
+export const localeFields = (locale: string) => {
+  // convert en-US to /us/en/
+  const localeSlugRaw = locale.toLowerCase().split('-').reverse().join('/')
+  return {
+    locale,
+    localeSlug: `/${localeSlugRaw}`,
+  }
+}
+
 async function preContent() {
   console.log('Prefetching of notion database started...')
 
@@ -123,7 +132,7 @@ async function preContent() {
         company: authorProperties['Company']?.rich_text?.[0]?.plain_text,
         email: authorProperties['Email'].email,
         tiktok: authorProperties['Tiktok'].url,
-        locale: authorProperties['Locale'].select?.name,
+        ...localeFields(authorProperties['Locale'].select?.name as string),
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
       const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
@@ -179,7 +188,7 @@ async function preContent() {
         layout: 'PostLayout',
         bibliography: undefined,
         canonicalUrl: undefined,
-        locale,
+        ...localeFields(locale),
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
       const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
@@ -230,8 +239,6 @@ async function preContent() {
     string,
     string | object
   >
-
-  settingsJson.translations = translationsData
 
   await fs.writeFile(
     SITE_METADATA_FILE,

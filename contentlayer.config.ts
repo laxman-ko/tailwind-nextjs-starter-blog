@@ -1,5 +1,10 @@
 import fs from 'fs/promises'
-import { defineDocumentType, ComputedFields, makeSource } from 'contentlayer2/source-files'
+import {
+  defineDocumentType,
+  ComputedFields,
+  makeSource,
+  FieldDefs,
+} from 'contentlayer2/source-files'
 import { writeFileSync } from 'fs'
 import readingTime from 'reading-time'
 import { slug } from 'github-slugger'
@@ -23,7 +28,7 @@ import rehypeKatexNoTranslate from 'rehype-katex-notranslate'
 import rehypeCitation from 'rehype-citation'
 import rehypePrismPlus from 'rehype-prism-plus'
 import rehypePresetMinify from 'rehype-preset-minify'
-import siteMetadata from './data/siteMetadata'
+import siteMetadata, { locale } from './data/siteMetadata'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
 import prettier from 'prettier'
 
