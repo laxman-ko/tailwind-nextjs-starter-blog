@@ -5,7 +5,11 @@ import PageTitle from '@/components/PageTitle'
 import { components } from '@/components/MDXComponents'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import { sortPosts, coreContent, allCoreContent } from 'pliny/utils/contentlayer'
-import { allBlogs, allAuthors } from 'contentlayer/generated'
+import {
+  getAllAuthorsByLocale,
+  getAllBlogsByLocale,
+  type NextPageProps,
+} from 'contentlayer/generated'
 import type { Authors, Blog } from 'contentlayer/generated'
 import PostSimple from '@/layouts/PostSimple'
 import PostLayout from '@/layouts/PostLayout'
@@ -21,11 +25,12 @@ const layouts = {
   PostBanner,
 }
 
-export async function generateMetadata(props: {
-  params: Promise<{ slug: string[] }>
-}): Promise<Metadata | undefined> {
+export async function generateMetadata(props: NextPageProps): Promise<Metadata | undefined> {
+  const allBlogs = await getAllBlogsByLocale(props)
+  const allAuthors = await getAllAuthorsByLocale(props)
+  const locale = (await props.searchParams).locale
   const params = await props.params
-  const slug = decodeURI(params.slug.join('/'))
+  const slug = decodeURI(params!.slug!.join('/'))
   const post = allBlogs.find((p) => p.slug === slug)
   const authorList = post?.authors || ['default']
   const authorDetails = authorList.map((author) => {
@@ -56,7 +61,7 @@ export async function generateMetadata(props: {
       title: post.title,
       description: post.summary,
       siteName: siteMetadata.title,
-      locale: 'en_US',
+      locale: locale.replace('-', '_'),
       type: 'article',
       publishedTime: publishedAt,
       modifiedTime: modifiedAt,
@@ -73,14 +78,18 @@ export async function generateMetadata(props: {
   }
 }
 
-export const generateStaticParams = async () => {
+export const generateStaticParams = async (props: NextPageProps) => {
+  const allBlogs = await getAllBlogsByLocale(props)
   return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
 }
 
-export default async function Page(props: { params: Promise<{ slug: string[] }> }) {
+export default async function Page(props: NextPageProps) {
   const params = await props.params
-  const slug = decodeURI(params.slug.join('/'))
+  // slug exists
+  const slug = decodeURI(params!.slug!.join('/'))
   // Filter out drafts in production
+  const allBlogs = await getAllBlogsByLocale(props)
+  const allAuthors = await getAllAuthorsByLocale(props)
   const sortedCoreContents = allCoreContent(sortPosts(allBlogs))
   const postIndex = sortedCoreContents.findIndex((p) => p.slug === slug)
   if (postIndex === -1) {

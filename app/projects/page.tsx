@@ -1,11 +1,16 @@
 import projectsData from '@/data/projectsData'
 import Card from '@/components/Card'
 import { genPageMetadata } from 'app/seo'
-import { _t } from '@/lib/translations/translations.utils'
+import { type NextPageProps, translate } from 'contentlayer/generated'
 
-export const metadata = genPageMetadata({ title: _t('Projects') })
+export const generateMetadata = async (props: NextPageProps) => {
+  const _t = await translate(props)
+  const locale = (await props.searchParams).locale
+  return genPageMetadata({ title: _t('Projects'), locale })
+}
 
-export default function Projects() {
+export default async function Projects(props: NextPageProps) {
+  const _t = await translate(props)
   return (
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">

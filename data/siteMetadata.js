@@ -1,4 +1,4 @@
-/** @type {import("pliny/config").PlinyConfig } */
+/** @type {import("pliny/config").PlinyConfig & { locales: {"en":"English","ne":"Nepali"}} */
 const siteMetadata = {
   title: 'लक्ष्मणको अक्षरहरू',
   author: 'लक्ष्मण शिवाकोटी',
@@ -17,10 +17,25 @@ const siteMetadata = {
   youtube: 'https://youtube.com/@laxman_ko',
   tiktok: 'https://tiktok.com/@laxman_ko',
   stickyNav: false,
-  analytics: { googleAnalytics: { googleAnalyticsId: 'G-CLPM8DXYKY' } },
-  newsletter: { provider: '' },
+  analytics: {
+    googleAnalytics: {
+      googleAnalyticsId: 'G-CLPM8DXYKY',
+    },
+  },
+  newsletter: {
+    provider: '',
+  },
   comments: {},
-  search: { provider: 'kbar', kbarConfig: { searchDocumentsPath: '/search.json' } },
-  locales: { en: 'English', ne: 'Nepali' },
+  search: {
+    provider: 'kbar',
+    kbarConfig: {
+      searchDocumentsPath: '/search.json',
+    },
+  },
+  locales: {
+    en: 'English',
+    ne: 'Nepali',
+  },
 }
+
 module.exports = siteMetadata

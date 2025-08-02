@@ -3,15 +3,22 @@ import Tag from '@/components/Tag'
 import { slug } from 'github-slugger'
 import tagData from 'app/tag-data.json'
 import { genPageMetadata } from 'app/seo'
-import { _t } from '@/lib/translations/translations.utils'
+import { type NextPageProps, translate } from 'contentlayer/generated'
 
-export const metadata = genPageMetadata({
-  title: _t('Tags'),
-  description: _t('Things I blog about'),
-})
+export async function generateMetadata(props: NextPageProps) {
+  const _t = await translate(props)
+  const locale = (await props.searchParams).locale
+  return genPageMetadata({
+    title: _t('Tags'),
+    description: _t('Things I blog about'),
+    locale,
+  })
+}
 
-export default async function Page() {
-  const tagCounts = tagData as Record<string, number>
+export default async function Page(props: NextPageProps) {
+  const _t = await translate(props)
+  const locale = (await props.searchParams).locale
+  const tagCounts = tagData[locale] as Record<string, number>
   const tagKeys = Object.keys(tagCounts)
   const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a])
   return (

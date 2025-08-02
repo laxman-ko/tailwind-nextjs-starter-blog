@@ -1,7 +1,8 @@
 import Link from '@/components/Link'
-import { _t } from '@/lib/translations/translations.utils'
+import { type NextPageProps, translate } from 'contentlayer/generated'
 
-export default function NotFound() {
+export default async function NotFound(props: NextPageProps) {
+  const _t = await translate(props)
   return (
     <div className="flex flex-col items-start justify-start md:mt-24 md:flex-row md:items-center md:justify-center md:space-x-6">
       <div className="space-x-2 pt-6 pb-8 md:space-y-5">

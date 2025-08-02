@@ -93,7 +93,6 @@ async function preContent() {
   const FOOTER_NAV_LINKS_FILE = `${root}/data/footerNavLinks.ts`
 
   const TRASNSLATIONS_TEXT_FILE = `${root}/data/translations.json`
-  const TYPES_FILE = `${root}/data/types.ts`
 
   for (const dir of [ARTICLES_DIR, AUTHORS_DIR]) {
     try {
@@ -121,9 +120,10 @@ async function preContent() {
   await fs.writeFile(
     SITE_METADATA_FILE,
     `
-    /** @type {import("pliny/config").PlinyConfig } */
-    const siteMetadata = ${JSON.stringify(siteMetadata)}
-    module.exports = siteMetadata;
+/** @type {import("pliny/config").PlinyConfig & { locales: ${JSON.stringify(siteMetadata.locales)}} */
+const siteMetadata = ${JSON.stringify(siteMetadata, null, 2)}
+
+module.exports = siteMetadata
     `
   )
 
@@ -341,8 +341,6 @@ async function preContent() {
   const footerNavLinks = ${JSON.stringify(hierarchialNavigationList['Footer'])}
   export default footerNavLinks`
   )
-
-  await fs.writeFile(TYPES_FILE, `export type Locale = 'en' | 'ne-NP' | 'en-US'`)
 
   console.log('Prefetching of notion database completed')
 }
