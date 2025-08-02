@@ -120,16 +120,16 @@ export const getListOfAllTranslations = async (): Promise<Translations[]> => {
   return pages as Translations[]
 }
 
-export const getSettings = async (): Promise<Settings> => {
+export const getSettings = async (): Promise<Settings[]> => {
   const settingsDabaseId = listOfChildDatabases.find(
     (item: ChildDatabase) => item.title === 'Settings'
   )?.id
 
   if (!settingsDabaseId) throw new Error('Settings database not found')
 
-  const blockList = await getListofAllPageBlocks(settingsDabaseId)
+  const settingItems = await getListOfAllDatabaseItems({ database_id: settingsDabaseId })
 
-  return blockList
+  return settingItems as Settings[]
 }
 
 export const getListOfAllNavigations = async (): Promise<Navigation[]> => {

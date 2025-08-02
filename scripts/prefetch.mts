@@ -21,15 +21,16 @@ type HierarchialListItem = {
 }
 
 let siteMetadata = {} as PlinyConfig & { locales: Record<string, string> }
+let defaultLocale = '' as 'en' | 'ne'
 
 export const getLocaleByName = (language: string): string => {
-  return Object.keys(siteMetadata.locales).find(
-    (locale: string) => siteMetadata.locales[locale] === language
+  return Object.keys(siteMetadata[defaultLocale].locales).find(
+    (locale: string) => siteMetadata[defaultLocale].locales[locale] === language
   ) as string
 }
 
 export const getLocaleName = (locale: string): string => {
-  return siteMetadata.locales[locale]
+  return siteMetadata[defaultLocale].locales[locale]
 }
 
 export const downloadAsset = async (
@@ -107,33 +108,40 @@ async function preContent() {
 
   // fetch all settings
   const settings = await getSettings()
-  const jsonCode = settings.find((setting) => setting.type === 'code')?.code
-  if (!jsonCode) throw new Error('JSON code not found')
+  if (settings.length === 0) throw new Error('Settings not found')
 
-  const settingsJson = JSON.parse(jsonCode?.rich_text[0].plain_text as string) as Record<
-    string,
-    string | object
-  >
+  const locales = Object.keys(settings[0].properties).filter((key) => key !== 'Name')
+  defaultLocale = 'en'
 
-  siteMetadata = settingsJson as PlinyConfig & { locales: Record<string, string> }
+  const settingsJson = {} as Record<string, Record<string, string | object>>
+
+  settings.forEach((setting) => {
+    const settingName = setting.properties.Name.title[0].plain_text
+    const enValue = setting.properties[defaultLocale].rich_text?.[0].plain_text
+
+    locales.forEach((locale) => {
+      if (!settingsJson[locale]) settingsJson[locale] = {}
+      // @ts-expect-error 'rich_text'
+      const value = setting.properties[locale].rich_text?.[0]?.plain_text || enValue
+      try {
+        settingsJson[locale][settingName] = JSON.parse(value)
+      } catch (error) {
+        settingsJson[locale][settingName] = value
+      }
+    })
+  })
+
+  siteMetadata = settingsJson as typeof siteMetadata
 
   await fs.writeFile(
     SITE_METADATA_FILE,
     `
-/** @type {import("pliny/config").PlinyConfig & { locales: ${JSON.stringify(siteMetadata.locales)}} */
+/** @type {{ [locale: string]: import("pliny/config").PlinyConfig & { locales: ${JSON.stringify(settingsJson[defaultLocale].locales)}} */
 const siteMetadata = ${JSON.stringify(siteMetadata, null, 2)}
 
 module.exports = siteMetadata
     `
   )
-
-  const logoImage = settings.find((setting) => setting.type === 'image')?.image
-  if (!logoImage) throw new Error('Logo not found')
-  // @ts-expect-error 'file'
-  const logo = logoImage?.caption[0].plain_text === 'Logo' ? logoImage?.file.url : ''
-
-  // download content of logo file and save to LOGO_FILE
-  await downloadAsset(logo, `${root}/data/logo`, root)
 
   const authors: Record<string, string> = {}
 

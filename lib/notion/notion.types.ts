@@ -320,7 +320,75 @@ export type Translations = PageObjectResponse & {
   properties: TranslationsProperties
 }
 
-export type Settings = BlockObjectResponse[]
+export type SettingsProperties = {
+  Name: {
+    id: string
+    type: 'title'
+    title: Array<{
+      type: 'text'
+      text: {
+        content: string
+        link: string | null
+      }
+      annotations: {
+        bold: boolean
+        italic: boolean
+        strikethrough: boolean
+        underline: boolean
+        code: boolean
+        color: string
+      }
+      plain_text: string
+      href: string | null
+    }>
+  }
+  en: {
+    id: string
+    type: 'rich_text'
+    rich_text: Array<{
+      type: 'text'
+      text: {
+        content: string
+        link: string | null
+      }
+      annotations: {
+        bold: boolean
+        italic: boolean
+        strikethrough: boolean
+        underline: boolean
+        code: boolean
+        color: string
+      }
+      plain_text: string
+      href: string | null
+    }>
+  }
+  ne: {
+    id: string
+    type: 'rich_text'
+    rich_text: Array<{
+      type: 'text'
+      text: {
+        content: string
+        link: string | null
+      }
+      annotations: {
+        bold: boolean
+        italic: boolean
+        strikethrough: boolean
+        underline: boolean
+        code: boolean
+        color: string
+      }
+      plain_text: string
+      href: string | null
+    }>
+  }
+}
+
+export type Settings = PageObjectResponse & {
+  properties: SettingsProperties
+}
 
 export type NavigationProperties = {
   Name: {

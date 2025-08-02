@@ -6,8 +6,8 @@ import translationsText from '@/data/translations.json'
 import siteMetadata from '@/data/siteMetadata'
 
 export const LOCALES = siteMetadata.locales
-
 export const LANGUAGE_COUNTRY_MATCH_REGEX = /^\/([a-z]{2})(?:\/([a-z]{2}))?(?=\/|$)/
+export const LOCALE_HEADER = 'x-locale'
 
 export type Locale = keyof typeof LOCALES
 export type LocaleName = (typeof LOCALES)[Locale]
@@ -55,7 +55,7 @@ export const getAllAuthorsByLocale = async (props: NextPageProps): Promise<Autho
   return getAllContentByLocale(allAuthors as Authors[], locale) as Authors[]
 }
 
-type TranslateFn = (text: TranslationTextKey, ...args: (string | number)[]) => string
+type TranslateFn = (text: keyof typeof translationsText, ...args: (string | number)[]) => string
 
 export const translate = (locale: Locale) => {
   const translateFn: TranslateFn = (text, ...args) => {
