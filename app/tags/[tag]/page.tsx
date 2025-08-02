@@ -6,7 +6,6 @@ import { allBlogs } from 'contentlayer/generated'
 import tagData from 'app/tag-data.json'
 import { genPageMetadata } from 'app/seo'
 import { Metadata } from 'next'
-import { _t } from '@/lib/translations/translations.utils'
 
 const POSTS_PER_PAGE = 5
 
@@ -17,7 +16,7 @@ export async function generateMetadata(props: {
   const tag = decodeURI(params.tag)
   return genPageMetadata({
     title: tag,
-    description: `${siteMetadata.title} ${tag} ${_t('tagged content')}`,
+    description: `${siteMetadata.title} ${tag} tagged content`,
     alternates: {
       canonical: './',
       types: {

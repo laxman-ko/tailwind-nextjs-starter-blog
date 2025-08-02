@@ -1,23 +1,12 @@
-import {
-  Authors,
-  type NextPageProps,
-  allAuthors,
-  getAllAuthorsByLocale,
-  translate,
-} from 'contentlayer/generated'
+import { Authors, allAuthors } from 'contentlayer/generated'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import AuthorLayout from '@/layouts/AuthorLayout'
 import { coreContent } from 'pliny/utils/contentlayer'
 import { genPageMetadata } from 'app/seo'
 
-export async function generateMetadata(props: NextPageProps) {
-  const locale = (await props.searchParams).locale
-  const _t = await translate(props)
-  return genPageMetadata({ title: _t('About'), locale })
-}
+export const metadata = genPageMetadata({ title: 'About' })
 
-export default async function Page(props: NextPageProps) {
-  const allAuthors = await getAllAuthorsByLocale(props)
+export default function Page() {
   const author = allAuthors.find((p) => p.slug === 'default') as Authors
   const mainContent = coreContent(author)
 

@@ -8,7 +8,6 @@ import type { Blog } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
-import { _t } from '@/lib/translations/translations.utils'
 
 interface PaginationProps {
   totalPages: number
@@ -91,12 +90,12 @@ export default function ListLayout({
           </h1>
           <div className="relative max-w-lg">
             <label>
-              <span className="sr-only">{_t('Search articles')}</span>
+              <span className="sr-only">Search articles</span>
               <input
-                aria-label={_t('Search articles')}
+                aria-label="Search articles"
                 type="text"
                 onChange={(e) => setSearchValue(e.target.value)}
-                placeholder={_t('Search articles')}
+                placeholder="Search articles"
                 className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-900 dark:border-gray-900 dark:bg-gray-800 dark:text-gray-100"
               />
             </label>
@@ -117,7 +116,7 @@ export default function ListLayout({
           </div>
         </div>
         <ul>
-          {!filteredBlogPosts.length && _t('No posts found.')}
+          {!filteredBlogPosts.length && 'No posts found.'}
           {displayPosts.map((post) => {
             const { path, date, title, summary, tags } = post
             return (

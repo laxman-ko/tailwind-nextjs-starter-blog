@@ -1,24 +1,21 @@
 import ListLayout from '@/layouts/ListLayoutWithTags'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
-import { type NextPageProps, getAllBlogsByLocale, translate } from 'contentlayer/generated'
+import { allBlogs } from 'contentlayer/generated'
 import { notFound } from 'next/navigation'
+
 const POSTS_PER_PAGE = 5
 
-export const generateStaticParams = async (props: NextPageProps) => {
-  const allBlogs = await getAllBlogsByLocale(props)
+export const generateStaticParams = async () => {
   const totalPages = Math.ceil(allBlogs.length / POSTS_PER_PAGE)
   const paths = Array.from({ length: totalPages }, (_, i) => ({ page: (i + 1).toString() }))
 
   return paths
 }
 
-export default async function Page(props: NextPageProps) {
-  const allBlogs = await getAllBlogsByLocale(props)
-  const _t = await translate(props)
+export default async function Page(props: { params: Promise<{ page: string }> }) {
   const params = await props.params
   const posts = allCoreContent(sortPosts(allBlogs))
-  // page exists
-  const pageNumber = parseInt(params!.page as string)
+  const pageNumber = parseInt(params.page as string)
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE)
 
   // Return 404 for invalid page numbers or empty pages
@@ -39,7 +36,7 @@ export default async function Page(props: NextPageProps) {
       posts={posts}
       initialDisplayPosts={initialDisplayPosts}
       pagination={pagination}
-      title={_t('All Posts')}
+      title="All Posts"
     />
   )
 }

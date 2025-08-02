@@ -2,7 +2,6 @@ import { ReactNode } from 'react'
 import type { Authors } from 'contentlayer/generated'
 import SocialIcon from '@/components/social-icons'
 import Image from '@/components/Image'
-import { _t } from '@/lib/translations/translations.utils'
 
 interface Props {
   children: ReactNode
@@ -10,15 +9,14 @@ interface Props {
 }
 
 export default function AuthorLayout({ children, content }: Props) {
-  const { name, avatar, occupation, company, email, twitter, bluesky, linkedin, github, tiktok } =
-    content
+  const { name, avatar, occupation, company, email, twitter, bluesky, linkedin, github } = content
 
   return (
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         <div className="space-y-2 pt-6 pb-8 md:space-y-5">
           <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
-            {_t('About')}
+            About
           </h1>
         </div>
         <div className="items-start space-y-2 xl:grid xl:grid-cols-3 xl:space-y-0 xl:gap-x-8">
@@ -41,7 +39,6 @@ export default function AuthorLayout({ children, content }: Props) {
               <SocialIcon kind="linkedin" href={linkedin} />
               <SocialIcon kind="x" href={twitter} />
               <SocialIcon kind="bluesky" href={bluesky} />
-              <SocialIcon kind="tiktok" href={tiktok} />
             </div>
           </div>
           <div className="prose dark:prose-invert max-w-none pt-8 pb-8 xl:col-span-2">

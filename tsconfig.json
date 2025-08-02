@@ -22,7 +22,7 @@
       "@/layouts/*": ["layouts/*"],
       "@/css/*": ["css/*"],
       "@/lib/*": ["lib/*"],
-      "contentlayer/generated": ["lib/contentlayer/contentlayer.utils"],
+      "contentlayer/generated": ["contentlayer.utils"],
       "pliny/*": ["node_modules/pliny/*"]
     },
     "plugins": [
@@ -45,7 +45,8 @@
     "scripts/prefetch.mts",
     "lib/notion/notion.client.mts",
     "lib/i18n/i18n.locales.mts",
-    "lib/i18n/i18n.utils.ts"
+    "lib/i18n/i18n.utils.ts",
+    "contentlayer.utils.ts"
   ],
   "exclude": ["node_modules"]
 }

@@ -11,7 +11,6 @@ import {
   Instagram,
   Medium,
   Bluesky,
-  Tiktok,
 } from './icons'
 
 const components = {
@@ -27,7 +26,6 @@ const components = {
   instagram: Instagram,
   medium: Medium,
   bluesky: Bluesky,
-  tiktok: Tiktok,
 }
 
 type SocialIconProps = {

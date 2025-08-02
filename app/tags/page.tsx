@@ -3,22 +3,11 @@ import Tag from '@/components/Tag'
 import { slug } from 'github-slugger'
 import tagData from 'app/tag-data.json'
 import { genPageMetadata } from 'app/seo'
-import { type NextPageProps, translate } from 'contentlayer/generated'
 
-export async function generateMetadata(props: NextPageProps) {
-  const _t = await translate(props)
-  const locale = (await props.searchParams).locale
-  return genPageMetadata({
-    title: _t('Tags'),
-    description: _t('Things I blog about'),
-    locale,
-  })
-}
+export const metadata = genPageMetadata({ title: 'Tags', description: 'Things I blog about' })
 
-export default async function Page(props: NextPageProps) {
-  const _t = await translate(props)
-  const locale = (await props.searchParams).locale
-  const tagCounts = tagData[locale] as Record<string, number>
+export default async function Page() {
+  const tagCounts = tagData as Record<string, number>
   const tagKeys = Object.keys(tagCounts)
   const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a])
   return (
@@ -38,7 +27,7 @@ export default async function Page(props: NextPageProps) {
                 <Link
                   href={`/tags/${slug(t)}`}
                   className="-ml-2 text-sm font-semibold text-gray-600 uppercase dark:text-gray-300"
-                  aria-label={_t(`View posts tagged %%`, t)}
+                  aria-label={`View posts tagged ${t}`}
                 >
                   {` (${tagCounts[t]})`}
                 </Link>

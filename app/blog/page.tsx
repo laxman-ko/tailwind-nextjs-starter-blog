@@ -1,19 +1,13 @@
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
-import { type NextPageProps, getAllBlogsByLocale, translate } from 'contentlayer/generated'
+import { allBlogs } from 'contentlayer/generated'
 import { genPageMetadata } from 'app/seo'
 import ListLayout from '@/layouts/ListLayoutWithTags'
 
 const POSTS_PER_PAGE = 5
 
-export const generateMetadata = async (props: NextPageProps) => {
-  const _t = await translate(props)
-  const locale = (await props.searchParams).locale
-  return genPageMetadata({ title: _t('Blog'), locale })
-}
+export const metadata = genPageMetadata({ title: 'Blog' })
 
-export default async function BlogPage(props: NextPageProps) {
-  const allBlogs = await getAllBlogsByLocale(props)
-  const _t = await translate(props)
+export default async function BlogPage(props: { searchParams: Promise<{ page: string }> }) {
   const posts = allCoreContent(sortPosts(allBlogs))
   const pageNumber = 1
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE)
@@ -28,7 +22,7 @@ export default async function BlogPage(props: NextPageProps) {
       posts={posts}
       initialDisplayPosts={initialDisplayPosts}
       pagination={pagination}
-      title={_t('All Posts')}
+      title="All Posts"
     />
   )
 }

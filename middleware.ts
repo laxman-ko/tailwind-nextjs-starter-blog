@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { getLocaleByPathname, LANGUAGE_COUNTRY_MATCH_REGEX } from '@/lib/i18n/i18n.utils'
+
 import siteMetadata from '@/data/siteMetadata'
+import { getLocaleByPathname, LANGUAGE_COUNTRY_MATCH_REGEX } from 'contentlayer/generated'
 
 export function middleware(request: NextRequest) {
   const { nextUrl } = request
@@ -21,7 +22,10 @@ export function middleware(request: NextRequest) {
   nextUrl.pathname = pathname.replace(LANGUAGE_COUNTRY_MATCH_REGEX, '')
 
   nextUrl.searchParams.set('locale', locale)
+
   const response = NextResponse.rewrite(nextUrl)
+
+  response.headers.set('x-locale', locale)
 
   return response
 }
