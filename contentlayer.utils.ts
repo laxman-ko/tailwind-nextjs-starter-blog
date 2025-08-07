@@ -80,7 +80,7 @@ const getSiteMetadata = async (): Promise<LocalizedSiteMetadata> => {
   return siteMetadata[locale]
 }
 
-export { allBlogs, allAuthors } from '.contentlayer/generated'
+// export { allBlogs, allAuthors } from '.contentlayer/generated'
 export type { Blog, Authors } from '.contentlayer/generated'
 
 export {
