@@ -21,11 +21,11 @@ export function middleware(request: NextRequest) {
     nextUrl.pathname = pathname.replace(LANGUAGE_COUNTRY_MATCH_REGEX, '')
   }
 
-  nextUrl.searchParams.set('locale', locale || siteMetadata.locale)
+  nextUrl.searchParams.set('locale', locale || siteMetadata.en.locale)
 
   const response = NextResponse.rewrite(nextUrl)
 
-  response.headers.set(LOCALE_HEADER, locale || siteMetadata.locale)
+  response.headers.set(LOCALE_HEADER, locale || siteMetadata.en.locale)
 
   return response
 }

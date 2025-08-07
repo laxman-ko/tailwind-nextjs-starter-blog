@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import siteMetadata from '@/data/siteMetadata'
-import { headers } from 'next/headers'
 
 interface PageSEOProps {
   title: string
@@ -10,13 +9,7 @@ interface PageSEOProps {
   [key: string]: any
 }
 
-export async function genPageMetadata({
-  title,
-  description,
-  image,
-  ...rest
-}: PageSEOProps): Promise<Metadata> {
-  const locale = (await headers()).get('x-locale')
+export function genPageMetadata({ title, description, image, ...rest }: PageSEOProps): Metadata {
   return {
     title,
     description: description || siteMetadata.description,
@@ -26,7 +19,7 @@ export async function genPageMetadata({
       url: './',
       siteName: siteMetadata.title,
       images: image ? [image] : [siteMetadata.socialBanner],
-      locale: locale?.replace('-', '_'),
+      locale: 'en_US',
       type: 'website',
     },
     twitter: {
