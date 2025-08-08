@@ -6,7 +6,10 @@ import { headers } from 'next/headers'
 import tagData from 'app/tag-data.json'
 import siteMetadata from '@/data/siteMetadata'
 
-const LOCALES = siteMetadata.locales
+const LOCALES = {
+  en: 'en',
+  ne: 'ne',
+}
 const LANGUAGE_COUNTRY_MATCH_REGEX = /^\/([a-z]{2})(?:\/([a-z]{2}))?(?=\/|$)/
 const LOCALE_HEADER = 'x-locale'
 
@@ -18,7 +21,7 @@ type SiteMetadata = (typeof siteMetadata)[Locale]
 const getCurrentLocale = async (): Promise<Locale> => {
   const locale = (await headers()).get(LOCALE_HEADER)
   if (!locale || !isValidLocale(locale)) throw new Error('Invalid locale page request:' + locale)
-  return locale
+  return locale as Locale
 }
 
 const isValidLocale = (locale: string): boolean => {
@@ -38,7 +41,7 @@ const getLocaleByPathname = (pathname: string): Locale | 400 | null => {
 
   if (!isValidLocale(locale)) return 400
 
-  return locale
+  return locale as Locale
 }
 
 const getAllContentByLocale = (content: DocumentTypes[], locale: Locale) => {
