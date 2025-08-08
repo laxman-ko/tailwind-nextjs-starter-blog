@@ -13,7 +13,7 @@ const LOCALE_HEADER = 'x-locale'
 type Locale = keyof typeof LOCALES
 type LocaleName = (typeof LOCALES)[Locale]
 
-type LocalizedSiteMetadata = typeof siteMetadata
+type SiteMetadata = (typeof siteMetadata)[Locale]
 
 const getCurrentLocale = async (): Promise<Locale> => {
   const locale = (await headers()).get(LOCALE_HEADER)
@@ -75,7 +75,7 @@ const getTranslationPage = async (): Promise<TranslateFn> => {
   return getTranslation(locale)
 }
 
-const getSiteMetadata = async (): Promise<LocalizedSiteMetadata> => {
+const getSiteMetadata = async (): Promise<SiteMetadata> => {
   const locale = await getCurrentLocale()
   return siteMetadata[locale]
 }

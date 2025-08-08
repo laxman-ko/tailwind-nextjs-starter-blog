@@ -23,14 +23,17 @@ type HierarchialListItem = {
 let siteMetadata = {} as PlinyConfig & { locales: Record<string, string> }
 let defaultLocale = '' as 'en' | 'ne'
 
+const locales = {
+  en: 'English',
+  ne: 'Nepali',
+} as Record<string, string>
+
 export const getLocaleByName = (language: string): string => {
-  return Object.keys(siteMetadata[defaultLocale].locales).find(
-    (locale: string) => siteMetadata[defaultLocale].locales[locale] === language
-  ) as string
+  return Object.keys(locales).find((locale: string) => locales[locale] === language) as string
 }
 
 export const getLocaleName = (locale: string): string => {
-  return siteMetadata[defaultLocale].locales[locale]
+  return locales[locale]
 }
 
 export const downloadAsset = async (
@@ -120,7 +123,10 @@ async function preContent() {
     const enValue = setting.properties[defaultLocale].rich_text?.[0].plain_text
 
     locales.forEach((locale) => {
-      if (!settingsJson[locale]) settingsJson[locale] = {}
+      if (!settingsJson[locale])
+        settingsJson[locale] = {
+          locale,
+        }
       // @ts-expect-error 'rich_text'
       const value = setting.properties[locale].rich_text?.[0]?.plain_text || enValue
       try {

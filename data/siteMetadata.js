@@ -1,13 +1,13 @@
-/** @type {{ [locale: string]: import("pliny/config").PlinyConfig & { locales: {"en":"English","ne":"Nepali"}} */
+/** @type {{ [locale: string]: import("pliny/config").PlinyConfig & { locales: undefined} */
 const siteMetadata = {
   en: {
-    title: "Laxman's Letters",
+    locale: 'en',
+    title: 'Laxman ko Aksharharu',
     author: 'Laxman Siwakoti',
     headerTitle: '',
     description:
       "A thinker, questioner and curious - Laxman's letters filled with thoughts, curiosity and inspirations",
-    language: 'ne',
-    locale: 'ne',
+    language: 'en',
     theme: 'system',
     siteUrl: 'https://akshar.laxmanko.com',
     siteRepo: 'https://github.com/laxmanko/akshar',
@@ -31,19 +31,15 @@ const siteMetadata = {
         searchDocumentsPath: '/search.json',
       },
     },
-    locales: {
-      en: 'English',
-      ne: 'Nepali',
-    },
   },
   ne: {
+    locale: 'ne',
     title: 'लक्ष्मणको अक्षरहरू',
     author: 'लक्ष्मण शिवाकोटी',
     headerTitle: '',
     description:
       'एक विचारक, प्रश्नकर्ता अनि जिज्ञासु - लक्ष्मणका विचार, जिज्ञासा र प्रेरणाले भरिएको अक्षरहरू',
     language: 'ne',
-    locale: 'ne',
     theme: 'system',
     siteUrl: 'https://akshar.laxmanko.com',
     siteRepo: 'https://github.com/laxmanko/akshar',
@@ -66,10 +62,6 @@ const siteMetadata = {
       kbarConfig: {
         searchDocumentsPath: '/search.json',
       },
-    },
-    locales: {
-      en: 'English',
-      ne: 'Nepali',
     },
   },
 }
