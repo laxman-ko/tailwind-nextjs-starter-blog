@@ -1,9 +1,10 @@
 'use client'
 
 import { ThemeProvider } from 'next-themes'
-import siteMetadata from '@/data/siteMetadata'
+import { getSiteMetadata } from 'contentlayer/generated'
 
-export function ThemeProviders({ children }: { children: React.ReactNode }) {
+export async function ThemeProviders({ children }: { children: React.ReactNode }) {
+  const siteMetadata = await getSiteMetadata()
   return (
     <ThemeProvider attribute="class" defaultTheme={siteMetadata.theme} enableSystem>
       {children}

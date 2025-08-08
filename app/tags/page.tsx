@@ -1,15 +1,16 @@
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import { slug } from 'github-slugger'
-import tagData from 'app/tag-data.json'
 import { genPageMetadata } from 'app/seo'
-import { getTranslationPage } from 'contentlayer/generated'
+import { getTranslationPage, getAllTags } from 'contentlayer/generated'
 
-export const metadata = genPageMetadata({ title: 'Tags', description: 'Things I blog about' })
+export async function generateMetadata() {
+  return genPageMetadata({ title: 'Tags', description: 'Things I blog about' })
+}
 
 export default async function Page() {
   const _t = await getTranslationPage()
-  const tagCounts = tagData as Record<string, number>
+  const tagCounts = await getAllTags()
   const tagKeys = Object.keys(tagCounts)
   const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a])
   return (
@@ -28,7 +29,7 @@ export default async function Page() {
                   <Link
                     href={`/tags/${slug(t)}`}
                     className="-ml-2 text-sm font-semibold text-gray-600 uppercase dark:text-gray-300"
-                    aria-label={_t(`View posts tagged ${t}`)}
+                    aria-label={_t(`View posts tagged %%`, t)}
                   >
                     {` (${tagCounts[t]})`}
                   </Link>

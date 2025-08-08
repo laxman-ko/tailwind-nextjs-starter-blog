@@ -1,21 +1,23 @@
 import projectsData from '@/data/projectsData'
 import Card from '@/components/Card'
 import { genPageMetadata } from 'app/seo'
+import { getTranslationPage } from 'contentlayer/generated'
 
 export async function generateMetadata() {
   return genPageMetadata({ title: 'Projects' })
 }
 
-export default function Projects() {
+export default async function Projects() {
+  const _t = await getTranslationPage()
   return (
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         <div className="space-y-2 pt-6 pb-8 md:space-y-5">
           <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
-            Projects
+            {_t('Projects')}
           </h1>
           <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
-            Showcase your projects with a hero image (16 x 9)
+            {_t('Showcase your projects with a hero image (16 x 9)')}
           </p>
         </div>
         <div className="container py-12">

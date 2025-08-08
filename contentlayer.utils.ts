@@ -3,7 +3,7 @@ import { allBlogs, allAuthors } from '.contentlayer/generated'
 import type { Blog, Authors } from '.contentlayer/generated'
 import translationsText from '@/data/translations.json'
 import { headers } from 'next/headers'
-
+import tagData from 'app/tag-data.json'
 import siteMetadata from '@/data/siteMetadata'
 
 const LOCALES = siteMetadata.locales
@@ -55,10 +55,20 @@ const getAllAuthors = async (): Promise<Authors[]> => {
   return getAllContentByLocale(allAuthors as Authors[], locale) as Authors[]
 }
 
-type TranslateFn = (text: keyof typeof translationsText, ...args: (string | number)[]) => string
+const getAllTags = async (): Promise<Record<string, number>> => {
+  const locale = await getCurrentLocale()
+  return tagData[locale]
+}
 
-const getTranslation = (locale: Locale) => {
-  const translateFn: TranslateFn = (text, ...args) => {
+const getAllTagsByLocale = (locale: Locale): Record<string, number> => {
+  return tagData[locale]
+}
+
+type TranslationText = keyof typeof translationsText
+type TranslationFn = (text: TranslationText, ...args: (string | number)[]) => string
+
+const getTranslationByLocale = (locale: Locale) => {
+  const translateFn: TranslationFn = (text, ...args) => {
     const template = translationsText[text][locale] || text
 
     let i = 0
@@ -70,13 +80,17 @@ const getTranslation = (locale: Locale) => {
   return translateFn
 }
 
-const getTranslationPage = async (): Promise<TranslateFn> => {
+const getTranslationPage = async (): Promise<TranslationFn> => {
   const locale = await getCurrentLocale()
-  return getTranslation(locale)
+  return getTranslationByLocale(locale)
 }
 
 const getSiteMetadata = async (): Promise<SiteMetadata> => {
   const locale = await getCurrentLocale()
+  return siteMetadata[locale]
+}
+
+const getSiteMetadataByLocale = (locale: Locale): SiteMetadata => {
   return siteMetadata[locale]
 }
 
@@ -87,9 +101,13 @@ export {
   getLocaleByPathname,
   getAllBlogs,
   getAllAuthors,
-  getTranslation,
+  getAllTags,
+  getAllTagsByLocale,
+  getTranslationByLocale,
   getTranslationPage,
+  getCurrentLocale,
   getSiteMetadata,
+  getSiteMetadataByLocale,
 }
 
-export type { Locale, LocaleName, TranslateFn }
+export type { Locale, LocaleName, TranslationFn, TranslationText }

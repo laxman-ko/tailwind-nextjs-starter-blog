@@ -1,23 +1,26 @@
 import { ReactNode } from 'react'
 import { formatDate } from 'pliny/utils/formatDate'
 import { CoreContent } from 'pliny/utils/contentlayer'
-import type { Blog } from 'contentlayer/generated'
+import type { Blog, Locale } from 'contentlayer/generated'
 import Comments from '@/components/Comments'
 import Link from '@/components/Link'
 import PageTitle from '@/components/PageTitle'
 import SectionContainer from '@/components/SectionContainer'
-import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
+import { getTranslationByLocale, getSiteMetadataByLocale } from 'contentlayer/generated'
 
 interface LayoutProps {
   content: CoreContent<Blog>
   children: ReactNode
   next?: { path: string; title: string }
   prev?: { path: string; title: string }
+  locale: Locale
 }
 
-export default function PostLayout({ content, next, prev, children }: LayoutProps) {
+export default function PostLayout({ content, next, prev, children, locale }: LayoutProps) {
   const { path, slug, date, title } = content
+  const _t = getTranslationByLocale(locale)
+  const siteMetadata = getSiteMetadataByLocale(locale)
 
   return (
     <SectionContainer>
@@ -28,7 +31,7 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
             <div className="space-y-1 border-b border-gray-200 pb-10 text-center dark:border-gray-700">
               <dl>
                 <div>
-                  <dt className="sr-only">Published on</dt>
+                  <dt className="sr-only">{_t('Published on')}</dt>
                   <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
                     <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
                   </dd>
@@ -55,7 +58,7 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
                     <Link
                       href={`/${prev.path}`}
                       className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                      aria-label={`Previous post: ${prev.title}`}
+                      aria-label={`${_t('Previous post')}: ${prev.title}`}
                     >
                       &larr; {prev.title}
                     </Link>
@@ -66,7 +69,7 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
                     <Link
                       href={`/${next.path}`}
                       className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                      aria-label={`Next post: ${next.title}`}
+                      aria-label={`${_t('Next post')}: ${next.title}`}
                     >
                       {next.title} &rarr;
                     </Link>

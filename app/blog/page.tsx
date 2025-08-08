@@ -1,5 +1,5 @@
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
-import { getAllBlogs, getTranslationPage } from 'contentlayer/generated'
+import { getAllBlogs, getTranslationPage, getCurrentLocale } from 'contentlayer/generated'
 import { genPageMetadata } from 'app/seo'
 import ListLayout from '@/layouts/ListLayoutWithTags'
 
@@ -11,6 +11,7 @@ export async function generateMetadata() {
 
 export default async function BlogPage(props: { searchParams: Promise<{ page: string }> }) {
   const _t = await getTranslationPage()
+  const locale = await getCurrentLocale()
   const allBlogs = await getAllBlogs()
   const posts = allCoreContent(sortPosts(allBlogs))
   const pageNumber = 1
@@ -27,6 +28,7 @@ export default async function BlogPage(props: { searchParams: Promise<{ page: st
       initialDisplayPosts={initialDisplayPosts}
       pagination={pagination}
       title={_t('All Posts')}
+      locale={locale}
     />
   )
 }

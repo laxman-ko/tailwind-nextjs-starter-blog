@@ -52,7 +52,7 @@ export async function generateMetadata(props: {
       title: post.title,
       description: post.summary,
       siteName: siteMetadata.title,
-      locale: 'en_US',
+      locale: siteMetadata.locale.replace('-', '_'),
       type: 'article',
       publishedTime: publishedAt,
       modifiedTime: modifiedAt,
