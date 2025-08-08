@@ -1,7 +1,8 @@
-/** @type {{ [locale: string]: import("pliny/config").PlinyConfig & { locales: undefined} */
+/** @type {{ [locale: string]: import("pliny/config").PlinyConfig & { isUnderConstruction: boolean }}} */
 const siteMetadata = {
   en: {
     locale: 'en',
+    isUnderConstruction: true,
     title: 'Laxman ko Aksharharu',
     author: 'Laxman Siwakoti',
     headerTitle: '',
@@ -34,6 +35,7 @@ const siteMetadata = {
   },
   ne: {
     locale: 'ne',
+    isUnderConstruction: true,
     title: 'लक्ष्मणको अक्षरहरू',
     author: 'लक्ष्मण शिवाकोटी',
     headerTitle: '',

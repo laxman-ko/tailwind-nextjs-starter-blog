@@ -142,7 +142,7 @@ async function preContent() {
   await fs.writeFile(
     SITE_METADATA_FILE,
     `
-/** @type {{ [locale: string]: import("pliny/config").PlinyConfig & { locales: ${JSON.stringify(settingsJson[defaultLocale].locales)}} */
+/** @type {{ [locale: string]: import("pliny/config").PlinyConfig & { isUnderConstruction: boolean }}} */
 const siteMetadata = ${JSON.stringify(siteMetadata, null, 2)}
 
 module.exports = siteMetadata

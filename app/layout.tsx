@@ -64,6 +64,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const basePath = process.env.BASE_PATH || ''
   const siteMetadata = await getSiteMetadata()
 
+  const isUnderConstruction = siteMetadata.isUnderConstruction
+
+  if (isUnderConstruction) {
+    return <h1>Under Construction, COMING SOON</h1>
+  }
+
   return (
     <html
       lang={siteMetadata.language}
