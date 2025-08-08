@@ -1,21 +1,20 @@
 import ListLayout from '@/layouts/ListLayoutWithTags'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
-import { getAllBlogs, getTranslationPage, getCurrentLocale } from 'contentlayer/generated'
+import { getAllBlogs, getTranslation } from 'contentlayer.utils.server'
 import { notFound } from 'next/navigation'
+import { allBlogs } from '.contentlayer/generated'
 
 const POSTS_PER_PAGE = 5
 
-export const generateStaticParams = async () => {
-  const allBlogs = await getAllBlogs()
-  const totalPages = Math.ceil(allBlogs.length / POSTS_PER_PAGE)
-  const paths = Array.from({ length: totalPages }, (_, i) => ({ page: (i + 1).toString() }))
+// export const generateStaticParams = async () => {
+//   const totalPages = Math.ceil(allBlogs.length / POSTS_PER_PAGE)
+//   const paths = Array.from({ length: totalPages }, (_, i) => ({ page: (i + 1).toString() }))
 
-  return paths
-}
+//   return paths
+// }
 
 export default async function Page(props: { params: Promise<{ page: string }> }) {
-  const _t = await getTranslationPage()
-  const locale = await getCurrentLocale()
+  const _t = await getTranslation()
   const params = await props.params
   const allBlogs = await getAllBlogs()
   const posts = allCoreContent(sortPosts(allBlogs))
@@ -41,7 +40,6 @@ export default async function Page(props: { params: Promise<{ page: string }> })
       initialDisplayPosts={initialDisplayPosts}
       pagination={pagination}
       title={_t('All Posts')}
-      locale={locale}
     />
   )
 }

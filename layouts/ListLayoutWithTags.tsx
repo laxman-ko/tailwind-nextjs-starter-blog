@@ -4,14 +4,14 @@ import { usePathname } from 'next/navigation'
 import { slug } from 'github-slugger'
 import { formatDate } from 'pliny/utils/formatDate'
 import { CoreContent } from 'pliny/utils/contentlayer'
-import type { Blog, Locale } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import {
   getSiteMetadataByLocale,
   getTranslationByLocale,
   getAllTagsByLocale,
-} from 'contentlayer/generated'
+  type Blog,
+} from 'contentlayer.utils.client'
 
 interface PaginationProps {
   totalPages: number
@@ -22,7 +22,6 @@ interface ListLayoutProps {
   title: string
   initialDisplayPosts?: CoreContent<Blog>[]
   pagination?: PaginationProps
-  locale: Locale
 }
 
 function Pagination({ totalPages, currentPage }: PaginationProps) {
@@ -75,12 +74,11 @@ export default function ListLayoutWithTags({
   title,
   initialDisplayPosts = [],
   pagination,
-  locale,
 }: ListLayoutProps) {
-  const _t = getTranslationByLocale(locale)
-  const siteMetadata = getSiteMetadataByLocale(locale)
+  const _t = getTranslationByLocale()
+  const siteMetadata = getSiteMetadataByLocale()
   const pathname = usePathname()
-  const tagCounts = getAllTagsByLocale(locale)
+  const tagCounts = getAllTagsByLocale()
   const tagKeys = Object.keys(tagCounts)
   const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a])
 

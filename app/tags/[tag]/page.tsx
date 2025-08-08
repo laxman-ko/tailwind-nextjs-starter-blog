@@ -2,7 +2,7 @@ import { slug } from 'github-slugger'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import siteMetadata from '@/data/siteMetadata'
 import ListLayout from '@/layouts/ListLayoutWithTags'
-import { getAllBlogs, getAllTags, getCurrentLocale } from 'contentlayer/generated'
+import { getAllBlogs, getAllTags } from 'contentlayer.utils.server'
 import { genPageMetadata } from 'app/seo'
 import { Metadata } from 'next'
 
@@ -25,18 +25,17 @@ export async function generateMetadata(props: {
   })
 }
 
-export const generateStaticParams = async () => {
-  const tagCounts = await getAllTags()
-  const tagKeys = Object.keys(tagCounts)
-  return tagKeys.map((tag) => ({
-    tag: encodeURI(tag),
-  }))
-}
+// export const generateStaticParams = async () => {
+//   const tagCounts = await getAllTags()
+//   const tagKeys = Object.keys(tagCounts)
+//   return tagKeys.map((tag) => ({
+//     tag: encodeURI(tag),
+//   }))
+// }
 
 export default async function TagPage(props: { params: Promise<{ tag: string }> }) {
   const params = await props.params
   const tag = decodeURI(params.tag)
-  const locale = await getCurrentLocale()
   const title = tag[0].toUpperCase() + tag.split(' ').join('-').slice(1)
   const allBlogs = await getAllBlogs()
   const filteredPosts = allCoreContent(
@@ -55,7 +54,6 @@ export default async function TagPage(props: { params: Promise<{ tag: string }> 
       initialDisplayPosts={initialDisplayPosts}
       pagination={pagination}
       title={title}
-      locale={locale}
     />
   )
 }

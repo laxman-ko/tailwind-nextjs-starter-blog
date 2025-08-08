@@ -1,13 +1,12 @@
 import { ReactNode } from 'react'
 import { formatDate } from 'pliny/utils/formatDate'
 import { CoreContent } from 'pliny/utils/contentlayer'
-import type { Blog, Locale } from 'contentlayer/generated'
 import Comments from '@/components/Comments'
 import Link from '@/components/Link'
 import PageTitle from '@/components/PageTitle'
 import SectionContainer from '@/components/SectionContainer'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
-import { getTranslationByLocale, getSiteMetadataByLocale } from 'contentlayer/generated'
+import { getTranslation, getSiteMetadata, type Blog, type Locale } from 'contentlayer.utils.server'
 
 interface LayoutProps {
   content: CoreContent<Blog>
@@ -17,10 +16,10 @@ interface LayoutProps {
   locale: Locale
 }
 
-export default function PostLayout({ content, next, prev, children, locale }: LayoutProps) {
+export default async function PostLayout({ content, next, prev, children, locale }: LayoutProps) {
   const { path, slug, date, title } = content
-  const _t = getTranslationByLocale(locale)
-  const siteMetadata = getSiteMetadataByLocale(locale)
+  const _t = await getTranslation()
+  const siteMetadata = await getSiteMetadata()
 
   return (
     <SectionContainer>

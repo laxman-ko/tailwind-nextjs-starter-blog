@@ -1,8 +1,9 @@
 import Link from './Link'
-import siteMetadata from '@/data/siteMetadata'
 import SocialIcon from '@/components/social-icons'
+import { getSiteMetadata } from 'contentlayer.utils.server'
 
-export default function Footer() {
+export default async function Footer() {
+  const siteMetadata = await getSiteMetadata()
   return (
     <footer>
       <div className="mt-16 flex flex-col items-center">

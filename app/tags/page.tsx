@@ -2,14 +2,14 @@ import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import { slug } from 'github-slugger'
 import { genPageMetadata } from 'app/seo'
-import { getTranslationPage, getAllTags } from 'contentlayer/generated'
+import { getTranslation, getAllTags } from 'contentlayer.utils.server'
 
 export async function generateMetadata() {
   return genPageMetadata({ title: 'Tags', description: 'Things I blog about' })
 }
 
 export default async function Page() {
-  const _t = await getTranslationPage()
+  const _t = await getTranslation()
   const tagCounts = await getAllTags()
   const tagKeys = Object.keys(tagCounts)
   const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a])

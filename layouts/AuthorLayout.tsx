@@ -1,17 +1,16 @@
 import { ReactNode } from 'react'
-import { getTranslationByLocale, type Authors, type Locale } from 'contentlayer/generated'
+import { getTranslation, type Authors } from 'contentlayer.utils.server'
 import SocialIcon from '@/components/social-icons'
 import Image from '@/components/Image'
 
 interface Props {
   children: ReactNode
   content: Omit<Authors, '_id' | '_raw' | 'body'>
-  locale: Locale
 }
 
-export default function AuthorLayout({ children, content, locale }: Props) {
+export default async function AuthorLayout({ children, content }: Props) {
   const { name, avatar, occupation, company, email, twitter, bluesky, linkedin, github } = content
-  const _t = getTranslationByLocale(locale)
+  const _t = await getTranslation()
 
   return (
     <>

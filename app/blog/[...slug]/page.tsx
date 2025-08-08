@@ -5,13 +5,18 @@ import PageTitle from '@/components/PageTitle'
 import { components } from '@/components/MDXComponents'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import { sortPosts, coreContent, allCoreContent } from 'pliny/utils/contentlayer'
-import { getAllBlogs, getAllAuthors, getTranslationPage } from 'contentlayer/generated'
-import type { Authors, Blog } from 'contentlayer/generated'
+import {
+  getAllBlogs,
+  getAllAuthors,
+  getTranslation,
+  getSiteMetadata,
+  type Blog,
+  type Authors,
+} from 'contentlayer.utils.server'
 import PostSimple from '@/layouts/PostSimple'
 import PostLayout from '@/layouts/PostLayout'
 import PostBanner from '@/layouts/PostBanner'
 import { Metadata } from 'next'
-import { getSiteMetadata } from 'contentlayer/generated'
 import { notFound } from 'next/navigation'
 
 const defaultLayout = 'PostLayout'
@@ -72,7 +77,7 @@ export async function generateMetadata(props: {
 export default async function Page(props: { params: Promise<{ slug: string[] }> }) {
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
-  const _t = await getTranslationPage()
+  const _t = await getTranslation()
   // Filter out drafts in production
   const allBlogs = await getAllBlogs()
   const sortedCoreContents = allCoreContent(sortPosts(allBlogs))

@@ -1,4 +1,4 @@
-import { Authors, getAllAuthors, getCurrentLocale } from 'contentlayer/generated'
+import { Authors, getAllAuthors } from 'contentlayer.utils.server'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import AuthorLayout from '@/layouts/AuthorLayout'
 import { coreContent } from 'pliny/utils/contentlayer'
@@ -12,11 +12,10 @@ export default async function Page() {
   const allAuthors = await getAllAuthors()
   const author = allAuthors.find((p) => p.slug === 'default') as Authors
   const mainContent = coreContent(author)
-  const locale = await getCurrentLocale()
 
   return (
     <>
-      <AuthorLayout content={mainContent} locale={locale}>
+      <AuthorLayout content={mainContent}>
         <MDXLayoutRenderer code={author.body.code} />
       </AuthorLayout>
     </>

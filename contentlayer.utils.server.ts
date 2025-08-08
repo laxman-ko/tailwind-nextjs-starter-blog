@@ -60,10 +60,6 @@ const getAllTags = async (): Promise<Record<string, number>> => {
   return tagData[locale]
 }
 
-const getAllTagsByLocale = (locale: Locale): Record<string, number> => {
-  return tagData[locale]
-}
-
 type TranslationText = keyof typeof translationsText
 type TranslationFn = (text: TranslationText, ...args: (string | number)[]) => string
 
@@ -80,7 +76,7 @@ const getTranslationByLocale = (locale: Locale) => {
   return translateFn
 }
 
-const getTranslationPage = async (): Promise<TranslationFn> => {
+const getTranslation = async (): Promise<TranslationFn> => {
   const locale = await getCurrentLocale()
   return getTranslationByLocale(locale)
 }
@@ -90,11 +86,6 @@ const getSiteMetadata = async (): Promise<SiteMetadata> => {
   return siteMetadata[locale]
 }
 
-const getSiteMetadataByLocale = (locale: Locale): SiteMetadata => {
-  return siteMetadata[locale]
-}
-
-// export { allBlogs, allAuthors } from '.contentlayer/generated'
 export type { Blog, Authors } from '.contentlayer/generated'
 
 export {
@@ -102,12 +93,11 @@ export {
   getAllBlogs,
   getAllAuthors,
   getAllTags,
-  getAllTagsByLocale,
-  getTranslationByLocale,
-  getTranslationPage,
+  getTranslation,
   getCurrentLocale,
   getSiteMetadata,
-  getSiteMetadataByLocale,
 }
 
-export type { Locale, LocaleName, TranslationFn, TranslationText }
+export { LANGUAGE_COUNTRY_MATCH_REGEX, LOCALE_HEADER }
+
+export type { Locale, TranslationFn, TranslationText }

@@ -1,6 +1,5 @@
 import { ReactNode } from 'react'
 import { CoreContent } from 'pliny/utils/contentlayer'
-import type { Blog, Authors } from 'contentlayer/generated'
 import Comments from '@/components/Comments'
 import Link from '@/components/Link'
 import PageTitle from '@/components/PageTitle'
@@ -8,11 +7,7 @@ import SectionContainer from '@/components/SectionContainer'
 import Image from '@/components/Image'
 import Tag from '@/components/Tag'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
-import {
-  getTranslationByLocale,
-  getSiteMetadataByLocale,
-  type Locale,
-} from 'contentlayer/generated'
+import { getTranslation, getSiteMetadata, type Blog, type Authors } from 'contentlayer.utils.server'
 
 const editUrl = (path) => path
 const discussUrl = (path) => path
@@ -30,21 +25,19 @@ interface LayoutProps {
   next?: { path: string; title: string }
   prev?: { path: string; title: string }
   children: ReactNode
-  locale: Locale
 }
 
-export default function PostLayout({
+export default async function PostLayout({
   content,
   authorDetails,
   next,
   prev,
   children,
-  locale,
 }: LayoutProps) {
   const { filePath, path, slug, date, title, tags } = content
   const basePath = path.split('/')[0]
-  const _t = getTranslationByLocale(locale)
-  const siteMetadata = getSiteMetadataByLocale(locale)
+  const _t = await getTranslation()
+  const siteMetadata = await getSiteMetadata()
 
   return (
     <SectionContainer>

@@ -2,9 +2,10 @@
 
 import { Comments as CommentsComponent } from 'pliny/comments'
 import { useState } from 'react'
-import siteMetadata from '@/data/siteMetadata'
+import { getSiteMetadataByLocale } from 'contentlayer.utils.client'
 
 export default function Comments({ slug }: { slug: string }) {
+  const siteMetadata = getSiteMetadataByLocale()
   const [loadComments, setLoadComments] = useState(false)
 
   if (!siteMetadata.comments?.provider) {

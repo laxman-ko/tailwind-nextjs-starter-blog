@@ -2,13 +2,13 @@ import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import { formatDate } from 'pliny/utils/formatDate'
 import NewsletterForm from 'pliny/ui/NewsletterForm'
-import { getSiteMetadata, getTranslationPage } from 'contentlayer/generated'
+import { getSiteMetadata, getTranslation } from 'contentlayer.utils.server'
 
 const MAX_DISPLAY = 5
 
 export default async function Home({ posts }) {
   const siteMetadata = await getSiteMetadata()
-  const _t = await getTranslationPage()
+  const _t = await getTranslation()
   return (
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">

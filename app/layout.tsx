@@ -9,7 +9,7 @@ import Header from '@/components/Header'
 import SectionContainer from '@/components/SectionContainer'
 import Footer from '@/components/Footer'
 import { ThemeProviders } from './theme-providers'
-import { getSiteMetadata } from 'contentlayer/generated'
+import { getSiteMetadata } from 'contentlayer.utils.server'
 
 const space_grotesk = Space_Grotesk({
   subsets: ['latin'],

@@ -1,14 +1,14 @@
 import projectsData from '@/data/projectsData'
 import Card from '@/components/Card'
 import { genPageMetadata } from 'app/seo'
-import { getTranslationPage } from 'contentlayer/generated'
+import { getTranslation } from 'contentlayer.utils.server'
 
 export async function generateMetadata() {
   return genPageMetadata({ title: 'Projects' })
 }
 
 export default async function Projects() {
-  const _t = await getTranslationPage()
+  const _t = await getTranslation()
   return (
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">

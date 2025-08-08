@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import Image from '@/components/Image'
 import Bleed from 'pliny/ui/Bleed'
 import { CoreContent } from 'pliny/utils/contentlayer'
-import { getTranslationByLocale, type Blog, type Locale } from 'contentlayer/generated'
+import { getTranslation, type Blog } from 'contentlayer.utils.server'
 import Comments from '@/components/Comments'
 import Link from '@/components/Link'
 import PageTitle from '@/components/PageTitle'
@@ -15,15 +15,14 @@ interface LayoutProps {
   children: ReactNode
   next?: { path: string; title: string }
   prev?: { path: string; title: string }
-  locale: Locale
 }
 
-export default function PostMinimal({ content, next, prev, children, locale }: LayoutProps) {
+export default async function PostMinimal({ content, next, prev, children }: LayoutProps) {
   const { slug, title, images } = content
   const displayImage =
     images && images.length > 0 ? images[0] : 'https://picsum.photos/seed/picsum/800/400'
 
-  const _t = getTranslationByLocale(locale)
+  const _t = await getTranslation()
 
   return (
     <SectionContainer>

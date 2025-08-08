@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { getSiteMetadata, getTranslationPage, type TranslationText } from 'contentlayer/generated'
+import { getSiteMetadata, getTranslation, type TranslationText } from 'contentlayer.utils.server'
 
 interface PageSEOProps {
   title: string
@@ -16,7 +16,7 @@ export async function genPageMetadata({
   ...rest
 }: PageSEOProps): Promise<Metadata> {
   const siteMetadata = await getSiteMetadata()
-  const _t = await getTranslationPage()
+  const _t = await getTranslation()
   const titleText = _t(title as TranslationText)
   const descriptionText = _t(description as TranslationText)
   return {

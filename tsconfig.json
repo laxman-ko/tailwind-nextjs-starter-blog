@@ -46,7 +46,7 @@
     "lib/notion/notion.client.mts",
     "lib/i18n/i18n.locales.mts",
     "lib/i18n/i18n.utils.ts",
-    "contentlayer.utils.ts"
+    "contentlayer.utils.server.ts"
   ],
   "exclude": ["node_modules"]
 }

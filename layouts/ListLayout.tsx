@@ -4,25 +4,26 @@ import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { formatDate } from 'pliny/utils/formatDate'
 import { CoreContent } from 'pliny/utils/contentlayer'
-import { getTranslationByLocale, getSiteMetadataByLocale } from 'contentlayer/generated'
-import type { Blog, Locale } from 'contentlayer/generated'
+import {
+  getTranslationByLocale,
+  getSiteMetadataByLocale,
+  type Blog,
+} from 'contentlayer.utils.client'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 
 interface PaginationProps {
   totalPages: number
   currentPage: number
-  locale: Locale
 }
 interface ListLayoutProps {
   posts: CoreContent<Blog>[]
   title: string
   initialDisplayPosts?: CoreContent<Blog>[]
   pagination?: PaginationProps
-  locale: Locale
 }
 
-function Pagination({ totalPages, currentPage, locale }: PaginationProps) {
+function Pagination({ totalPages, currentPage }: PaginationProps) {
   const pathname = usePathname()
   const segments = pathname.split('/')
   const lastSegment = segments[segments.length - 1]
@@ -32,7 +33,7 @@ function Pagination({ totalPages, currentPage, locale }: PaginationProps) {
     .replace(/\/$/, '') // Remove trailing slash
   const prevPage = currentPage - 1 > 0
   const nextPage = currentPage + 1 <= totalPages
-  const _t = getTranslationByLocale(locale)
+  const _t = getTranslationByLocale()
 
   return (
     <div className="space-y-2 pt-6 pb-8 md:space-y-5">
@@ -73,10 +74,9 @@ export default function ListLayout({
   title,
   initialDisplayPosts = [],
   pagination,
-  locale,
 }: ListLayoutProps) {
-  const _t = getTranslationByLocale(locale)
-  const siteMetadata = getSiteMetadataByLocale(locale)
+  const _t = getTranslationByLocale()
+  const siteMetadata = getSiteMetadataByLocale()
   const [searchValue, setSearchValue] = useState('')
   const filteredBlogPosts = posts.filter((post) => {
     const searchContent = post.title + post.summary + post.tags?.join(' ')
@@ -158,11 +158,7 @@ export default function ListLayout({
         </ul>
       </div>
       {pagination && pagination.totalPages > 1 && !searchValue && (
-        <Pagination
-          currentPage={pagination.currentPage}
-          totalPages={pagination.totalPages}
-          locale={locale}
-        />
+        <Pagination currentPage={pagination.currentPage} totalPages={pagination.totalPages} />
       )}
     </>
   )
