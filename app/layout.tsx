@@ -68,7 +68,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   if (isUnderConstruction) {
     return (
-      <html>
+      <html lang={siteMetadata.language}>
         <body>
           <h1>Under Construction, COMING SOON</h1>
         </body>
