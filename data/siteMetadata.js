@@ -3,7 +3,7 @@ const siteMetadata = {
   en: {
     locale: 'en',
     defaultLocale: 'ne',
-    isUnderConstruction: false,
+    isUnderConstruction: true,
     title: 'Laxman ko Aksharharu',
     author: 'Laxman Siwakoti',
     headerTitle: '',
@@ -37,7 +37,7 @@ const siteMetadata = {
   ne: {
     locale: 'ne',
     defaultLocale: 'ne',
-    isUnderConstruction: false,
+    isUnderConstruction: true,
     title: 'लक्ष्मणको अक्षरहरू',
     author: 'लक्ष्मण शिवाकोटी',
     headerTitle: '',

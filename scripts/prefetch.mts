@@ -322,15 +322,25 @@ module.exports = siteMetadata
 
   // fetch all navigations
 
-  const hierarchialNavigationList: Record<string, { href: string; title: string }[]> = {}
+  const hierarchialNavigationList: Record<
+    string,
+    Record<string, { href: string; title: string }[]>
+  > = {}
   const navigations = await getListOfAllNavigations()
 
   const sortedNavigations = sortedHierarchialList(navigations)
 
   Object.entries(sortedNavigations).forEach(([_, navigationItem]) => {
     // @ts-expect-error 'title'
-    const navigationName = navigationItem.properties.Name.title[0].plain_text
-    hierarchialNavigationList[navigationName] = navigationItem.children.map((item) => {
+    const navigationNameWithLocale = navigationItem.properties.Name.title[0].plain_text
+    const [navigationName, locale = defaultLocale] = navigationNameWithLocale.split('__')
+    if (!hierarchialNavigationList[navigationName]) {
+      hierarchialNavigationList[navigationName] = {}
+    }
+    if (!hierarchialNavigationList[navigationName][locale]) {
+      hierarchialNavigationList[navigationName][locale] = []
+    }
+    hierarchialNavigationList[navigationName][locale] = navigationItem.children.map((item) => {
       return {
         // @ts-expect-error 'url'
         href: item.properties.href.url,
