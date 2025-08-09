@@ -6,7 +6,7 @@ export const runtime = 'edge'
 
 const handler = NewsletterAPI({
   // @ts-ignore
-  provider: siteMetadata.en.newsletter.provider,
+  provider: siteMetadata.newsletter.provider,
 })
 
 export { handler as GET, handler as POST }

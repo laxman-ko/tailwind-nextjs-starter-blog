@@ -5,18 +5,13 @@ import PageTitle from '@/components/PageTitle'
 import { components } from '@/components/MDXComponents'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import { sortPosts, coreContent, allCoreContent } from 'pliny/utils/contentlayer'
-import {
-  getAllBlogs,
-  getAllAuthors,
-  getTranslation,
-  getSiteMetadata,
-  type Blog,
-  type Authors,
-} from 'contentlayer.utils.server'
+import { allBlogs, allAuthors } from 'contentlayer/generated'
+import type { Authors, Blog } from 'contentlayer/generated'
 import PostSimple from '@/layouts/PostSimple'
 import PostLayout from '@/layouts/PostLayout'
 import PostBanner from '@/layouts/PostBanner'
 import { Metadata } from 'next'
+import siteMetadata from '@/data/siteMetadata'
 import { notFound } from 'next/navigation'
 
 const defaultLayout = 'PostLayout'
@@ -31,24 +26,28 @@ export async function generateMetadata(props: {
 }): Promise<Metadata | undefined> {
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
-  const allBlogs = await getAllBlogs()
   const post = allBlogs.find((p) => p.slug === slug)
   const authorList = post?.authors || ['default']
-  const authors = await getAllAuthors()
   const authorDetails = authorList.map((author) => {
-    const authorResults = authors.find((p) => p.slug === author)
+    const authorResults = allAuthors.find((p) => p.slug === author)
     return coreContent(authorResults as Authors)
   })
   if (!post) {
     return
   }
 
-  const siteMetadata = await getSiteMetadata()
   const publishedAt = new Date(post.date).toISOString()
-  const modifiedAt = post.lastmod ? new Date(post.lastmod).toISOString() : publishedAt
-  const ogImages = post.images ? [post.images] : [siteMetadata.socialBanner]
-  const imageList = post.images ? [post.images] : [siteMetadata.socialBanner]
-  const authorNames = authorDetails.map((author) => author.name)
+  const modifiedAt = new Date(post.lastmod || post.date).toISOString()
+  const authors = authorDetails.map((author) => author.name)
+  let imageList = [siteMetadata.socialBanner]
+  if (post.images) {
+    imageList = typeof post.images === 'string' ? [post.images] : post.images
+  }
+  const ogImages = imageList.map((img) => {
+    return {
+      url: img && img.includes('http') ? img : siteMetadata.siteUrl + img,
+    }
+  })
 
   return {
     title: post.title,
@@ -57,13 +56,13 @@ export async function generateMetadata(props: {
       title: post.title,
       description: post.summary,
       siteName: siteMetadata.title,
-      locale: siteMetadata.locale.replace('-', '_'),
+      locale: 'en_US',
       type: 'article',
       publishedTime: publishedAt,
       modifiedTime: modifiedAt,
       url: './',
       images: ogImages,
-      authors: authorNames.length > 0 ? authorNames : [siteMetadata.author],
+      authors: authors.length > 0 ? authors : [siteMetadata.author],
     },
     twitter: {
       card: 'summary_large_image',
@@ -74,12 +73,14 @@ export async function generateMetadata(props: {
   }
 }
 
+export const generateStaticParams = async () => {
+  return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
+}
+
 export default async function Page(props: { params: Promise<{ slug: string[] }> }) {
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
-  const _t = await getTranslation()
   // Filter out drafts in production
-  const allBlogs = await getAllBlogs()
   const sortedCoreContents = allCoreContent(sortPosts(allBlogs))
   const postIndex = sortedCoreContents.findIndex((p) => p.slug === slug)
   if (postIndex === -1) {
@@ -90,7 +91,6 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
   const next = sortedCoreContents[postIndex - 1]
   const post = allBlogs.find((p) => p.slug === slug) as Blog
   const authorList = post?.authors || ['default']
-  const allAuthors = await getAllAuthors()
   const authorDetails = authorList.map((author) => {
     const authorResults = allAuthors.find((p) => p.slug === author)
     return coreContent(authorResults as Authors)

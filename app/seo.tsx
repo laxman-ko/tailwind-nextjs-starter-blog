@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { getSiteMetadata, getTranslation, type TranslationText } from 'contentlayer.utils.server'
+import siteMetadata from '@/data/siteMetadata'
 
 interface PageSEOProps {
   title: string
@@ -9,30 +9,21 @@ interface PageSEOProps {
   [key: string]: any
 }
 
-export async function genPageMetadata({
-  title,
-  description,
-  image,
-  ...rest
-}: PageSEOProps): Promise<Metadata> {
-  const siteMetadata = await getSiteMetadata()
-  const _t = await getTranslation()
-  const titleText = _t(title as TranslationText)
-  const descriptionText = _t(description as TranslationText)
+export function genPageMetadata({ title, description, image, ...rest }: PageSEOProps): Metadata {
   return {
-    title: titleText,
-    description: descriptionText || siteMetadata.description,
+    title,
+    description: description || siteMetadata.description,
     openGraph: {
-      title: `${titleText} | ${siteMetadata.title}`,
-      description: descriptionText || siteMetadata.description,
+      title: `${title} | ${siteMetadata.title}`,
+      description: description || siteMetadata.description,
       url: './',
       siteName: siteMetadata.title,
       images: image ? [image] : [siteMetadata.socialBanner],
-      locale: siteMetadata.locale.replace('-', '_'),
+      locale: 'en_US',
       type: 'website',
     },
     twitter: {
-      title: `${titleText} | ${siteMetadata.title}`,
+      title: `${title} | ${siteMetadata.title}`,
       card: 'summary_large_image',
       images: image ? [image] : [siteMetadata.socialBanner],
     },

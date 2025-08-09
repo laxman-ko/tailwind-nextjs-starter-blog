@@ -22,7 +22,8 @@
       "@/layouts/*": ["layouts/*"],
       "@/css/*": ["css/*"],
       "@/lib/*": ["lib/*"],
-      "contentlayer/generated": ["contentlayer.utils"],
+      "contentlayer/generated": ["contentlayer.utils.server"],
+      "contentlayer/generated/client": ["contentlayer.utils.client"],
       "pliny/*": ["node_modules/pliny/*"]
     },
     "plugins": [

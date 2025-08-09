@@ -1,15 +1,15 @@
-import siteMetadata from '@/data/siteMetadata'
 import { MetadataRoute } from 'next'
+import siteMetadata from '@/data/siteMetadata'
 
 export const dynamic = 'force-static'
 
-export default async function robots(): Promise<MetadataRoute.Robots> {
+export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: `${siteMetadata.en.siteUrl}/sitemap.xml`,
-    host: siteMetadata.en.siteUrl,
+    sitemap: `${siteMetadata.siteUrl}/sitemap.xml`,
+    host: siteMetadata.siteUrl,
   }
 }
