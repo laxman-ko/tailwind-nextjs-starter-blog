@@ -1,5 +1,5 @@
 import translationsText from '@/data/translations.json'
-import tagData from 'app/tag-data.json'
+import tagData from '[locale]/tag-data.json'
 import siteMetadata from '@/data/siteMetadata'
 import { useSearchParams } from 'next/navigation'
 

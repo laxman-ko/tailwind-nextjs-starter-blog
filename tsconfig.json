@@ -21,9 +21,7 @@
       "@/data/*": ["data/*"],
       "@/layouts/*": ["layouts/*"],
       "@/css/*": ["css/*"],
-      "@/lib/*": ["lib/*"],
-      "contentlayer/generated": ["contentlayer.utils.server"],
-      "contentlayer/generated/client": ["contentlayer.utils.client"],
+      "contentlayer/generated": ["./.contentlayer/generated"],
       "pliny/*": ["node_modules/pliny/*"]
     },
     "plugins": [
@@ -42,12 +40,7 @@
     "**/*.json",
     ".contentlayer/generated",
     ".contentlayer/generated/**/*.json",
-    ".next/types/**/*.ts",
-    "scripts/prefetch.mts",
-    "lib/notion/notion.client.mts",
-    "lib/i18n/i18n.locales.mts",
-    "lib/i18n/i18n.utils.ts",
-    "contentlayer.utils.server.ts"
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

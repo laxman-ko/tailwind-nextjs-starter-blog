@@ -21,9 +21,7 @@ const generateRssItem = (config, post) => `
   </item>
 `
 
-const generateRss = (config, posts, page = 'feed.xml') => {
-  if (!posts.length) return ''
-  return `
+const generateRss = (config, posts, page = 'feed.xml') => `
   <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
       <title>${escape(config.title)}</title>
@@ -38,7 +36,6 @@ const generateRss = (config, posts, page = 'feed.xml') => {
     </channel>
   </rss>
 `
-}
 
 async function generateRSS(config, allBlogs, page = 'feed.xml') {
   const publishPosts = allBlogs.filter((post) => post.draft !== true)
@@ -60,7 +57,7 @@ async function generateRSS(config, allBlogs, page = 'feed.xml') {
 }
 
 const rss = () => {
-  generateRSS(siteMetadata.en, allBlogs)
+  generateRSS(siteMetadata, allBlogs)
   console.log('RSS feed generated...')
 }
 export default rss

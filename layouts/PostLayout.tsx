@@ -1,16 +1,18 @@
 import { ReactNode } from 'react'
 import { CoreContent } from 'pliny/utils/contentlayer'
+import type { Blog, Authors } from 'contentlayer/generated'
 import Comments from '@/components/Comments'
 import Link from '@/components/Link'
 import PageTitle from '@/components/PageTitle'
 import SectionContainer from '@/components/SectionContainer'
 import Image from '@/components/Image'
 import Tag from '@/components/Tag'
+import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
-import { getTranslation, getSiteMetadata, type Blog, type Authors } from 'contentlayer.utils.server'
 
-const editUrl = (path) => path
-const discussUrl = (path) => path
+const editUrl = (path) => `${siteMetadata.siteRepo}/blob/main/data/${path}`
+const discussUrl = (path) =>
+  `https://mobile.twitter.com/search?q=${encodeURIComponent(`${siteMetadata.siteUrl}/${path}`)}`
 
 const postDateTemplate: Intl.DateTimeFormatOptions = {
   weekday: 'long',
@@ -27,17 +29,9 @@ interface LayoutProps {
   children: ReactNode
 }
 
-export default async function PostLayout({
-  content,
-  authorDetails,
-  next,
-  prev,
-  children,
-}: LayoutProps) {
+export default function PostLayout({ content, authorDetails, next, prev, children }: LayoutProps) {
   const { filePath, path, slug, date, title, tags } = content
   const basePath = path.split('/')[0]
-  const _t = await getTranslation()
-  const siteMetadata = await getSiteMetadata()
 
   return (
     <SectionContainer>
@@ -48,7 +42,7 @@ export default async function PostLayout({
             <div className="space-y-1 text-center">
               <dl className="space-y-10">
                 <div>
-                  <dt className="sr-only">{_t('Published on')}</dt>
+                  <dt className="sr-only">Published on</dt>
                   <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
                     <time dateTime={date}>
                       {new Date(date).toLocaleDateString(siteMetadata.locale, postDateTemplate)}
@@ -63,7 +57,7 @@ export default async function PostLayout({
           </header>
           <div className="grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0 dark:divide-gray-700">
             <dl className="pt-6 pb-10 xl:border-b xl:border-gray-200 xl:pt-11 xl:dark:border-gray-700">
-              <dt className="sr-only">{_t('Authors')}</dt>
+              <dt className="sr-only">Authors</dt>
               <dd>
                 <ul className="flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-y-8 xl:space-x-0">
                   {authorDetails.map((author) => (
@@ -78,9 +72,9 @@ export default async function PostLayout({
                         />
                       )}
                       <dl className="text-sm leading-5 font-medium whitespace-nowrap">
-                        <dt className="sr-only">{_t('Name')}</dt>
+                        <dt className="sr-only">Name</dt>
                         <dd className="text-gray-900 dark:text-gray-100">{author.name}</dd>
-                        <dt className="sr-only">{_t('Twitter')}</dt>
+                        <dt className="sr-only">Twitter</dt>
                         <dd>
                           {author.twitter && (
                             <Link
@@ -103,10 +97,10 @@ export default async function PostLayout({
               <div className="prose dark:prose-invert max-w-none pt-10 pb-8">{children}</div>
               <div className="pt-6 pb-6 text-sm text-gray-700 dark:text-gray-300">
                 <Link href={discussUrl(path)} rel="nofollow">
-                  {_t('Discuss on Twitter')}
+                  Discuss on Twitter
                 </Link>
                 {` • `}
-                <Link href={editUrl(filePath)}>{_t('View on GitHub')}</Link>
+                <Link href={editUrl(filePath)}>View on GitHub</Link>
               </div>
               {siteMetadata.comments && (
                 <div
@@ -122,7 +116,7 @@ export default async function PostLayout({
                 {tags && (
                   <div className="py-4 xl:py-8">
                     <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
-                      {_t('Tags')}
+                      Tags
                     </h2>
                     <div className="flex flex-wrap">
                       {tags.map((tag) => (
@@ -136,7 +130,7 @@ export default async function PostLayout({
                     {prev && prev.path && (
                       <div>
                         <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
-                          {_t('Previous Article')}
+                          Previous Article
                         </h2>
                         <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
                           <Link href={`/${prev.path}`}>{prev.title}</Link>
@@ -146,7 +140,7 @@ export default async function PostLayout({
                     {next && next.path && (
                       <div>
                         <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
-                          {_t('Next Article')}
+                          Next Article
                         </h2>
                         <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
                           <Link href={`/${next.path}`}>{next.title}</Link>
@@ -160,9 +154,9 @@ export default async function PostLayout({
                 <Link
                   href={`/${basePath}`}
                   className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                  aria-label={_t('Back to the blog')}
+                  aria-label="Back to the blog"
                 >
-                  &larr; {_t('Back to the blog')}
+                  &larr; Back to the blog
                 </Link>
               </div>
             </footer>

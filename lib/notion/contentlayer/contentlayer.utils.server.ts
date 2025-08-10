@@ -3,7 +3,7 @@ import { allBlogs, allAuthors } from '.contentlayer/generated'
 import type { Blog, Authors } from '.contentlayer/generated'
 import translationsText from '@/data/translations.json'
 import { headers } from 'next/headers'
-import tagData from 'app/tag-data.json'
+import tagData from '[locale]/tag-data.json'
 import siteMetadata from '@/data/siteMetadata'
 
 const LOCALES = {

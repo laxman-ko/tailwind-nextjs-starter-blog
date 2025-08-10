@@ -6,7 +6,7 @@ import {
   getLocaleByPathname,
   LANGUAGE_COUNTRY_MATCH_REGEX,
   LOCALE_HEADER,
-} from 'contentlayer.utils.server'
+} from '@/lib/contentlayer/contentlayer.utils.server'
 
 export function middleware(request: NextRequest) {
   const { nextUrl } = request
