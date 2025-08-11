@@ -120,7 +120,7 @@ async function preContent() {
 
   settings.forEach((setting) => {
     const settingName = setting.properties.Name.title[0].plain_text
-    const enValue = setting.properties[defaultLocale].rich_text?.[0].plain_text
+    const enValue = setting.properties[defaultLocale].rich_text?.[0]?.plain_text
 
     locales.forEach((locale) => {
       if (!settingsJson[locale])
