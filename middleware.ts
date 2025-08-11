@@ -2,7 +2,11 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 import siteMetadata from '@/data/siteMetadata'
-import { getLocaleByPathname, LANGUAGE_COUNTRY_MATCH_REGEX, LOCALE_HEADER } from 'app/contentlayer.utils.server'
+import {
+  getLocaleByPathname,
+  LANGUAGE_COUNTRY_MATCH_REGEX,
+  LOCALE_HEADER,
+} from 'app/contentlayer.utils.server'
 
 export function middleware(request: NextRequest) {
   const { nextUrl } = request

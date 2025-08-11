@@ -66,7 +66,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const siteMetadata = await getSiteMetadata()
   const isUnderConstruction = !process.env.IS_LOCALHOST && siteMetadata.isUnderConstruction
 
-  if(isUnderConstruction) {
+  if (isUnderConstruction) {
     return (
       <html lang={siteMetadata.language} suppressHydrationWarning>
         <body>
