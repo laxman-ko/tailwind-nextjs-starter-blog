@@ -1,12 +1,11 @@
 import { MetadataRoute } from 'next'
-import { getAllBlogs, getSiteMetadata } from 'app/contentlayer.utils.server'
+import siteMetadata from '@/data/siteMetadata'
+import { allBlogs } from 'contentlayer/generated'
 
 export const dynamic = 'force-static'
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteMetadata = await getSiteMetadata()
-  const siteUrl = siteMetadata.siteUrl
-  const allBlogs = await getAllBlogs()
+export default function sitemap(): MetadataRoute.Sitemap {
+  const siteUrl = siteMetadata.en.siteUrl
   const blogRoutes = allBlogs
     .filter((post) => !post.draft)
     .map((post) => ({
