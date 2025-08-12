@@ -5,42 +5,22 @@ import translationsText from '@/data/translations.json'
 import { headers } from 'next/headers'
 import tagData from './tag-data.json'
 import siteMetadata from '@/data/siteMetadata'
-
-const LOCALES = {
-  en: 'en',
-  ne: 'ne',
-}
-const LANGUAGE_COUNTRY_MATCH_REGEX = /^\/([a-z]{2})(?:\/([a-z]{2}))?(?=\/|$)/
-const LOCALE_HEADER = 'x-locale'
-
-type Locale = keyof typeof LOCALES
-type LocaleName = (typeof LOCALES)[Locale]
-
-type SiteMetadata = (typeof siteMetadata)[Locale]
+import headerNavLinks from '@/data/headerNavLinks'
+import {
+  LOCALE_HEADER,
+  Locale,
+  isValidLocale,
+  TranslationText,
+  TranslationFn,
+  SiteMetadata,
+  HeaderNavLink,
+  LANGUAGE_COUNTRY_MATCH_REGEX,
+  translationHelperFn,
+} from './contentlayer.helpers'
 
 const getCurrentLocale = async (): Promise<Locale> => {
   const locale = (await headers()).get(LOCALE_HEADER)
   if (!locale || !isValidLocale(locale)) throw new Error('Invalid locale page request:' + locale)
-  return locale as Locale
-}
-
-const isValidLocale = (locale: string): boolean => {
-  return Object.keys(LOCALES).includes(locale)
-}
-
-const getLocaleByPathname = (pathname: string): Locale | 400 | null => {
-  // match /us/en/ (country/language) or /en/ (language)
-  const [_, countryOrLanguageCode, languageCode] =
-    pathname.match(LANGUAGE_COUNTRY_MATCH_REGEX) ?? []
-
-  if (!countryOrLanguageCode) return null
-
-  const locale = (
-    languageCode ? `${languageCode}-${countryOrLanguageCode.toUpperCase()}` : countryOrLanguageCode
-  ) as Locale
-
-  if (!isValidLocale(locale)) return 400
-
   return locale as Locale
 }
 
@@ -63,25 +43,11 @@ const getAllTags = async (): Promise<Record<string, number>> => {
   return tagData[locale]
 }
 
-type TranslationText = keyof typeof translationsText
-type TranslationFn = (text: TranslationText, ...args: (string | number)[]) => string
-
-const getTranslationByLocale = (locale: Locale) => {
-  const translateFn: TranslationFn = (text, ...args) => {
-    const template = translationsText[text][locale] || text
-
-    let i = 0
-    return template.replace(/%%/g, () => {
-      return args[i++]?.toString() || ''
-    })
-  }
-
-  return translateFn
-}
-
 const getTranslation = async (): Promise<TranslationFn> => {
   const locale = await getCurrentLocale()
-  return getTranslationByLocale(locale)
+  return (text: TranslationText, ...args: (string | number)[]) => {
+    return translationHelperFn(locale, text, ...args)
+  }
 }
 
 const getSiteMetadata = async (): Promise<SiteMetadata> => {
@@ -94,10 +60,14 @@ const getSEOLocale = async (): Promise<string> => {
   return locale.replace('-', '_')
 }
 
+const getHeaderNavLinks = async (): Promise<HeaderNavLink[]> => {
+  const locale = await getCurrentLocale()
+  return headerNavLinks[locale]
+}
+
 export type { Blog, Authors } from '.contentlayer/generated'
 
 export {
-  getLocaleByPathname,
   getAllBlogs,
   getAllAuthors,
   getAllTags,
@@ -105,6 +75,7 @@ export {
   getCurrentLocale,
   getSiteMetadata,
   getSEOLocale,
+  getHeaderNavLinks,
 }
 
 export { LANGUAGE_COUNTRY_MATCH_REGEX, LOCALE_HEADER }

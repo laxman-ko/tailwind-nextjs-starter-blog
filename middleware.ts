@@ -3,16 +3,16 @@ import type { NextRequest } from 'next/server'
 
 import siteMetadata from '@/data/siteMetadata'
 import {
-  getLocaleByPathname,
+  getLocaleFromPathname,
   LANGUAGE_COUNTRY_MATCH_REGEX,
   LOCALE_HEADER,
-} from 'app/contentlayer.utils.server'
+} from 'app/contentlayer.helpers'
 
 export function middleware(request: NextRequest) {
   const { nextUrl } = request
   const { pathname } = nextUrl
 
-  const locale = getLocaleByPathname(pathname)
+  const locale = getLocaleFromPathname(pathname)
 
   // if locale is not valid, return 400
   if (locale === 400) return NextResponse.json({ error: 'Bad Request' }, { status: 400 })

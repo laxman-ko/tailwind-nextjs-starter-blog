@@ -5,8 +5,11 @@ import Link from './Link'
 import MobileNav from './MobileNav'
 import ThemeSwitch from './ThemeSwitch'
 import SearchButton from './SearchButton'
+import { getSiteMetadata, getHeaderNavLinks } from 'app/contentlayer.utils.server'
 
-const Header = () => {
+const Header = async () => {
+  const siteMetadata = await getSiteMetadata()
+  const headerNavLinks = await getHeaderNavLinks()
   let headerClass = 'flex items-center w-full bg-white dark:bg-gray-950 justify-between py-10'
   if (siteMetadata.stickyNav) {
     headerClass += ' sticky top-0 z-50'

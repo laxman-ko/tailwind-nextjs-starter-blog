@@ -1,15 +1,22 @@
-import translationsText from '@/data/translations.json'
-import tagData from '[locale]/tag-data.json'
+import tagData from './tag-data.json'
 import siteMetadata from '@/data/siteMetadata'
-import { useSearchParams } from 'next/navigation'
-
-type Locale = keyof typeof siteMetadata
-
-type SiteMetadata = (typeof siteMetadata)[Locale]
+import { usePathname, useSearchParams } from 'next/navigation'
+import {
+  getLocaleFromPathname,
+  HeaderNavLink,
+  Locale,
+  SiteMetadata,
+  translationHelperFn,
+  TranslationText,
+  isValidLocale,
+  LOCALE_DEFAULT,
+} from './contentlayer.helpers'
+import headerNavLinks from '@/data/headerNavLinks'
 
 const getLocale = (): Locale => {
-  const locale = useSearchParams().get('locale') as Locale
-  return locale
+  const pathname = usePathname()
+  const locale = getLocaleFromPathname(pathname)
+  return isValidLocale(String(locale)) ? (locale as Locale) : LOCALE_DEFAULT
 }
 
 const getAllTagsByLocale = (): Record<string, number> => {
@@ -17,21 +24,11 @@ const getAllTagsByLocale = (): Record<string, number> => {
   return tagData[locale]
 }
 
-type TranslationText = keyof typeof translationsText
-type TranslationFn = (text: TranslationText, ...args: (string | number)[]) => string
-
 const getTranslationByLocale = () => {
   const locale = getLocale()
-  const translateFn: TranslationFn = (text, ...args) => {
-    const template = translationsText[text][locale] || text
-
-    let i = 0
-    return template.replace(/%%/g, () => {
-      return args[i++]?.toString() || ''
-    })
+  return (text: TranslationText, ...args: (string | number)[]) => {
+    return translationHelperFn(locale, text, ...args)
   }
-
-  return translateFn
 }
 
 const getSiteMetadataByLocale = (): SiteMetadata => {
@@ -39,7 +36,17 @@ const getSiteMetadataByLocale = (): SiteMetadata => {
   return siteMetadata[locale]
 }
 
-export { getAllTagsByLocale, getTranslationByLocale, getSiteMetadataByLocale }
+const getHeaderNavLinksByLocale = (): HeaderNavLink[] => {
+  const locale = getLocale()
+  return headerNavLinks[locale]
+}
+
+export {
+  getAllTagsByLocale,
+  getTranslationByLocale,
+  getSiteMetadataByLocale,
+  getHeaderNavLinksByLocale,
+}
 
 export type { Blog, Authors } from '.contentlayer/generated'
 export type { Locale, TranslationText }
