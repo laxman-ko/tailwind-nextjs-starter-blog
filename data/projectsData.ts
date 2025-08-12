@@ -8,7 +8,7 @@ interface Project {
 const projectsData: Record<string, Project[]> = {
   en: [
     {
-      title: 'English',
+      title: 'English1',
       description: '---',
       imgSrc: '/static/images/google.png',
       href: '#',
