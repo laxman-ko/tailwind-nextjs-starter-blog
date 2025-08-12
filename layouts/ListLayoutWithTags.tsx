@@ -7,11 +7,7 @@ import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Blog } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
-import {
-  getAllTagsByLocale,
-  getSiteMetadataByLocale,
-  getTranslationByLocale,
-} from 'app/contentlayer.utils.client'
+import { useAllTags, useSiteMetadata, useTranslation } from 'app/contentlayer.utils.client'
 
 interface PaginationProps {
   totalPages: number
@@ -26,7 +22,7 @@ interface ListLayoutProps {
 
 function Pagination({ totalPages, currentPage }: PaginationProps) {
   const pathname = usePathname()
-  const _t = getTranslationByLocale()
+  const _t = useTranslation()
   const segments = pathname.split('/')
   const lastSegment = segments[segments.length - 1]
   const basePath = pathname
@@ -77,9 +73,9 @@ export default function ListLayoutWithTags({
   pagination,
 }: ListLayoutProps) {
   const pathname = usePathname()
-  const _t = getTranslationByLocale()
-  const siteMetadata = getSiteMetadataByLocale()
-  const tagData = getAllTagsByLocale()
+  const _t = useTranslation()
+  const siteMetadata = useSiteMetadata()
+  const tagData = useAllTags()
   const tagCounts = tagData
   const tagKeys = Object.keys(tagCounts)
   const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a])

@@ -1,10 +1,10 @@
 'use client'
 
 import { ThemeProvider } from 'next-themes'
-import { getSiteMetadataByLocale } from 'app/contentlayer.utils.client'
+import { useSiteMetadata } from 'app/contentlayer.utils.client'
 
 export function ThemeProviders({ children }: { children: React.ReactNode }) {
-  const siteMetadata = getSiteMetadataByLocale()
+  const siteMetadata = useSiteMetadata()
   return (
     <ThemeProvider attribute="class" defaultTheme={siteMetadata.theme} enableSystem>
       {children}

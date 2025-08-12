@@ -1,7 +1,6 @@
 import Card from '@/components/Card'
 import { genPageMetadata } from 'app/seo'
-import { getTranslation } from 'app/contentlayer.utils.server'
-import { getAllProjects } from 'app/contentlayer.utils.server'
+import { getTranslation, getAllProjects } from 'app/contentlayer.utils.server'
 
 export const generateMetadata = async () => genPageMetadata({ title: 'Projects' })
 

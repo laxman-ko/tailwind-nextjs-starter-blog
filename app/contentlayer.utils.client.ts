@@ -13,40 +13,35 @@ import {
 } from './contentlayer.helpers'
 import headerNavLinks from '@/data/headerNavLinks'
 
-const getLocale = (): Locale => {
+const useLocale = () => {
   const pathname = usePathname()
   const locale = getLocaleFromPathname(pathname)
   return isValidLocale(String(locale)) ? (locale as Locale) : LOCALE_DEFAULT
 }
 
-const getAllTagsByLocale = (): Record<string, number> => {
-  const locale = getLocale()
+const useAllTags = (): Record<string, number> => {
+  const locale = useLocale()
   return tagData[locale]
 }
 
-const getTranslationByLocale = () => {
-  const locale = getLocale()
+const useTranslation = () => {
+  const locale = useLocale()
   return (text: TranslationText, ...args: (string | number)[]) => {
     return translationHelperFn(locale, text, ...args)
   }
 }
 
-const getSiteMetadataByLocale = (): SiteMetadata => {
-  const locale = getLocale()
+const useSiteMetadata = (): SiteMetadata => {
+  const locale = useLocale()
   return siteMetadata[locale]
 }
 
-const getHeaderNavLinksByLocale = (): HeaderNavLink[] => {
-  const locale = getLocale()
+const useHeaderNavLinks = (): HeaderNavLink[] => {
+  const locale = useLocale()
   return headerNavLinks[locale]
 }
 
-export {
-  getAllTagsByLocale,
-  getTranslationByLocale,
-  getSiteMetadataByLocale,
-  getHeaderNavLinksByLocale,
-}
+export { useAllTags, useTranslation, useSiteMetadata, useHeaderNavLinks }
 
 export type { Blog, Authors } from '.contentlayer/generated'
 export type { Locale, TranslationText }

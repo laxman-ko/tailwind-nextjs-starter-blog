@@ -1,11 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getSiteMetadataByLocale } from 'app/contentlayer.utils.client'
+import { useSiteMetadata } from 'app/contentlayer.utils.client'
 
 const ScrollTopAndComment = () => {
   const [show, setShow] = useState(false)
-  const siteMetadata = getSiteMetadataByLocale()
+  const siteMetadata = useSiteMetadata()
 
   useEffect(() => {
     const handleWindowScroll = () => {

@@ -1,6 +1,5 @@
 import { MetadataRoute } from 'next'
-import { getAllBlogs } from 'app/contentlayer.utils.server'
-import { getSiteMetadata } from 'app/contentlayer.utils.server'
+import { getAllBlogs, getSiteMetadata } from 'app/contentlayer.utils.server'
 
 export const dynamic = 'force-static'
 
