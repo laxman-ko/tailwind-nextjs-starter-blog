@@ -2,11 +2,11 @@ import ListLayout from '@/layouts/ListLayoutWithTags'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { notFound } from 'next/navigation'
 import { getAllBlogs, getTranslation } from 'app/contentlayer.utils.server'
+import { allBlogs } from 'contentlayer/generated'
 
 const POSTS_PER_PAGE = 5
 
 export const generateStaticParams = async () => {
-  const allBlogs = await getAllBlogs()
   const totalPages = Math.ceil(allBlogs.length / POSTS_PER_PAGE)
   const paths = Array.from({ length: totalPages }, (_, i) => ({ page: (i + 1).toString() }))
 

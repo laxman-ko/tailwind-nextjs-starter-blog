@@ -7,7 +7,7 @@ import {
   getSettings,
   getListOfAllArticles,
   getListOfAllNavigations,
-} from '../lib/notion/notion.client.mjs'
+} from '../lib/notion/notion.client.mts'
 import yaml from 'js-yaml'
 import { PageObjectResponse } from '@notionhq/client'
 import { ArticleProperties, AuthorProperties } from '../lib/notion/notion.types'

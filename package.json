@@ -5,7 +5,7 @@
   "scripts": {
     "start": "next dev",
     "dev": "cross-env INIT_CWD=$PWD next dev",
-    "prefetch": "cross-env INIT_CWD=$PWD tsx --tsconfig ./tsconfig.json ./scripts/prefetch.mts && yarn prettier ./data --write --ignore-path=''",
+    "prefetch": "cross-env INIT_CWD=$PWD tsx --tsconfig ./tsconfig.json ./scripts/prefetch.ts && yarn prettier ./data --write --ignore-path=''",
     "prebuild": "yarn prettier . --write",
     "build": "cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
     "serve": "next start",

@@ -37,12 +37,10 @@
     "**/*.mjs",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.mts",
     "**/*.json",
     ".contentlayer/generated",
     ".contentlayer/generated/**/*.json",
-    ".next/types/**/*.ts",
-    "scripts/**/*"
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }
