@@ -1,14 +1,17 @@
 import { slug } from 'github-slugger'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import ListLayout from '@/layouts/ListLayoutWithTags'
-import { getAllBlogs, getAllTags } from 'app/contentlayer.utils.server'
+import { getAllBlogs } from 'app/contentlayer.utils.server'
+import tagData from 'app/tag-data.json'
 import { notFound } from 'next/navigation'
 
 const POSTS_PER_PAGE = 5
 
 export const generateStaticParams = async () => {
-  const tagData = await getAllTags()
-  const tagCounts = tagData as Record<string, number>
+  let tagCounts = {}
+  Object.values(tagData).forEach((tags) => {
+    tagCounts = { ...tagCounts, ...tags }
+  })
   return Object.keys(tagCounts).flatMap((tag) => {
     const postCount = tagCounts[tag]
     const totalPages = Math.max(1, Math.ceil(postCount / POSTS_PER_PAGE))
