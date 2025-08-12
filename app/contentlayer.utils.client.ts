@@ -1,6 +1,6 @@
 import tagData from './tag-data.json'
 import siteMetadata from '@/data/siteMetadata'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import {
   getLocaleFromPathname,
   HeaderNavLink,

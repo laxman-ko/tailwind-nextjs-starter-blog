@@ -5,7 +5,8 @@ import ListLayout from '@/layouts/ListLayoutWithTags'
 import tagData from 'app/tag-data.json'
 import { genPageMetadata } from 'app/seo'
 import { Metadata } from 'next'
-import { getAllBlogs } from 'app/contentlayer.utils.server'
+import { getAllBlogs, getAllTags } from 'app/contentlayer.utils.server'
+import { notFound } from 'next/navigation'
 
 const POSTS_PER_PAGE = 5
 
@@ -43,6 +44,12 @@ export default async function TagPage(props: { params: Promise<{ tag: string }> 
   const tag = decodeURI(params.tag)
   const title = tag[0].toUpperCase() + tag.split(' ').join('-').slice(1)
   const allBlogs = await getAllBlogs()
+  const allTags = await getAllTags()
+
+  if (!allTags[tag]) {
+    return notFound()
+  }
+
   const filteredPosts = allCoreContent(
     sortPosts(allBlogs.filter((post) => post.tags && post.tags.map((t) => slug(t)).includes(tag)))
   )

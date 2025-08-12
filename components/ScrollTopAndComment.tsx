@@ -1,10 +1,11 @@
 'use client'
 
-import siteMetadata from '@/data/siteMetadata'
 import { useEffect, useState } from 'react'
+import { getSiteMetadataByLocale } from 'app/contentlayer.utils.client'
 
 const ScrollTopAndComment = () => {
   const [show, setShow] = useState(false)
+  const siteMetadata = getSiteMetadataByLocale()
 
   useEffect(() => {
     const handleWindowScroll = () => {

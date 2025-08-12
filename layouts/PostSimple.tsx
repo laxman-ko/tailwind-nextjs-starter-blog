@@ -6,8 +6,8 @@ import Comments from '@/components/Comments'
 import Link from '@/components/Link'
 import PageTitle from '@/components/PageTitle'
 import SectionContainer from '@/components/SectionContainer'
-import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
+import { getSiteMetadata } from 'app/contentlayer.utils.server'
 
 interface LayoutProps {
   content: CoreContent<Blog>
@@ -16,8 +16,9 @@ interface LayoutProps {
   prev?: { path: string; title: string }
 }
 
-export default function PostLayout({ content, next, prev, children }: LayoutProps) {
+export default async function PostLayout({ content, next, prev, children }: LayoutProps) {
   const { path, slug, date, title } = content
+  const siteMetadata = await getSiteMetadata()
 
   return (
     <SectionContainer>
