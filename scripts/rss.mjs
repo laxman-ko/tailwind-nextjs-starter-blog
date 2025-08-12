@@ -4,10 +4,15 @@ import { slug } from 'github-slugger'
 import { escape } from 'pliny/utils/htmlEscaper.js'
 import siteMetadata from '../data/siteMetadata.js'
 import tagData from '../app/tag-data.json' with { type: 'json' }
-import { allBlogs } from '../.contentlayer/generated/index.mjs'
+import { allBlogs as allBlogsLocalized } from '../.contentlayer/generated/index.mjs'
 import { sortPosts } from 'pliny/utils/contentlayer.js'
 
 const outputFolder = process.env.EXPORT ? 'out' : 'public'
+
+let allBlogs = []
+Object.values(allBlogsLocalized).forEach((blogs) => {
+  allBlogs = [...allBlogs, ...blogs]
+})
 
 const generateRssItem = (config, post) => `
   <item>
@@ -24,7 +29,7 @@ const generateRssItem = (config, post) => `
 const generateRss = (config, posts, page = 'feed.xml') => `
   <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-      <title>${(console.log(config), escape(config.title))}</title>
+      <title>${escape(config.title)}</title>
       <link>${config.siteUrl}/blog</link>
       <description>${escape(config.description)}</description>
       <language>${config.language}</language>
