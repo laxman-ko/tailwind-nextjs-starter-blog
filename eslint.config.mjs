@@ -67,5 +67,13 @@ export default [
       '@typescript-eslint/ban-ts-comment': 'off',
       'no-duplicate-imports': 'error',
     },
+    overrides: [
+      {
+        files: ['scripts/**/*.mts'],
+        parserOptions: {
+          project: null,
+        },
+      },
+    ],
   },
 ]
