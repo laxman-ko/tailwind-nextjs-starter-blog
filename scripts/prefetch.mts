@@ -10,7 +10,7 @@ import {
 } from '../lib/notion/notion.client.mjs'
 import yaml from 'js-yaml'
 import { PageObjectResponse } from '@notionhq/client'
-import { ArticleProperties, AuthorProperties } from '@/lib/notion/notion.types'
+import { ArticleProperties, AuthorProperties } from '../lib/notion/notion.types'
 import { PlinyConfig } from 'pliny/config'
 
 type HierarchialListItem = {
