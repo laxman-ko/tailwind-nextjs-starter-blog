@@ -1,9 +1,10 @@
 import { MetadataRoute } from 'next'
-import siteMetadata from '@/data/siteMetadata'
+import { getSiteMetadata } from 'app/contentlayer.utils.server'
 
 export const dynamic = 'force-static'
 
-export default function robots(): MetadataRoute.Robots {
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const siteMetadata = await getSiteMetadata()
   return {
     rules: {
       userAgent: '*',

@@ -1,12 +1,13 @@
-import { Authors, allAuthors } from 'contentlayer/generated'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import AuthorLayout from '@/layouts/AuthorLayout'
 import { coreContent } from 'pliny/utils/contentlayer'
 import { genPageMetadata } from 'app/seo'
+import { getAllAuthors, type Authors } from 'app/contentlayer.utils.server'
 
-export const metadata = genPageMetadata({ title: 'About' })
+export const generateMetadata = async () => genPageMetadata({ title: 'About' })
 
-export default function Page() {
+export default async function Page() {
+  const allAuthors = await getAllAuthors()
   const author = allAuthors.find((p) => p.slug === 'default') as Authors
   const mainContent = coreContent(author)
 
