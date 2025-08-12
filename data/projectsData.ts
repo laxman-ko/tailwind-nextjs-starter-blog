@@ -5,13 +5,23 @@ interface Project {
   imgSrc?: string
 }
 
-const projectsData: Project[] = [
-  {
-    title: '---',
-    description: '---',
-    imgSrc: '/static/images/google.png',
-    href: '#',
-  },
-]
+const projectsData: Record<string, Project[]> = {
+  en: [
+    {
+      title: 'English',
+      description: '---',
+      imgSrc: '/static/images/google.png',
+      href: '#',
+    },
+  ],
+  ne: [
+    {
+      title: 'Nepali',
+      description: '---',
+      imgSrc: '/static/images/google.png',
+      href: '#',
+    },
+  ],
+}
 
 export default projectsData

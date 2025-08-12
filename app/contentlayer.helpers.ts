@@ -1,6 +1,7 @@
 import headerNavLinks from '@/data/headerNavLinks'
 import siteMetadata from '@/data/siteMetadata'
 import translationsText from '@/data/translations.json'
+import projectsData from '@/data/projectsData'
 
 const LOCALES = {
   en: 'en',
@@ -17,6 +18,8 @@ export type LocaleName = (typeof LOCALES)[Locale]
 export type HeaderNavLink = (typeof headerNavLinks)[Locale][number]
 export type SiteMetadata = (typeof siteMetadata)[Locale]
 
+export type Project = (typeof projectsData)[Locale][number]
+
 export type TranslationText = keyof typeof translationsText
 export type TranslationFn = (text: TranslationText, ...args: (string | number)[]) => string
 export type TranslationHelperFn = (
@@ -26,8 +29,9 @@ export type TranslationHelperFn = (
 ) => string
 
 export const translationHelperFn: TranslationHelperFn = (locale, text, ...args) => {
-  const template = translationsText[text][locale] || text
+  if (!text) return text
 
+  const template = translationsText[text]?.[locale] || text
   let i = 0
   return template.replace(/%%/g, () => {
     return args[i++]?.toString() || ''

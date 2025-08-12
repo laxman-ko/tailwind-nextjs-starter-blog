@@ -1,11 +1,15 @@
-import { DocumentTypes } from '.contentlayer/generated'
-import { allBlogs, allAuthors } from '.contentlayer/generated'
-import type { Blog, Authors } from '.contentlayer/generated'
-import translationsText from '@/data/translations.json'
+import {
+  allBlogs,
+  allAuthors,
+  type DocumentTypes,
+  type Blog,
+  type Authors,
+} from '.contentlayer/generated'
 import { headers } from 'next/headers'
 import tagData from './tag-data.json'
 import siteMetadata from '@/data/siteMetadata'
 import headerNavLinks from '@/data/headerNavLinks'
+import allProjects from '@/data/projectsData'
 import {
   LOCALE_HEADER,
   Locale,
@@ -16,6 +20,7 @@ import {
   HeaderNavLink,
   LANGUAGE_COUNTRY_MATCH_REGEX,
   translationHelperFn,
+  Project,
 } from './contentlayer.helpers'
 
 const getCurrentLocale = async (): Promise<Locale> => {
@@ -41,6 +46,11 @@ const getAllAuthors = async (): Promise<Authors[]> => {
 const getAllTags = async (): Promise<Record<string, number>> => {
   const locale = await getCurrentLocale()
   return tagData[locale]
+}
+
+const getAllProjects = async (): Promise<Project[]> => {
+  const locale = await getCurrentLocale()
+  return allProjects[locale]
 }
 
 const getTranslation = async (): Promise<TranslationFn> => {
@@ -76,6 +86,7 @@ export {
   getSiteMetadata,
   getSEOLocale,
   getHeaderNavLinks,
+  getAllProjects,
 }
 
 export { LANGUAGE_COUNTRY_MATCH_REGEX, LOCALE_HEADER }

@@ -10,6 +10,7 @@ import PostLayout from '@/layouts/PostLayout'
 import PostBanner from '@/layouts/PostBanner'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { allBlogs } from 'contentlayer/generated'
 import {
   getAllBlogs,
   getAllAuthors,
@@ -82,7 +83,6 @@ export async function generateMetadata(props: {
 }
 
 export const generateStaticParams = async () => {
-  const allBlogs = await getAllBlogs()
   return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
 }
 
