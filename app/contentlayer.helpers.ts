@@ -8,7 +8,7 @@ const LOCALES = {
   ne: 'ne',
 }
 
-export const LOCALE_DEFAULT: Locale = 'ne'
+export const SITE_LOCALE_DEFAULT: Locale = 'ne'
 
 export const LANGUAGE_COUNTRY_MATCH_REGEX = /^\/([a-z]{2})(?:\/([a-z]{2}))?(?=\/|$)/
 export const LOCALE_HEADER = 'x-locale'
@@ -56,4 +56,11 @@ export const getLocaleFromPathname = (pathname: string): Locale | 400 | null => 
   if (!isValidLocale(locale)) return 400
 
   return locale
+}
+
+export const getLocaleSlug = (locale: Locale): string => {
+  const [localeCode, countryCode] = locale.split('-')
+  const localeSlugs = [countryCode, localeCode].filter(Boolean)
+  if (locale === SITE_LOCALE_DEFAULT) return ''
+  return '/' + localeSlugs.join('/').toLowerCase()
 }

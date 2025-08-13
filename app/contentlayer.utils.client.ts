@@ -9,14 +9,14 @@ import {
   translationHelperFn,
   TranslationText,
   isValidLocale,
-  LOCALE_DEFAULT,
+  SITE_LOCALE_DEFAULT,
 } from './contentlayer.helpers'
 import headerNavLinks from '@/data/headerNavLinks'
 
 const useLocale = () => {
   const pathname = usePathname()
   const locale = getLocaleFromPathname(pathname)
-  return isValidLocale(String(locale)) ? (locale as Locale) : LOCALE_DEFAULT
+  return isValidLocale(String(locale)) ? (locale as Locale) : SITE_LOCALE_DEFAULT
 }
 
 const useAllTags = (): Record<string, number> => {

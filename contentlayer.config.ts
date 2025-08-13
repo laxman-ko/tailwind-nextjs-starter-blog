@@ -31,6 +31,7 @@ import rehypePresetMinify from 'rehype-preset-minify'
 import siteMetadata from './data/siteMetadata'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
 import prettier from 'prettier'
+import { getLocaleSlug } from './app/contentlayer.helpers'
 
 const root = process.cwd()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -57,7 +58,11 @@ const computedFields: ComputedFields = {
   },
   path: {
     type: 'string',
-    resolve: (doc) => doc._raw.flattenedPath.replace(/\__[a-z]{2}(-[A-Z]{2})?$/, ''),
+    resolve: (doc) => {
+      const localeSlug = getLocaleSlug(doc.locale)
+      const path = doc._raw.flattenedPath.replace(/\__[a-z]{2}(-[A-Z]{2})?$/, '')
+      return `${localeSlug}/${path}`
+    },
   },
   filePath: {
     type: 'string',
