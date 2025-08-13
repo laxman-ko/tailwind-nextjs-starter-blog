@@ -3,6 +3,8 @@ import { genPageMetadata } from 'app/seo'
 import ListLayout from '@/layouts/ListLayoutWithTags'
 import { getAllBlogs, getTranslation } from 'app/contentlayer.utils.server'
 
+export const runtime = 'edge'
+
 const POSTS_PER_PAGE = 5
 
 export const generateMetadata = async () => genPageMetadata({ title: 'Blog' })

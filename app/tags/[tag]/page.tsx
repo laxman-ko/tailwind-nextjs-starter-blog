@@ -8,6 +8,8 @@ import { Metadata } from 'next'
 import { getAllBlogs, getAllTags } from 'app/contentlayer.utils.server'
 import { notFound } from 'next/navigation'
 
+export const runtime = 'edge'
+
 const POSTS_PER_PAGE = 5
 
 export async function generateMetadata(props: {

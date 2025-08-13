@@ -1,6 +1,8 @@
 import Link from '@/components/Link'
 import { getTranslation } from 'app/contentlayer.utils.server'
 
+export const runtime = 'edge'
+
 export default async function NotFound() {
   const _t = await getTranslation()
   return (

@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation'
 import { getAllBlogs, getTranslation } from 'app/contentlayer.utils.server'
 import { allBlogs } from 'contentlayer/generated'
 
+export const runtime = 'edge'
+
 const POSTS_PER_PAGE = 5
 
 export const generateStaticParams = async () => {

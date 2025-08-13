@@ -4,6 +4,8 @@ import { coreContent } from 'pliny/utils/contentlayer'
 import { genPageMetadata } from 'app/seo'
 import { getAllAuthors, type Authors } from 'app/contentlayer.utils.server'
 
+export const runtime = 'edge'
+
 export const generateMetadata = async () => genPageMetadata({ title: 'About' })
 
 export default async function Page() {

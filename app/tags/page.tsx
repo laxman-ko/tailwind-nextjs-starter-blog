@@ -4,6 +4,7 @@ import { slug } from 'github-slugger'
 import { getAllTags, getTranslation } from 'app/contentlayer.utils.server'
 import { genPageMetadata } from 'app/seo'
 
+export const runtime = 'edge'
 export const generateMetadata = async () =>
   genPageMetadata({ title: 'Tags', description: 'Things I blog about' })
 

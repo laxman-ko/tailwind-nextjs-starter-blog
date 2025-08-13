@@ -5,6 +5,8 @@ import { getAllBlogs } from 'app/contentlayer.utils.server'
 import tagData from 'app/tag-data.json'
 import { notFound } from 'next/navigation'
 
+export const runtime = 'edge'
+
 const POSTS_PER_PAGE = 5
 
 export const generateStaticParams = async () => {

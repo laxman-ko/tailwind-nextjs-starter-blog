@@ -20,6 +20,8 @@ import {
   type Blog,
 } from 'app/contentlayer.utils.server'
 
+export const runtime = 'edge'
+
 const defaultLayout = 'PostLayout'
 const layouts = {
   PostSimple,

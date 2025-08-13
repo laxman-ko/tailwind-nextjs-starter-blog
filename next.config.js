@@ -72,7 +72,6 @@ module.exports = () => {
     eslint: {
       dirs: ['app', 'components', 'layouts', 'scripts'],
     },
-    runtime: 'edge',
     images: {
       remotePatterns: [
         {
