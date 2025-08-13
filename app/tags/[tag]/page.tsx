@@ -29,17 +29,17 @@ export async function generateMetadata(props: {
   })
 }
 
-export const generateStaticParams = async () => {
-  let tagCounts = {}
-  Object.values(tagData).forEach((tags) => {
-    tagCounts = { ...tagCounts, ...tags }
-  })
+// export const generateStaticParams = async () => {
+//   let tagCounts = {}
+//   Object.values(tagData).forEach((tags) => {
+//     tagCounts = { ...tagCounts, ...tags }
+//   })
 
-  const tagKeys = Object.keys(tagCounts)
-  return tagKeys.map((tag) => ({
-    tag: encodeURI(tag),
-  }))
-}
+//   const tagKeys = Object.keys(tagCounts)
+//   return tagKeys.map((tag) => ({
+//     tag: encodeURI(tag),
+//   }))
+// }
 
 export default async function TagPage(props: { params: Promise<{ tag: string }> }) {
   const params = await props.params
