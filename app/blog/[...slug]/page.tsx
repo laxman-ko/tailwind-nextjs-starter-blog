@@ -1,3 +1,4 @@
+export const dynamic = 'force-static'
 // Return a list of `params` to populate the [slug] dynamic segment
 export async function generateStaticParams() {
   const posts = [{ slug: 'test' }, { slug: 'test2' }]
