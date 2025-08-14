@@ -28,6 +28,8 @@ const layouts = {
   PostBanner,
 }
 
+export const runtime = 'nodejs'
+
 export async function generateMetadata(props: PageProps): Promise<Metadata | undefined> {
   const allBlogs = await getAllBlogs(props)
   const allAuthors = await getAllAuthors(props)
