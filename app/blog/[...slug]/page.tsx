@@ -1,17 +1,134 @@
-export const dynamic = 'force-static'
-// Return a list of `params` to populate the [slug] dynamic segment
-export async function generateStaticParams() {
-  const posts = [{ slug: 'test' }, { slug: 'test2' }]
+import 'css/prism.css'
+import 'katex/dist/katex.css'
 
-  return posts.map((post) => ({
-    slug: [post.slug],
-  }))
+import PageTitle from '@/components/PageTitle'
+import { components } from '@/components/MDXComponents'
+import { MDXLayoutRenderer } from 'pliny/mdx-components'
+import { sortPosts, coreContent, allCoreContent } from 'pliny/utils/contentlayer'
+import PostSimple from '@/layouts/PostSimple'
+import PostLayout from '@/layouts/PostLayout'
+import PostBanner from '@/layouts/PostBanner'
+import { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import { allBlogs } from 'contentlayer/generated'
+import {
+  getAllBlogs,
+  getAllAuthors,
+  getSiteMetadata,
+  getSEOLocale,
+  type Authors,
+  type Blog,
+} from 'app/contentlayer.utils.server'
+
+export const dynamic = 'force-static'
+export const dynamicParams = false
+
+const defaultLayout = 'PostLayout'
+const layouts = {
+  PostSimple,
+  PostLayout,
+  PostBanner,
 }
 
-// Multiple versions of this page will be statically generated
-// using the `params` returned by `generateStaticParams`
-export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  console.log(slug)
-  return <h1>{slug}</h1>
+export async function generateMetadata(props: {
+  params: Promise<{ slug: string[] }>
+}): Promise<Metadata | undefined> {
+  const allBlogs = await getAllBlogs()
+  const allAuthors = await getAllAuthors()
+  const siteMetadata = await getSiteMetadata()
+  const params = await props.params
+  const slug = decodeURI(params.slug.join('/'))
+  const post = allBlogs.find((p) => p.slug === slug)
+  const authorList = post?.authors || ['default']
+  const authorDetails = authorList.map((author) => {
+    const authorResults = allAuthors.find((p) => p.slug === author)
+    return coreContent(authorResults as Authors)
+  })
+  if (!post) {
+    return
+  }
+
+  const publishedAt = new Date(post.date).toISOString()
+  const modifiedAt = new Date(post.lastmod || post.date).toISOString()
+  const authors = authorDetails.map((author) => author.name)
+  let imageList = [siteMetadata.socialBanner]
+  if (post.images) {
+    imageList = typeof post.images === 'string' ? [post.images] : post.images
+  }
+  const ogImages = imageList.map((img) => {
+    return {
+      url: img && img.includes('http') ? img : siteMetadata.siteUrl + img,
+    }
+  })
+
+  return {
+    title: post.title,
+    description: post.summary,
+    openGraph: {
+      title: post.title,
+      description: post.summary,
+      siteName: siteMetadata.title,
+      locale: await getSEOLocale(),
+      type: 'article',
+      publishedTime: publishedAt,
+      modifiedTime: modifiedAt,
+      url: './',
+      images: ogImages,
+      authors: authors.length > 0 ? authors : [siteMetadata.author],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.summary,
+      images: imageList,
+    },
+  }
+}
+
+export const generateStaticParams = async () => {
+  return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
+}
+
+export default async function Page(props: { params: Promise<{ slug: string[] }> }) {
+  const params = await props.params
+  const slug = decodeURI(params.slug.join('/'))
+  const allBlogs = await getAllBlogs()
+  const allAuthors = await getAllAuthors()
+  // Filter out drafts in production
+  const sortedCoreContents = allCoreContent(sortPosts(allBlogs))
+  const postIndex = sortedCoreContents.findIndex((p) => p.slug === slug)
+  if (postIndex === -1) {
+    return notFound()
+  }
+
+  const prev = sortedCoreContents[postIndex + 1]
+  const next = sortedCoreContents[postIndex - 1]
+  const post = allBlogs.find((p) => p.slug === slug) as Blog
+  const authorList = post?.authors || ['default']
+  const authorDetails = authorList.map((author) => {
+    const authorResults = allAuthors.find((p) => p.slug === author)
+    return coreContent(authorResults as Authors)
+  })
+  const mainContent = coreContent(post)
+  const jsonLd = post.structuredData
+  jsonLd['author'] = authorDetails.map((author) => {
+    return {
+      '@type': 'Person',
+      name: author.name,
+    }
+  })
+
+  const Layout = layouts[post.layout || defaultLayout]
+  const Dat = post.body.code
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <Layout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>
+        <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} />
+      </Layout>
+    </>
+  )
 }
