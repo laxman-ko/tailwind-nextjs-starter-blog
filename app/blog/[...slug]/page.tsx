@@ -3,7 +3,7 @@ export async function generateStaticParams() {
   const posts = [{ slug: 'test' }, { slug: 'test2' }]
 
   return posts.map((post) => ({
-    slug: post.slug,
+    slug: [post.slug],
   }))
 }
 
