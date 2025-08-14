@@ -28,14 +28,12 @@ const layouts = {
   PostBanner,
 }
 
-export async function generateMetadata(props: {
-  params: Promise<{ slug: string[] }>
-}): Promise<Metadata | undefined> {
-  const allBlogs = await getAllBlogs()
-  const allAuthors = await getAllAuthors()
-  const siteMetadata = await getSiteMetadata()
+export async function generateMetadata(props: PageProps): Promise<Metadata | undefined> {
+  const allBlogs = await getAllBlogs(props)
+  const allAuthors = await getAllAuthors(props)
+  const siteMetadata = await getSiteMetadata(props)
   const params = await props.params
-  const slug = decodeURI(params.slug.join('/'))
+  const slug = decodeURI(params.slug?.join('/') || '')
   const post = allBlogs.find((p) => p.slug === slug)
   const authorList = post?.authors || ['default']
   const authorDetails = authorList.map((author) => {
@@ -66,7 +64,7 @@ export async function generateMetadata(props: {
       title: post.title,
       description: post.summary,
       siteName: siteMetadata.title,
-      locale: await getSEOLocale(),
+      locale: await getSEOLocale(props),
       type: 'article',
       publishedTime: publishedAt,
       modifiedTime: modifiedAt,
