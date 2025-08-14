@@ -10,7 +10,7 @@ import PostLayout from '@/layouts/PostLayout'
 import PostBanner from '@/layouts/PostBanner'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { allBlogs } from 'contentlayer/generated'
+import { allBlogs, allAuthors } from 'contentlayer/generated'
 import {
   getAllBlogs,
   getAllAuthors,
@@ -20,6 +20,7 @@ import {
   type Blog,
 } from 'app/contentlayer.utils.server'
 import type { PageProps } from 'app/contentlayer.helpers'
+import siteMetadata from '@/data/siteMetadata'
 
 const defaultLayout = 'PostLayout'
 const layouts = {
@@ -31,9 +32,6 @@ const layouts = {
 export const runtime = 'nodejs'
 
 export async function generateMetadata(props: PageProps): Promise<Metadata | undefined> {
-  const allBlogs = await getAllBlogs(props)
-  const allAuthors = await getAllAuthors(props)
-  const siteMetadata = await getSiteMetadata(props)
   const params = await props.params
   const slug = decodeURI(params.slug?.join('/') || '')
   const post = allBlogs.find((p) => p.slug === slug)
@@ -49,13 +47,13 @@ export async function generateMetadata(props: PageProps): Promise<Metadata | und
   const publishedAt = new Date(post.date).toISOString()
   const modifiedAt = new Date(post.lastmod || post.date).toISOString()
   const authors = authorDetails.map((author) => author.name)
-  let imageList = [siteMetadata.socialBanner]
+  let imageList = [siteMetadata.en.socialBanner]
   if (post.images) {
     imageList = typeof post.images === 'string' ? [post.images] : post.images
   }
   const ogImages = imageList.map((img) => {
     return {
-      url: img && img.includes('http') ? img : siteMetadata.siteUrl + img,
+      url: img && img.includes('http') ? img : siteMetadata.en.siteUrl + img,
     }
   })
 
@@ -65,14 +63,14 @@ export async function generateMetadata(props: PageProps): Promise<Metadata | und
     openGraph: {
       title: post.title,
       description: post.summary,
-      siteName: siteMetadata.title,
+      siteName: siteMetadata.en.title,
       locale: await getSEOLocale(props),
       type: 'article',
       publishedTime: publishedAt,
       modifiedTime: modifiedAt,
       url: './',
       images: ogImages,
-      authors: authors.length > 0 ? authors : [siteMetadata.author],
+      authors: authors.length > 0 ? authors : [siteMetadata.en.author],
     },
     twitter: {
       card: 'summary_large_image',
@@ -90,8 +88,6 @@ export const generateStaticParams = async () => {
 export default async function Page(props: PageProps) {
   const params = await props.params
   const slug = decodeURI(params.slug?.join('/') || '')
-  const allBlogs = await getAllBlogs(props)
-  const allAuthors = await getAllAuthors(props)
   // Filter out drafts in production
   const sortedCoreContents = allCoreContent(sortPosts(allBlogs))
   const postIndex = sortedCoreContents.findIndex((p) => p.slug === slug)
