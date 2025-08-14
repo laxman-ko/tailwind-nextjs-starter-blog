@@ -10,15 +10,7 @@ import PostLayout from '@/layouts/PostLayout'
 import PostBanner from '@/layouts/PostBanner'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { allBlogs, allAuthors } from 'contentlayer/generated'
-import {
-  getAllBlogs,
-  getAllAuthors,
-  getSiteMetadata,
-  getSEOLocale,
-  type Authors,
-  type Blog,
-} from 'app/contentlayer.utils.server'
+import { allBlogs, allAuthors, Authors, Blog } from 'contentlayer/generated'
 import type { PageProps } from 'app/contentlayer.helpers'
 import siteMetadata from '@/data/siteMetadata'
 
@@ -64,7 +56,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata | und
       title: post.title,
       description: post.summary,
       siteName: siteMetadata.en.title,
-      locale: await getSEOLocale(props),
+      locale: 'en',
       type: 'article',
       publishedTime: publishedAt,
       modifiedTime: modifiedAt,
