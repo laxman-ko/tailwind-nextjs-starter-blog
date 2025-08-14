@@ -19,6 +19,7 @@ import {
   type Authors,
   type Blog,
 } from 'app/contentlayer.utils.server'
+import type { PageProps } from 'app/contentlayer.helpers'
 
 const defaultLayout = 'PostLayout'
 const layouts = {
@@ -86,13 +87,11 @@ export const generateStaticParams = async () => {
   return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
 }
 
-export default async function Page(props: { params: Promise<{ slug: string[] }> }) {
-  // @ts-ignore 's'
-  console.log({ p: await props?.searchParams })
+export default async function Page(props: PageProps) {
   const params = await props.params
-  const slug = decodeURI(params.slug.join('/'))
-  const allBlogs = await getAllBlogs()
-  const allAuthors = await getAllAuthors()
+  const slug = decodeURI(params.slug?.join('/') || '')
+  const allBlogs = await getAllBlogs(props)
+  const allAuthors = await getAllAuthors(props)
   // Filter out drafts in production
   const sortedCoreContents = allCoreContent(sortPosts(allBlogs))
   const postIndex = sortedCoreContents.findIndex((p) => p.slug === slug)
