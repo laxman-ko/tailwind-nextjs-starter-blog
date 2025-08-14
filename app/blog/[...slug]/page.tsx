@@ -20,8 +20,6 @@ import {
   type Blog,
 } from 'app/contentlayer.utils.server'
 
-export const runtime = 'edge'
-
 const defaultLayout = 'PostLayout'
 const layouts = {
   PostSimple,
@@ -84,11 +82,13 @@ export async function generateMetadata(props: {
   }
 }
 
-// export const generateStaticParams = async () => {
-//   return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
-// }
+export const generateStaticParams = async () => {
+  return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
+}
 
 export default async function Page(props: { params: Promise<{ slug: string[] }> }) {
+  // @ts-ignore 's'
+  console.log({ p: await props?.searchParams })
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
   const allBlogs = await getAllBlogs()

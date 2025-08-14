@@ -21,10 +21,13 @@ import {
   LANGUAGE_COUNTRY_MATCH_REGEX,
   translationHelperFn,
   Project,
+  PageProps,
 } from './contentlayer.helpers'
 
-const getCurrentLocale = async (): Promise<Locale> => {
-  const locale = (await headers()).get(LOCALE_HEADER)
+const getCurrentLocale = async (props?: PageProps): Promise<Locale> => {
+  const localeFromProps = (await props?.searchParams)?.locale
+  const localeFromHeader = (await headers()).get(LOCALE_HEADER)
+  const locale = localeFromProps || localeFromHeader
   if (!locale || !isValidLocale(locale)) throw new Error('Invalid locale page request:' + locale)
   return locale as Locale
 }
@@ -33,45 +36,45 @@ const getAllContentByLocale = (content: DocumentTypes[], locale: Locale) => {
   return content.filter((item) => item.locale === locale) as DocumentTypes[]
 }
 
-const getAllBlogs = async (): Promise<Blog[]> => {
-  const locale = await getCurrentLocale()
+const getAllBlogs = async (props?: PageProps): Promise<Blog[]> => {
+  const locale = await getCurrentLocale(props)
   return getAllContentByLocale(allBlogs as Blog[], locale) as Blog[]
 }
 
-const getAllAuthors = async (): Promise<Authors[]> => {
-  const locale = await getCurrentLocale()
+const getAllAuthors = async (props?: PageProps): Promise<Authors[]> => {
+  const locale = await getCurrentLocale(props)
   return getAllContentByLocale(allAuthors as Authors[], locale) as Authors[]
 }
 
-const getAllTags = async (): Promise<Record<string, number>> => {
-  const locale = await getCurrentLocale()
+const getAllTags = async (props?: PageProps): Promise<Record<string, number>> => {
+  const locale = await getCurrentLocale(props)
   return tagData[locale]
 }
 
-const getAllProjects = async (): Promise<Project[]> => {
-  const locale = await getCurrentLocale()
+const getAllProjects = async (props?: PageProps): Promise<Project[]> => {
+  const locale = await getCurrentLocale(props)
   return allProjects[locale]
 }
 
-const getTranslation = async (): Promise<TranslationFn> => {
-  const locale = await getCurrentLocale()
+const getTranslation = async (props?: PageProps): Promise<TranslationFn> => {
+  const locale = await getCurrentLocale(props)
   return (text: TranslationText, ...args: (string | number)[]) => {
     return translationHelperFn(locale, text, ...args)
   }
 }
 
-const getSiteMetadata = async (): Promise<SiteMetadata> => {
-  const locale = await getCurrentLocale()
+const getSiteMetadata = async (props?: PageProps): Promise<SiteMetadata> => {
+  const locale = await getCurrentLocale(props)
   return siteMetadata[locale]
 }
 
-const getSEOLocale = async (): Promise<string> => {
-  const locale = await getCurrentLocale()
+const getSEOLocale = async (props?: PageProps): Promise<string> => {
+  const locale = await getCurrentLocale(props)
   return locale.replace('-', '_')
 }
 
-const getHeaderNavLinks = async (): Promise<HeaderNavLink[]> => {
-  const locale = await getCurrentLocale()
+const getHeaderNavLinks = async (props?: PageProps): Promise<HeaderNavLink[]> => {
+  const locale = await getCurrentLocale(props)
   return headerNavLinks[locale]
 }
 

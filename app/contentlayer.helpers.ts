@@ -13,6 +13,11 @@ export const SITE_LOCALE_DEFAULT: Locale = 'ne'
 export const LANGUAGE_COUNTRY_MATCH_REGEX = /^\/([a-z]{2})(?:\/([a-z]{2}))?(?=\/|$)/
 export const LOCALE_HEADER = 'x-locale'
 
+export type PageProps = {
+  params: Promise<{ slug?: string[]; tag?: string; page?: string }>
+  searchParams: Promise<{ locale: string }>
+}
+
 export type Locale = keyof typeof LOCALES
 export type LocaleName = (typeof LOCALES)[Locale]
 export type HeaderNavLink = (typeof headerNavLinks)[Locale][number]
