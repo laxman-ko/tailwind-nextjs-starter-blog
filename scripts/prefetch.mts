@@ -32,7 +32,8 @@ export const isValidLocale = (locale: string): boolean => {
   return Object.keys(locales).includes(locale)
 }
 
-export const getLocaleFromPathname = (pathname: string): Locale | 400 | null => {
+export const getLocaleFromPathname = (pathname?: string): Locale | 400 | null => {
+  if (!pathname) return null
   // match /us/en/ (country/language) or /en/ (language)
   const [_, countryOrLanguageCode, languageCode] =
     pathname.match(LANGUAGE_COUNTRY_MATCH_REGEX) ?? []
@@ -48,8 +49,9 @@ export const getLocaleFromPathname = (pathname: string): Locale | 400 | null => 
   return locale
 }
 
+const DEFAULT_SITE_LOCALE = 'ne'
 const siteMetadata = {
-  locale: getLocaleFromPathname(process.env.BASE_PATH as string),
+  locale: getLocaleFromPathname(process.env.BASE_PATH) || DEFAULT_SITE_LOCALE,
 } as Record<string, string | object>
 
 const getLocaleByName = (language: string): string => {
