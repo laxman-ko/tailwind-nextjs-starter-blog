@@ -4,5 +4,8 @@ pages_build_output_dir = ".vercel/output/static"
 compatibility_date = "2025-07-27"
 compatibility_flags = [ "nodejs_compat" ]
 
-[env]
-production = { }
+[vars.preview]
+Is_LOCALHOST = "true"
+
+[vars.production]
+Is_TEST = "false"
