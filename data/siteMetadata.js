@@ -1,14 +1,14 @@
 /** @type {import("pliny/config").PlinyConfig } & { isUnderConstruction: boolean, defaultLocale: string, locale: string } */
 const siteMetadata = {
-  locale: 'ne',
+  locale: 'en',
   defaultLocale: 'ne',
   isUnderConstruction: true,
-  title: 'लक्ष्मणको अक्षरहरू',
-  author: 'लक्ष्मण शिवाकोटी',
+  title: 'Laxman ko Aksharharu',
+  author: 'Laxman Siwakoti',
   headerTitle: '',
   description:
-    'एक विचारक, प्रश्नकर्ता अनि जिज्ञासु - लक्ष्मणका विचार, जिज्ञासा र प्रेरणाले भरिएको अक्षरहरू',
-  language: 'ne',
+    "A thinker, questioner and curious - Laxman's letters filled with thoughts, curiosity and inspirations",
+  language: 'en',
   theme: 'system',
   siteUrl: 'https://akshar.laxmanko.com',
   siteRepo: 'https://github.com/laxmanko/akshar',
