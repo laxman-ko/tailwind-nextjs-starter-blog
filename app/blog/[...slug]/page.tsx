@@ -19,7 +19,6 @@ import {
 } from 'app/contentlayer.utils.server'
 
 export const runtime = 'edge'
-export const dynamicParams = false
 
 const defaultLayout = 'PostLayout'
 const layouts = {
