@@ -11,7 +11,6 @@ import {
 import yaml from 'js-yaml'
 import { PageObjectResponse } from '@notionhq/client'
 import { ArticleProperties, AuthorProperties } from '../lib/notion/notion.types.js'
-import { PlinyConfig } from 'pliny/config'
 
 type HierarchialListItem = {
   id: string
@@ -20,23 +19,20 @@ type HierarchialListItem = {
   children: HierarchialListItem[]
 }
 
-let siteMetadata = {} as PlinyConfig & { locales: Record<string, string> }
-let defaultLocale = '' as 'en' | 'ne'
-
 const locales = {
   en: 'English',
   ne: 'Nepali',
 } as Record<string, string>
 
-export const getLocaleByName = (language: string): string => {
+const siteMetadata = {
+  locale: process.env.SITE_LOCALE,
+} as Record<string, string | object>
+
+const getLocaleByName = (language: string): string => {
   return Object.keys(locales).find((locale: string) => locales[locale] === language) as string
 }
 
-export const getLocaleName = (locale: string): string => {
-  return locales[locale]
-}
-
-export const downloadAsset = async (
+const downloadAsset = async (
   url: string,
   relativeSavePathWithoutExt: string,
   root = ''
@@ -55,7 +51,7 @@ export const downloadAsset = async (
   return savedFileName.replace(rootDir, '')
 }
 
-export const sortedHierarchialList = (list: PageObjectResponse[]) => {
+const sortedHierarchialList = (list: PageObjectResponse[]) => {
   // sort page where properties Parent Item's relation is empty array on top
   const sortListByParentItem = list.sort((a, b) => {
     // @ts-expect-error 'relation'
@@ -94,7 +90,6 @@ async function preContent() {
 
   const SITE_METADATA_FILE = `${root}/data/siteMetadata.js`
   const HEADER_NAV_LINKS_FILE = `${root}/data/headerNavLinks.ts`
-  const FOOTER_NAV_LINKS_FILE = `${root}/data/footerNavLinks.ts`
 
   const TRASNSLATIONS_TEXT_FILE = `${root}/data/translations.json`
 
@@ -113,36 +108,23 @@ async function preContent() {
   const settings = await getSettings()
   if (settings.length === 0) throw new Error('Settings not found')
 
-  const locales = Object.keys(settings[0].properties).filter((key) => key !== 'Name')
-  defaultLocale = 'en'
-
-  const settingsJson = {} as Record<string, Record<string, string | object>>
-
   settings.forEach((setting) => {
     const settingName = setting.properties.Name.title[0].plain_text
-    const enValue = setting.properties[defaultLocale].rich_text?.[0]?.plain_text
+    const enValue = setting.properties['en']?.rich_text?.[0]?.plain_text
 
-    locales.forEach((locale) => {
-      if (!settingsJson[locale])
-        settingsJson[locale] = {
-          locale,
-        }
-      // @ts-expect-error 'rich_text'
-      const value = setting.properties[locale].rich_text?.[0]?.plain_text || enValue
-      try {
-        settingsJson[locale][settingName] = JSON.parse(value)
-      } catch (error) {
-        settingsJson[locale][settingName] = value
-      }
-    })
+    // @ts-expect-error 'rich_text'
+    const value = setting.properties[siteMetadata.locale]?.rich_text?.[0]?.plain_text || enValue
+    try {
+      siteMetadata[settingName] = JSON.parse(value)
+    } catch (error) {
+      siteMetadata[settingName] = value
+    }
   })
-
-  siteMetadata = settingsJson as typeof siteMetadata
 
   await fs.writeFile(
     SITE_METADATA_FILE,
     `
-/** @type {{ [locale: string]: import("pliny/config").PlinyConfig & { isUnderConstruction: boolean, defaultLocale: string }}} */
+/** @type {import("pliny/config").PlinyConfig } & { isUnderConstruction: boolean, defaultLocale: string, locale: string } */
 const siteMetadata = ${JSON.stringify(siteMetadata, null, 2)}
 
 module.exports = siteMetadata
@@ -181,6 +163,14 @@ module.exports = siteMetadata
 
       const locale = getLocaleByName(localeName)
 
+      if (locale !== siteMetadata.locale) {
+        console.log('Skip other locale', {
+          locale,
+          localeName,
+        })
+        return
+      }
+
       const name = authorProperties['Name'].title[0].plain_text
       const authorSlug = authorProperties['Slug'].url
       const slug = authorSlug === DEFAULT_AUTHOR ? 'default' : authorSlug
@@ -198,12 +188,11 @@ module.exports = siteMetadata
         company: authorProperties['Company']?.rich_text?.[0]?.plain_text,
         email: authorProperties['Email'].email,
         tiktok: authorProperties['Tiktok'].url,
-        locale,
         localizedSlugs,
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
       const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
-      await fs.writeFile(`${AUTHORS_DIR}/${slug}__${locale}.mdx`, mdxContent)
+      await fs.writeFile(`${AUTHORS_DIR}/${slug}.mdx`, mdxContent)
     })
   })
 
@@ -259,6 +248,14 @@ module.exports = siteMetadata
 
       const locale = getLocaleByName(localeName)
 
+      if (locale !== siteMetadata.locale) {
+        console.log('Skip other locale', {
+          locale,
+          localeName,
+        })
+        return
+      }
+
       const frontmatter = {
         title,
         date: articleProperties['Created time'].created_time,
@@ -271,12 +268,11 @@ module.exports = siteMetadata
         layout: 'PostLayout',
         bibliography: undefined,
         canonicalUrl: undefined,
-        locale,
         localizedSlugs,
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
       const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
-      const mdxFile = `${ARTICLES_DIR}/${slug}__${locale}.mdx`
+      const mdxFile = `${ARTICLES_DIR}/${slug}.mdx`
       try {
         await fs.access(mdxFile)
         throw new Error(`File ${mdxFile} already exists`)
@@ -322,10 +318,7 @@ module.exports = siteMetadata
 
   // fetch all navigations
 
-  const hierarchialNavigationList: Record<
-    string,
-    Record<string, { href: string; title: string }[]>
-  > = {}
+  const hierarchialNavigationList: Record<string, { href: string; title: string }[]> = {}
   const navigations = await getListOfAllNavigations()
 
   const sortedNavigations = sortedHierarchialList(navigations)
@@ -333,14 +326,15 @@ module.exports = siteMetadata
   Object.entries(sortedNavigations).forEach(([_, navigationItem]) => {
     // @ts-expect-error 'title'
     const navigationNameWithLocale = navigationItem.properties.Name.title[0].plain_text
-    const [navigationName, locale = defaultLocale] = navigationNameWithLocale.split('__')
-    if (!hierarchialNavigationList[navigationName]) {
-      hierarchialNavigationList[navigationName] = {}
+    const [navigationName, locale = siteMetadata.locale] = navigationNameWithLocale.split('__')
+    if (locale !== siteMetadata.locale) {
+      console.log('Skip other locale', {
+        locale,
+        navigationName,
+      })
+      return
     }
-    if (!hierarchialNavigationList[navigationName][locale]) {
-      hierarchialNavigationList[navigationName][locale] = []
-    }
-    hierarchialNavigationList[navigationName][locale] = navigationItem.children.map((item) => {
+    hierarchialNavigationList[navigationName] = navigationItem.children.map((item) => {
       return {
         // @ts-expect-error 'url'
         href: item.properties.href.url,
@@ -350,20 +344,11 @@ module.exports = siteMetadata
     })
   })
 
-  console.log(hierarchialNavigationList)
-
   await fs.writeFile(
     HEADER_NAV_LINKS_FILE,
     `
   const headerNavLinks = ${JSON.stringify(hierarchialNavigationList['Header'])}
   export default headerNavLinks`
-  )
-
-  await fs.writeFile(
-    FOOTER_NAV_LINKS_FILE,
-    `
-  const footerNavLinks = ${JSON.stringify(hierarchialNavigationList['Footer'])}
-  export default footerNavLinks`
   )
 
   console.log('Prefetching of notion database completed')

@@ -2,12 +2,10 @@
 
 import { Comments as CommentsComponent } from 'pliny/comments'
 import { useState } from 'react'
-import { useSiteMetadata, useTranslation } from 'app/contentlayer.utils.client'
+import siteMetadata from '@/data/siteMetadata'
 
 export default function Comments({ slug }: { slug: string }) {
   const [loadComments, setLoadComments] = useState(false)
-  const siteMetadata = useSiteMetadata()
-  const _t = useTranslation()
 
   if (!siteMetadata.comments?.provider) {
     return null
@@ -17,7 +15,7 @@ export default function Comments({ slug }: { slug: string }) {
       {loadComments ? (
         <CommentsComponent commentsConfig={siteMetadata.comments} slug={slug} />
       ) : (
-        <button onClick={() => setLoadComments(true)}>{_t('Load Comments')}</button>
+        <button onClick={() => setLoadComments(true)}>Load Comments</button>
       )}
     </>
   )

@@ -7,7 +7,7 @@ import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Blog } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
-import { useSiteMetadata } from 'app/contentlayer.utils.client'
+import siteMetadata from '@/data/siteMetadata'
 
 interface PaginationProps {
   totalPages: number
@@ -76,7 +76,6 @@ export default function ListLayout({
     const searchContent = post.title + post.summary + post.tags?.join(' ')
     return searchContent.toLowerCase().includes(searchValue.toLowerCase())
   })
-  const siteMetadata = useSiteMetadata()
 
   // If initialDisplayPosts exist, display it if no searchValue is specified
   const displayPosts =

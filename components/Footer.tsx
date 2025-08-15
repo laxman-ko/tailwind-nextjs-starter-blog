@@ -1,9 +1,8 @@
 import Link from './Link'
+import siteMetadata from '@/data/siteMetadata'
 import SocialIcon from '@/components/social-icons'
-import { getSiteMetadata } from 'app/contentlayer.utils.server'
 
-export default async function Footer() {
-  const siteMetadata = await getSiteMetadata()
+export default function Footer() {
   return (
     <footer>
       <div className="mt-16 flex flex-col items-center">
@@ -28,9 +27,9 @@ export default async function Footer() {
           <Link href="/">{siteMetadata.title}</Link>
         </div>
         <div className="mb-8 text-sm text-gray-500 dark:text-gray-400">
-          {/* <Link href="https://github.com/timlrx/tailwind-nextjs-starter-blog">
+          <Link href="https://github.com/timlrx/tailwind-nextjs-starter-blog">
             Tailwind Nextjs Theme
-          </Link> */}
+          </Link>
         </div>
       </div>
     </footer>

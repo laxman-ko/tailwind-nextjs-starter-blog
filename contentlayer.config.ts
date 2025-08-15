@@ -1,10 +1,4 @@
-import fs from 'fs/promises'
-import {
-  defineDocumentType,
-  ComputedFields,
-  makeSource,
-  FieldDefs,
-} from 'contentlayer2/source-files'
+import { defineDocumentType, ComputedFields, makeSource } from 'contentlayer2/source-files'
 import { writeFileSync } from 'fs'
 import readingTime from 'reading-time'
 import { slug } from 'github-slugger'
@@ -31,7 +25,6 @@ import rehypePresetMinify from 'rehype-preset-minify'
 import siteMetadata from './data/siteMetadata'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
 import prettier from 'prettier'
-import { getLocaleSlug } from './app/contentlayer.helpers'
 
 const root = process.cwd()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -53,16 +46,11 @@ const computedFields: ComputedFields = {
   readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
   slug: {
     type: 'string',
-    resolve: (doc) =>
-      doc._raw.flattenedPath.replace(/^.+?(\/)/, '').replace(/\__[a-z]{2}(-[A-Z]{2})?$/, ''),
+    resolve: (doc) => doc._raw.flattenedPath.replace(/^.+?(\/)/, ''),
   },
   path: {
     type: 'string',
-    resolve: (doc) => {
-      const localeSlug = getLocaleSlug(doc.locale)
-      const path = doc._raw.flattenedPath.replace(/\__[a-z]{2}(-[A-Z]{2})?$/, '')
-      return `${localeSlug}/${path}`
-    },
+    resolve: (doc) => doc._raw.flattenedPath,
   },
   filePath: {
     type: 'string',
@@ -75,19 +63,15 @@ const computedFields: ComputedFields = {
  * Count the occurrences of all tags across blog posts and write to json file
  */
 async function createTagCount(allBlogs) {
-  const tagCount: { [key: string]: Record<string, number> } = {}
+  const tagCount: Record<string, number> = {}
   allBlogs.forEach((file) => {
     if (file.tags && (!isProduction || file.draft !== true)) {
       file.tags.forEach((tag) => {
         const formattedTag = slug(tag)
-        const tagLocale = file.locale
-        if (!tagCount[tagLocale]) {
-          tagCount[tagLocale] = {}
-        }
-        if (formattedTag in tagCount[tagLocale]) {
-          tagCount[tagLocale][formattedTag] += 1
+        if (formattedTag in tagCount) {
+          tagCount[formattedTag] += 1
         } else {
-          tagCount[tagLocale][formattedTag] = 1
+          tagCount[formattedTag] = 1
         }
       })
     }
@@ -98,11 +82,11 @@ async function createTagCount(allBlogs) {
 
 function createSearchIndex(allBlogs) {
   if (
-    siteMetadata?.en?.search?.provider === 'kbar' &&
-    siteMetadata.en?.search.kbarConfig.searchDocumentsPath
+    siteMetadata?.search?.provider === 'kbar' &&
+    siteMetadata.search.kbarConfig.searchDocumentsPath
   ) {
     writeFileSync(
-      `public/${path.basename(siteMetadata.en?.search.kbarConfig.searchDocumentsPath)}`,
+      `public/${path.basename(siteMetadata.search.kbarConfig.searchDocumentsPath)}`,
       JSON.stringify(allCoreContent(sortPosts(allBlogs)))
     )
     console.log('Local search index generated...')
@@ -125,8 +109,6 @@ export const Blog = defineDocumentType(() => ({
     layout: { type: 'string' },
     bibliography: { type: 'string' },
     canonicalUrl: { type: 'string' },
-    locale: { type: 'string' },
-    localizedSlugs: { type: 'json' },
   },
   computedFields: {
     ...computedFields,
@@ -139,9 +121,8 @@ export const Blog = defineDocumentType(() => ({
         datePublished: doc.date,
         dateModified: doc.lastmod || doc.date,
         description: doc.summary,
-        image: doc.images ? doc.images[0] : siteMetadata.en?.socialBanner,
-        url: `${siteMetadata.en?.siteUrl}/${doc._raw.flattenedPath}`,
-        inLanguage: doc.locale,
+        image: doc.images ? doc.images[0] : siteMetadata.socialBanner,
+        url: `${siteMetadata.siteUrl}/${doc._raw.flattenedPath}`,
       }),
     },
   },
@@ -162,9 +143,6 @@ export const Authors = defineDocumentType(() => ({
     linkedin: { type: 'string' },
     github: { type: 'string' },
     layout: { type: 'string' },
-    tiktok: { type: 'string' },
-    locale: { type: 'string' },
-    localizedSlugs: { type: 'json' },
   },
   computedFields,
 }))

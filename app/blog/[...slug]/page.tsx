@@ -1,24 +1,18 @@
 import 'css/prism.css'
 import 'katex/dist/katex.css'
 
+import PageTitle from '@/components/PageTitle'
+import { components } from '@/components/MDXComponents'
+import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import { sortPosts, coreContent, allCoreContent } from 'pliny/utils/contentlayer'
+import { allBlogs, allAuthors } from 'contentlayer/generated'
+import type { Authors, Blog } from 'contentlayer/generated'
 import PostSimple from '@/layouts/PostSimple'
 import PostLayout from '@/layouts/PostLayout'
 import PostBanner from '@/layouts/PostBanner'
 import { Metadata } from 'next'
+import siteMetadata from '@/data/siteMetadata'
 import { notFound } from 'next/navigation'
-import { allBlogs } from 'contentlayer/generated'
-import {
-  getAllBlogs,
-  getAllAuthors,
-  getSiteMetadata,
-  getSEOLocale,
-  type Authors,
-  type Blog,
-  markdownToHtml,
-} from 'app/contentlayer.utils.server'
-
-export const runtime = 'edge'
 
 const defaultLayout = 'PostLayout'
 const layouts = {
@@ -32,9 +26,6 @@ export async function generateMetadata(props: {
 }): Promise<Metadata | undefined> {
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
-  const allBlogs = await getAllBlogs()
-  const allAuthors = await getAllAuthors()
-  const siteMetadata = await getSiteMetadata()
   const post = allBlogs.find((p) => p.slug === slug)
   const authorList = post?.authors || ['default']
   const authorDetails = authorList.map((author) => {
@@ -65,7 +56,7 @@ export async function generateMetadata(props: {
       title: post.title,
       description: post.summary,
       siteName: siteMetadata.title,
-      locale: await getSEOLocale(),
+      locale: 'en_US',
       type: 'article',
       publishedTime: publishedAt,
       modifiedTime: modifiedAt,
@@ -82,15 +73,13 @@ export async function generateMetadata(props: {
   }
 }
 
-// export const generateStaticParams = async () => {
-//   return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
-// }
+export const generateStaticParams = async () => {
+  return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
+}
 
 export default async function Page(props: { params: Promise<{ slug: string[] }> }) {
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
-  const allBlogs = await getAllBlogs()
-  const allAuthors = await getAllAuthors()
   // Filter out drafts in production
   const sortedCoreContents = allCoreContent(sortPosts(allBlogs))
   const postIndex = sortedCoreContents.findIndex((p) => p.slug === slug)
@@ -116,7 +105,6 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
   })
 
   const Layout = layouts[post.layout || defaultLayout]
-  const htmlContent = await markdownToHtml(post.body.raw)
 
   return (
     <>
@@ -125,7 +113,7 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Layout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>
-        <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+        <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} />
       </Layout>
     </>
   )
