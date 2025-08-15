@@ -6,8 +6,7 @@
     "start": "next dev",
     "dev": "cross-env INIT_CWD=$PWD next dev",
     "prefetch": "cross-env INIT_CWD=$PWD tsx --tsconfig ./tsconfig.json ./scripts/prefetch.mts && yarn prettier ./data --write --ignore-path=''",
-    "prebuild": "yarn prettier . --write",
-    "build": "cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
+    "build": "yarn prefetch && cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
     "lint": "next lint --fix --dir pages --dir app --dir components --dir lib --dir layouts --dir scripts",
@@ -17,12 +16,10 @@
   "dependencies": {
     "@headlessui/react": "2.2.0",
     "@next/bundle-analyzer": "15.2.4",
-    "@notionhq/client": "^4.0.1",
     "@tailwindcss/forms": "^0.5.9",
     "@tailwindcss/postcss": "^4.0.5",
     "@tailwindcss/typography": "^0.5.15",
     "body-scroll-lock": "^4.0.0-beta.0",
-    "contentful": "^11.7.14",
     "contentlayer2": "0.5.5",
     "esbuild": "0.25.2",
     "github-slugger": "^2.0.0",
@@ -32,10 +29,8 @@
     "next": "15.2.4",
     "next-contentlayer2": "0.5.5",
     "next-themes": "^0.4.6",
-    "notion-to-md": "^3.1.9",
     "pliny": "0.4.1",
     "postcss": "^8.4.24",
-    "querystring": "^0.2.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "reading-time": "1.5.0",
@@ -49,7 +44,6 @@
     "remark": "^15.0.0",
     "remark-gfm": "^4.0.0",
     "remark-github-blockquote-alert": "^1.2.1",
-    "remark-html": "^16.0.1",
     "remark-math": "^6.0.0",
     "tailwindcss": "^4.0.5",
     "unist-util-visit": "^5.0.0"
@@ -57,6 +51,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.16.0",
+    "@notionhq/client": "^4.0.2",
     "@svgr/webpack": "^8.0.1",
     "@types/mdx": "^2.0.12",
     "@types/react": "^19.0.8",
@@ -69,18 +64,19 @@
     "eslint-plugin-prettier": "^5.2.0",
     "globals": "^15.12.0",
     "husky": "^9.0.0",
-    "lint-staged": "^16.1.2",
+    "lint-staged": "^13.0.0",
+    "notion-to-md": "^3.1.9",
     "prettier": "^3.0.0",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "tsx": "^4.20.3",
+    "tsx": "^4.20.4",
     "typescript": "^5.1.3"
   },
   "lint-staged": {
-    "*.(js|jsx|ts|tsx|mts|mjs)": [
-      "yarn eslint --fix"
+    "*.+(js|jsx|ts|tsx)": [
+      "eslint --fix"
     ],
-    "*.(js|jsx|ts|tsx|json|css|md|mdx|mts|mjs)": [
-      "yarn prettier --write"
+    "*.+(js|jsx|ts|tsx|json|css|md|mdx)": [
+      "prettier --write"
     ]
   },
   "packageManager": "yarn@3.6.1"
