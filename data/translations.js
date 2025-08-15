@@ -1,6 +1,14 @@
 import siteMetadata from './siteMetadata'
 
 const translations = {
+  'Previous post: %%': {
+    en: 'Previous post: %%',
+    ne: 'अघिल्लो लेख: %%',
+  },
+  'Next post: %%': {
+    en: 'Next post: %%',
+    ne: 'अर्को लेख: %%',
+  },
   'Load Comments': {
     en: 'Load Comments',
     ne: 'टिप्पणीहरू लोड गर्नुहोस्',
@@ -174,6 +182,16 @@ const translations = {
     ne: 'ताजा लेखहरु',
   },
 }
+
+/**
+ * @typedef {keyof typeof translations} TranslationKey
+ */
+
+/**
+ * @param {TranslationKey} text - Must be one of the keys from 'translations'
+ * @param {...string} args - Optional replacement args for %%
+ * @returns {string}
+ */
 
 export const _t = (text, ...args) => {
   const locale = siteMetadata.locale

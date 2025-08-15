@@ -321,6 +321,16 @@ module.exports = siteMetadata
 
     const translations = ${JSON.stringify(translationsData, null, 2)}
     
+    /**
+     * @typedef {keyof typeof translations} TranslationKey
+     */
+
+    /**
+     * @param {TranslationKey} text - Must be one of the keys from 'translations'
+     * @param {...string} args - Optional replacement args for %%
+     * @returns {string}
+     */
+
     export const _t = (text, ...args) => {
       const locale = siteMetadata.locale
       const template = translations[text]?.[locale] || text
