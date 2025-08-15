@@ -91,7 +91,7 @@ async function preContent() {
   const SITE_METADATA_FILE = `${root}/data/siteMetadata.js`
   const HEADER_NAV_LINKS_FILE = `${root}/data/headerNavLinks.ts`
 
-  const TRASNSLATIONS_TEXT_FILE = `${root}/data/translations.json`
+  const TRASNSLATIONS_TEXT_FILE = `${root}/data/translations.js`
 
   for (const dir of [ARTICLES_DIR, AUTHORS_DIR]) {
     try {
@@ -314,7 +314,23 @@ module.exports = siteMetadata
     })
   )
 
-  fs.writeFile(TRASNSLATIONS_TEXT_FILE, JSON.stringify(translationsData, null, 2))
+  fs.writeFile(
+    TRASNSLATIONS_TEXT_FILE,
+    `
+    import siteMetadata from "./siteMetadata"
+
+    const translations = ${JSON.stringify(translationsData, null, 2)}
+    
+    export const _t = (text, ...args) => {
+      const locale = siteMetadata.locale
+      const template = translations[text]?.[locale] || text
+      let i = 0
+      return template.replace(/%%/g, () => {
+        return args[i++]?.toString() || ''
+      })
+    }
+  `
+  )
 
   // fetch all navigations
 
