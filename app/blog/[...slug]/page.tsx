@@ -1,9 +1,6 @@
 import 'css/prism.css'
 import 'katex/dist/katex.css'
 
-import PageTitle from '@/components/PageTitle'
-import { components } from '@/components/MDXComponents'
-import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import { sortPosts, coreContent, allCoreContent } from 'pliny/utils/contentlayer'
 import PostSimple from '@/layouts/PostSimple'
 import PostLayout from '@/layouts/PostLayout'
@@ -18,9 +15,10 @@ import {
   getSEOLocale,
   type Authors,
   type Blog,
+  markdownToHtml,
 } from 'app/contentlayer.utils.server'
 
-export const dynamic = 'force-static'
+export const runtime = 'edge'
 export const dynamicParams = false
 
 const defaultLayout = 'PostLayout'
@@ -33,11 +31,11 @@ const layouts = {
 export async function generateMetadata(props: {
   params: Promise<{ slug: string[] }>
 }): Promise<Metadata | undefined> {
+  const params = await props.params
+  const slug = decodeURI(params.slug.join('/'))
   const allBlogs = await getAllBlogs()
   const allAuthors = await getAllAuthors()
   const siteMetadata = await getSiteMetadata()
-  const params = await props.params
-  const slug = decodeURI(params.slug.join('/'))
   const post = allBlogs.find((p) => p.slug === slug)
   const authorList = post?.authors || ['default']
   const authorDetails = authorList.map((author) => {
@@ -85,9 +83,9 @@ export async function generateMetadata(props: {
   }
 }
 
-export const generateStaticParams = async () => {
-  return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
-}
+// export const generateStaticParams = async () => {
+//   return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
+// }
 
 export default async function Page(props: { params: Promise<{ slug: string[] }> }) {
   const params = await props.params
@@ -119,7 +117,8 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
   })
 
   const Layout = layouts[post.layout || defaultLayout]
-  const Dat = post.body.code
+  const htmlContent = await markdownToHtml(post.body.raw)
+
   return (
     <>
       <script
@@ -127,7 +126,7 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Layout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>
-        <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} />
+        <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
       </Layout>
     </>
   )
