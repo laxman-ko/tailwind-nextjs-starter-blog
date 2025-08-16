@@ -56,10 +56,10 @@ function deleteLocaleComponents(components, locales) {
 
     for (const comp of components) {
       const [name, ext] = comp.split('.')
-      const filePath = path.join(componentsDir, `${name}_${locale}.${ext}`)
+      const filePath = path.join(componentsDir, `${name}__${locale}.${ext}`)
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath)
-        console.log(`🗑 Deleted: ${name}_${locale}.${ext}`)
+        console.log(`🗑 Deleted: ${name}__${locale}.${ext}`)
       }
     }
   }
@@ -73,7 +73,7 @@ function copyComponent(componentName, locale) {
   if (!fs.existsSync(srcPath)) return
 
   const [name, ext] = componentName.split('.')
-  const destName = `${name}_${locale}.${ext}`
+  const destName = `${name}__${locale}.${ext}`
   const destPath = path.join(componentsDir, destName)
 
   let content = fs.readFileSync(srcPath, 'utf8')
@@ -95,7 +95,7 @@ function updateImports(filePath, components, locale) {
     for (const component of components) {
       const [name] = component.split('.')
       const regex = new RegExp(`from ['"]@/components/${name}['"]`, 'g')
-      content = content.replace(regex, `from '@/components/${name}_${locale}'`)
+      content = content.replace(regex, `from '@/components/${name}__${locale}'`)
     }
     fs.writeFileSync(filePath, content, 'utf8')
   }

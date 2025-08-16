@@ -55,3 +55,4 @@ data/authors
 
 # locales
 app/(i18n)
+components/*__*.tsx
