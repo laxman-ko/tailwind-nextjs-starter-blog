@@ -21,8 +21,6 @@ const layouts = {
   PostBanner,
 }
 
-export const dynamicParams = false
-
 export async function generateMetadata(props: {
   params: Promise<{ slug: string[] }>
 }): Promise<Metadata | undefined> {
