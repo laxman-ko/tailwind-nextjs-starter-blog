@@ -126,6 +126,11 @@ async function preContent() {
     }
   })
 
+  if (siteMetadata.locale !== DEFAULT_SITE_LOCALE) {
+    // @ts-expect-error 'search'
+    siteMetadata.search.kbarConfig.searchDocumentsPath = '/' + siteMetadata.locale + '/search.json'
+  }
+
   await fs.writeFile(
     SITE_METADATA_FILE,
     `

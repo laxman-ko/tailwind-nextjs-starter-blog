@@ -29,7 +29,7 @@ const siteMetadata = {
   search: {
     provider: 'kbar',
     kbarConfig: {
-      searchDocumentsPath: '/search.json',
+      searchDocumentsPath: '/en/search.json',
     },
   },
 }
