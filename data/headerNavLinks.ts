@@ -1,6 +1,6 @@
 const headerNavLinks = [
-  { href: '/about', title: 'मेरो बारेमा' },
-  { href: '/blog', title: 'लेखहरू' },
-  { href: '/', title: 'गृह' },
+  { href: '/about', title: 'About' },
+  { href: '/blog', title: 'Blog' },
+  { href: '/', title: 'Home' },
 ]
 export default headerNavLinks
