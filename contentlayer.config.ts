@@ -22,11 +22,11 @@ import rehypeKatexNoTranslate from 'rehype-katex-notranslate'
 import rehypeCitation from 'rehype-citation'
 import rehypePrismPlus from 'rehype-prism-plus'
 import rehypePresetMinify from 'rehype-preset-minify'
-import { getSiteHelpers } from 'app/helpers'
+import siteMetadataLocalized from './data/siteMetadata'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
 import prettier from 'prettier'
 
-const { siteMetadata } = getSiteHelpers('en')
+const siteMetadata = siteMetadataLocalized['en']
 
 const root = process.cwd()
 const isProduction = process.env.NODE_ENV === 'production'
