@@ -181,6 +181,10 @@ const translations = {
     en: 'Latest',
     ne: 'ताजा लेखहरु',
   },
+  'Under Construction': {
+    en: 'Under Construction',
+    ne: 'माँग्दछ',
+  },
 }
 
 /**

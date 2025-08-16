@@ -64,7 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   if (siteMetadata.isUnderConstruction) {
     return (
-      <html>
+      <html lang={siteMetadata.language}>
         <body>
           <h1>{_t('Under Construction')}</h1>
         </body>
