@@ -135,7 +135,6 @@ for (const locale of siteLocales) {
   // Update imports in i18n pages
   const localeAppDir = path.join(i18nDir, locale)
   updateImports(localeAppDir, componentsToCopy, locale)
-  updateImports(layoutDir, componentsToCopy, locale)
 }
 
 console.log('\n✅ All locales processed successfully!')
