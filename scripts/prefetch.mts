@@ -29,9 +29,7 @@ const LANGUAGE_COUNTRY_MATCH_REGEX = /^\/([a-z]{2})(?:\/([a-z]{2}))?(?=\/|$)/
 type Locale = keyof typeof locales
 
 const DEFAULT_SITE_LOCALE = 'ne'
-const siteMetadata = {
-  locale: process.env.SITE_LOCALE || DEFAULT_SITE_LOCALE,
-} as Record<string, string | object>
+let siteMetadata = {} as Record<string, Record<string, string | object>>
 
 const getLocaleByName = (language: string): string => {
   return Object.keys(locales).find((locale: string) => locales[locale] === language) as string
@@ -113,28 +111,36 @@ async function preContent() {
   const settings = await getSettings()
   if (settings.length === 0) throw new Error('Settings not found')
 
+  const locales = Object.keys(settings[0].properties).filter((key) => key !== 'Name')
+  const defaultSettingsLocale = 'en'
+
+  const settingsJson = {} as Record<string, Record<string, string | object>>
+
   settings.forEach((setting) => {
     const settingName = setting.properties.Name.title[0].plain_text
-    const enValue = setting.properties['en']?.rich_text?.[0]?.plain_text
+    const enValue = setting.properties[defaultSettingsLocale].rich_text?.[0]?.plain_text
 
-    // @ts-expect-error 'rich_text'
-    const value = setting.properties[siteMetadata.locale]?.rich_text?.[0]?.plain_text || enValue
-    try {
-      siteMetadata[settingName] = JSON.parse(value)
-    } catch (error) {
-      siteMetadata[settingName] = value
-    }
+    locales.forEach((locale) => {
+      if (!settingsJson[locale])
+        settingsJson[locale] = {
+          locale,
+        }
+      // @ts-expect-error 'rich_text'
+      const value = setting.properties[locale].rich_text?.[0]?.plain_text || enValue
+      try {
+        settingsJson[locale][settingName] = JSON.parse(value)
+      } catch (error) {
+        settingsJson[locale][settingName] = value
+      }
+    })
   })
 
-  if (siteMetadata.locale !== DEFAULT_SITE_LOCALE) {
-    // @ts-expect-error 'search'
-    siteMetadata.search.kbarConfig.searchDocumentsPath = '/' + siteMetadata.locale + '/search.json'
-  }
+  siteMetadata = settingsJson as typeof siteMetadata
 
   await fs.writeFile(
     SITE_METADATA_FILE,
     `
-/** @type {import("pliny/config").PlinyConfig } & { isUnderConstruction: boolean, defaultLocale: string, locale: string } */
+/** @type {{ [locale: string]: import("pliny/config").PlinyConfig & { isUnderConstruction: boolean, defaultLocale: string }}} */
 const siteMetadata = ${JSON.stringify(siteMetadata, null, 2)}
 
 module.exports = siteMetadata
@@ -173,14 +179,6 @@ module.exports = siteMetadata
 
       const locale = getLocaleByName(localeName)
 
-      if (locale !== siteMetadata.locale) {
-        console.log('Skip other locale', {
-          locale,
-          localeName,
-        })
-        return
-      }
-
       const name = authorProperties['Name'].title[0].plain_text
       const authorSlug = authorProperties['Slug'].url
       const slug = authorSlug === DEFAULT_AUTHOR ? 'default' : authorSlug
@@ -198,6 +196,7 @@ module.exports = siteMetadata
         company: authorProperties['Company']?.rich_text?.[0]?.plain_text,
         email: authorProperties['Email'].email,
         tiktok: authorProperties['Tiktok'].url,
+        locale,
         localizedSlugs,
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
@@ -258,14 +257,6 @@ module.exports = siteMetadata
 
       const locale = getLocaleByName(localeName)
 
-      if (locale !== siteMetadata.locale) {
-        console.log('Skip other locale', {
-          locale,
-          localeName,
-        })
-        return
-      }
-
       const frontmatter = {
         title,
         date: articleProperties['Created time'].created_time,
@@ -278,6 +269,7 @@ module.exports = siteMetadata
         layout: 'PostLayout',
         bibliography: undefined,
         canonicalUrl: undefined,
+        locale,
         localizedSlugs,
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
@@ -333,28 +325,34 @@ module.exports = siteMetadata
     
     /**
      * @typedef {keyof typeof translations} TranslationKey
+     * @typedef {keyof typeof translations[TranslationKey]} LocaleKey
      */
 
     /**
-     * @param {TranslationKey} text - Must be one of the keys from 'translations'
-     * @param {...string} args - Optional replacement args for %%
-     * @returns {string}
+     * Creates a translate function for a given locale
+     *
+     * @param {LocaleKey} locale - The locale code (e.g. 'en', 'ne')
+     * @returns {(text: TranslationKey, ...args: string[]) => string}
      */
 
-    export const _t = (text, ...args) => {
-      const locale = siteMetadata.locale
-      const template = translations[text]?.[locale] || text
-      let i = 0
-      return template.replace(/%%/g, () => {
-        return args[i++]?.toString() || ''
-      })
+    export const translate = (locale) => {
+      return (text, ...args) => {
+        const template = translations[text]?.[locale] || text
+        let i = 0
+        return template.replace(/%%/g, () => {
+          return args[i++]?.toString() || ''
+        })
+      }
     }
   `
   )
 
   // fetch all navigations
 
-  const hierarchialNavigationList: Record<string, { href: string; title: string }[]> = {}
+  const hierarchialNavigationList: Record<
+    string,
+    Record<string, { href: string; title: string }[]>
+  > = {}
   const navigations = await getListOfAllNavigations()
 
   const sortedNavigations = sortedHierarchialList(navigations)
@@ -362,15 +360,15 @@ module.exports = siteMetadata
   Object.entries(sortedNavigations).forEach(([_, navigationItem]) => {
     // @ts-expect-error 'title'
     const navigationNameWithLocale = navigationItem.properties.Name.title[0].plain_text
-    const [navigationName, locale = siteMetadata.locale] = navigationNameWithLocale.split('__')
-    if (locale !== siteMetadata.locale) {
-      console.log('Skip other locale', {
-        locale,
-        navigationName,
-      })
-      return
+    const [navigationName, locale = siteMetadata.defaultLocale] =
+      navigationNameWithLocale.split('__')
+    if (!hierarchialNavigationList[navigationName]) {
+      hierarchialNavigationList[navigationName] = {}
     }
-    hierarchialNavigationList[navigationName] = navigationItem.children.map((item) => {
+    if (!hierarchialNavigationList[navigationName][locale]) {
+      hierarchialNavigationList[navigationName][locale] = []
+    }
+    hierarchialNavigationList[navigationName][locale] = navigationItem.children.map((item) => {
       return {
         // @ts-expect-error 'url'
         href: item.properties.href.url,
@@ -379,6 +377,8 @@ module.exports = siteMetadata
       }
     })
   })
+
+  console.log(hierarchialNavigationList)
 
   await fs.writeFile(
     HEADER_NAV_LINKS_FILE,

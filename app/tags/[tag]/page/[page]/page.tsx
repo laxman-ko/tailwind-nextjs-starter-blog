@@ -1,11 +1,14 @@
 import { slug } from 'github-slugger'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import ListLayout from '@/layouts/ListLayoutWithTags'
-import { allBlogs } from 'contentlayer/generated'
 import tagData from 'app/tag-data.json'
 import { notFound } from 'next/navigation'
+import { getAllBlogs } from 'app/helpers'
+import siteMetadata from '@/data/siteMetadata'
 
 const POSTS_PER_PAGE = 5
+
+const allBlogs = getAllBlogs(siteMetadata.defaultLocale)
 
 export const generateStaticParams = async () => {
   const tagCounts = tagData as Record<string, number>

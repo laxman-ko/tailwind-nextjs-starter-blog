@@ -1,10 +1,16 @@
-import { Authors, allAuthors } from 'contentlayer/generated'
+import { Authors } from 'contentlayer/generated'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import AuthorLayout from '@/layouts/AuthorLayout'
 import { coreContent } from 'pliny/utils/contentlayer'
 import { genPageMetadata } from 'app/seo'
+import siteMetadata from '@/data/siteMetadata'
+import { getAllAuthors } from 'app/helpers'
+import { translate } from '@/data/translations'
 
-export const metadata = genPageMetadata({ title: 'About' })
+const _t = translate(siteMetadata.defaultLocale)
+const allAuthors = getAllAuthors(siteMetadata.defaultLocale)
+
+export const metadata = genPageMetadata({ title: _t('About') })
 
 export default function Page() {
   const author = allAuthors.find((p) => p.slug === 'default') as Authors

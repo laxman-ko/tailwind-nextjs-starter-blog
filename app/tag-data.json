@@ -1,3 +1,9 @@
 {
-  "hello": 1
+  "en": {
+    "hello": 1
+  },
+  "ne": {
+    "sabda": 1,
+    "sakti": 1
+  }
 }

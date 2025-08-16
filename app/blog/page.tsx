@@ -1,10 +1,14 @@
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
-import { allBlogs } from 'contentlayer/generated'
+import { getAllBlogs } from 'app/helpers'
 import { genPageMetadata } from 'app/seo'
 import ListLayout from '@/layouts/ListLayoutWithTags'
-import { _t } from '@/data/translations'
+import { translate } from '@/data/translations'
+import siteMetadata from '@/data/siteMetadata'
 
 const POSTS_PER_PAGE = 5
+
+const _t = translate(siteMetadata.defaultLocale)
+const allBlogs = getAllBlogs(siteMetadata.defaultLocale)
 
 export const metadata = genPageMetadata({ title: _t('Blog') })
 

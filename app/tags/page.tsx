@@ -3,7 +3,12 @@ import Tag from '@/components/Tag'
 import { slug } from 'github-slugger'
 import tagData from 'app/tag-data.json'
 import { genPageMetadata } from 'app/seo'
-import { _t } from '@/data/translations'
+import { translate } from '@/data/translations'
+import siteMetadata from '@/data/siteMetadata'
+import { getAllBlogs } from 'app/helpers'
+
+const _t = translate(siteMetadata.defaultLocale)
+const allBlogs = getAllBlogs(siteMetadata.defaultLocale)
 
 export const metadata = genPageMetadata({
   title: _t('Tags'),

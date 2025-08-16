@@ -1,6 +1,10 @@
 import siteMetadata from './siteMetadata'
 
 const translations = {
+  'Under Construction': {
+    en: 'Under Construction',
+    ne: 'प्रतीक्षा गर्नुहोस्, चाँडै आउँदै छ।',
+  },
   'Previous post: %%': {
     en: 'Previous post: %%',
     ne: 'अघिल्लो लेख: %%',
@@ -181,27 +185,26 @@ const translations = {
     en: 'Latest',
     ne: 'ताजा लेखहरु',
   },
-  'Under Construction': {
-    en: 'Under Construction',
-    ne: 'माँग्दछ',
-  },
 }
 
 /**
  * @typedef {keyof typeof translations} TranslationKey
+ * @typedef {keyof typeof translations[TranslationKey]} LocaleKey
  */
 
 /**
- * @param {TranslationKey} text - Must be one of the keys from 'translations'
- * @param {...string} args - Optional replacement args for %%
- * @returns {string}
+ * Creates a translate function for a given locale
+ *
+ * @param {LocaleKey} locale - The locale code (e.g. 'en', 'ne')
+ * @returns {(text: TranslationKey, ...args: string[]) => string}
  */
 
-export const _t = (text, ...args) => {
-  const locale = siteMetadata.locale
-  const template = translations[text]?.[locale] || text
-  let i = 0
-  return template.replace(/%%/g, () => {
-    return args[i++]?.toString() || ''
-  })
+export const translate = (locale) => {
+  return (text, ...args) => {
+    const template = translations[text]?.[locale] || text
+    let i = 0
+    return template.replace(/%%/g, () => {
+      return args[i++]?.toString() || ''
+    })
+  }
 }

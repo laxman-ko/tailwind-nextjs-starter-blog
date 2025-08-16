@@ -1,8 +1,9 @@
-interface Project {
+export interface Project {
   title: string
   description: string
   href?: string
   imgSrc?: string
+  locale: string
 }
 
 const projectsData: Project[] = [
@@ -13,6 +14,7 @@ const projectsData: Project[] = [
     for.`,
     imgSrc: '/static/images/google.png',
     href: 'https://www.google.com',
+    locale: 'en',
   },
   {
     title: 'The Time Machine',
@@ -21,6 +23,14 @@ const projectsData: Project[] = [
     forgotten headphones with this simple yet affordable solution.`,
     imgSrc: '/static/images/time-machine.jpg',
     href: '/blog/the-time-machine',
+    locale: 'en',
+  },
+  {
+    title: 'Nepali Test',
+    description: `Nepali Test`,
+    imgSrc: '/static/images/time-machine.jpg',
+    href: '/blog/the-time-machine',
+    locale: 'ne',
   },
 ]
 
