@@ -2,10 +2,20 @@
 import Link from 'next/link'
 import type { LinkProps } from 'next/link'
 import { AnchorHTMLAttributes } from 'react'
+import siteMetadata from '@/data/siteMetadata'
 
-const CustomLink = ({ href, ...rest }: LinkProps & AnchorHTMLAttributes<HTMLAnchorElement>) => {
+const CustomLink = ({
+  href: _href,
+  ...rest
+}: LinkProps & AnchorHTMLAttributes<HTMLAnchorElement>) => {
+  let href = _href
   const isInternalLink = href && href.startsWith('/')
   const isAnchorLink = href && href.startsWith('#')
+
+  if (isInternalLink && siteMetadata.locale !== siteMetadata.defaultLocale) {
+    const localeSlug = `/${siteMetadata.locale}`
+    href = href === '/' ? localeSlug : `${localeSlug}${href}`
+  }
 
   if (isInternalLink) {
     return <Link className="break-words" href={href} {...rest} />
