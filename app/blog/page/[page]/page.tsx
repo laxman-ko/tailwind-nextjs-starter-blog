@@ -1,14 +1,11 @@
 import ListLayout from '@/layouts/ListLayoutWithTags'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
-import { getAllBlogs } from 'app/helpers'
+import { getSiteHelpers } from 'app/helpers'
 import { notFound } from 'next/navigation'
-import { translate } from '@/data/translations'
-import siteMetadata from '@/data/siteMetadata'
 
 const POSTS_PER_PAGE = 5
 
-const _t = translate(siteMetadata.defaultLocale)
-const allBlogs = getAllBlogs(siteMetadata.defaultLocale)
+const { allBlogs, _t } = getSiteHelpers()
 
 export const generateStaticParams = async () => {
   const totalPages = Math.ceil(allBlogs.length / POSTS_PER_PAGE)

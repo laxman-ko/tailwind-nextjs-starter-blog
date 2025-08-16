@@ -1,5 +1,7 @@
 import { NewsletterAPI } from 'pliny/newsletter'
-import siteMetadata from '@/data/siteMetadata'
+import { getSiteHelpers } from 'app/helpers'
+
+const { siteMetadata } = getSiteHelpers()
 
 export const runtime = 'edge'
 

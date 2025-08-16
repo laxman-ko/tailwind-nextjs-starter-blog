@@ -3,12 +3,9 @@ import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import AuthorLayout from '@/layouts/AuthorLayout'
 import { coreContent } from 'pliny/utils/contentlayer'
 import { genPageMetadata } from 'app/seo'
-import siteMetadata from '@/data/siteMetadata'
-import { getAllAuthors } from 'app/helpers'
-import { translate } from '@/data/translations'
+import { getSiteHelpers } from 'app/helpers'
 
-const _t = translate(siteMetadata.defaultLocale)
-const allAuthors = getAllAuthors(siteMetadata.defaultLocale)
+const { allAuthors, _t } = getSiteHelpers()
 
 export const metadata = genPageMetadata({ title: _t('About') })
 

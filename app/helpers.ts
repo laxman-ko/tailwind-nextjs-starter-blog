@@ -1,14 +1,46 @@
 import { allAuthors, allBlogs } from 'contentlayer/generated'
 import projectsData from '@/data/projectsData'
+import siteMetadata from '@/data/siteMetadata'
+import { translate } from '@/data/translations'
+import tagData from 'app/tag-data.json'
+import headerNavLinks from '@/data/headerNavLinks'
 
-export const getAllAuthors = (locale: string) => {
+const getAllAuthors = (locale: string) => {
   return allAuthors.filter((item) => item.locale === locale)
 }
 
-export const getAllBlogs = (locale: string) => {
+const getAllBlogs = (locale: string) => {
   return allBlogs.filter((item) => item.locale === locale)
 }
 
-export const getAllProjects = (locale: string) => {
+const getAllProjects = (locale: string) => {
   return projectsData.filter((item) => item.locale === locale)
+}
+
+const getSiteSettings = (locale: string) => {
+  return siteMetadata[locale]
+}
+
+const getAllTags = (locale: string) => {
+  return tagData[locale]
+}
+
+const getHeaderNavLinks = (locale: string) => {
+  return headerNavLinks[locale]
+}
+
+export const getSiteHelpers = (locale?: string) => {
+  const siteLocale = locale || Object.values(siteMetadata)[0].defaultLocale
+  if (!siteLocale) {
+    throw new Error('No default locale found')
+  }
+  return {
+    allAuthors: getAllAuthors(siteLocale),
+    allBlogs: getAllBlogs(siteLocale),
+    projectsData: getAllProjects(siteLocale),
+    siteMetadata: getSiteSettings(siteLocale),
+    tagData: getAllTags(siteLocale),
+    headerNavLinks: getHeaderNavLinks(siteLocale),
+    _t: translate(siteLocale),
+  }
 }

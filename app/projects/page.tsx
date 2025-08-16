@@ -1,11 +1,8 @@
 import Card from '@/components/Card'
 import { genPageMetadata } from 'app/seo'
-import { translate } from '@/data/translations'
-import siteMetadata from '@/data/siteMetadata'
-import { getAllProjects } from 'app/helpers'
+import { getSiteHelpers } from 'app/helpers'
 
-const _t = translate(siteMetadata.defaultLocale)
-const projectsData = getAllProjects(siteMetadata.defaultLocale)
+const { projectsData, _t } = getSiteHelpers()
 
 export const metadata = genPageMetadata({ title: _t('Projects') })
 

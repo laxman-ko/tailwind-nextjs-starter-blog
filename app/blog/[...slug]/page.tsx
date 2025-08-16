@@ -10,9 +10,8 @@ import PostSimple from '@/layouts/PostSimple'
 import PostLayout from '@/layouts/PostLayout'
 import PostBanner from '@/layouts/PostBanner'
 import { Metadata } from 'next'
-import siteMetadata from '@/data/siteMetadata'
 import { notFound } from 'next/navigation'
-import { getAllBlogs, getAllAuthors } from 'app/helpers'
+import { getSiteHelpers } from 'app/helpers'
 
 const defaultLayout = 'PostLayout'
 const layouts = {
@@ -21,8 +20,7 @@ const layouts = {
   PostBanner,
 }
 
-const allBlogs = getAllBlogs(siteMetadata.defaultLocale)
-const allAuthors = getAllAuthors(siteMetadata.defaultLocale)
+const { allBlogs, allAuthors, siteMetadata } = getSiteHelpers()
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string[] }>

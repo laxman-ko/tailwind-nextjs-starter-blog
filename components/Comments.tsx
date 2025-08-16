@@ -2,7 +2,9 @@
 
 import { Comments as CommentsComponent } from 'pliny/comments'
 import { useState } from 'react'
-import siteMetadata from '@/data/siteMetadata'
+import { getSiteHelpers } from 'app/helpers'
+
+const { siteMetadata } = getSiteHelpers()
 
 export default function Comments({ slug }: { slug: string }) {
   const [loadComments, setLoadComments] = useState(false)

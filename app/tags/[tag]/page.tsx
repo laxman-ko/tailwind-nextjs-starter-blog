@@ -1,17 +1,13 @@
 import { slug } from 'github-slugger'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
-import siteMetadata from '@/data/siteMetadata'
 import ListLayout from '@/layouts/ListLayoutWithTags'
-import { getAllBlogs } from 'app/helpers'
-import tagData from 'app/tag-data.json'
+import { getSiteHelpers } from 'app/helpers'
 import { genPageMetadata } from 'app/seo'
 import { Metadata } from 'next'
-import { translate } from '@/data/translations'
 
 const POSTS_PER_PAGE = 5
 
-const _t = translate(siteMetadata.defaultLocale)
-const allBlogs = getAllBlogs(siteMetadata.defaultLocale)
+const { allBlogs, tagData, siteMetadata, _t } = getSiteHelpers()
 
 export async function generateMetadata(props: {
   params: Promise<{ tag: string }>

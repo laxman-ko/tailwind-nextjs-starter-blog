@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
-import siteMetadata from '@/data/siteMetadata'
+import { getSiteHelpers } from 'app/helpers'
+
+const { siteMetadata } = getSiteHelpers()
 
 interface PageSEOProps {
   title: string

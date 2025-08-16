@@ -319,8 +319,6 @@ module.exports = siteMetadata
   fs.writeFile(
     TRASNSLATIONS_TEXT_FILE,
     `
-    import siteMetadata from "./siteMetadata"
-
     const translations = ${JSON.stringify(translationsData, null, 2)}
     
     /**
@@ -331,7 +329,7 @@ module.exports = siteMetadata
     /**
      * Creates a translate function for a given locale
      *
-     * @param {LocaleKey} locale - The locale code (e.g. 'en', 'ne')
+     * @param {string} locale - The locale code (e.g. 'en', 'ne')
      * @returns {(text: TranslationKey, ...args: string[]) => string}
      */
 

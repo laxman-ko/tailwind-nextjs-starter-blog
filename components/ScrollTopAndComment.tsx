@@ -1,7 +1,9 @@
 'use client'
 
-import siteMetadata from '@/data/siteMetadata'
+import { getSiteHelpers } from 'app/helpers'
 import { useEffect, useState } from 'react'
+
+const { siteMetadata } = getSiteHelpers()
 
 const ScrollTopAndComment = () => {
   const [show, setShow] = useState(false)

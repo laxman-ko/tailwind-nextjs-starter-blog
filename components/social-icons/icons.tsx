@@ -110,3 +110,12 @@ export function Bluesky(svgProps: SVGProps<SVGSVGElement>) {
     </svg>
   )
 }
+
+export function Tiktok(svgProps: SVGProps<SVGSVGElement>) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...svgProps}>
+      <title>TikTok</title>
+      <path d="M12.525 2c1.1 0 2.087.45 2.805 1.171a3.97 3.97 0 0 0 1.17 2.835 3.99 3.99 0 0 0 2.835 1.171v2.46a6.45 6.45 0 0 1-3.465-1.012v6.907c0 3.69-2.998 6.668-6.668 6.668A6.67 6.67 0 0 1 2.5 15.523c0-3.67 2.978-6.668 6.668-6.668.232 0 .46.013.684.04v2.497a4.2 4.2 0 0 0-.684-.056 4.18 4.18 0 0 0-4.172 4.187 4.18 4.18 0 0 0 4.172 4.188c2.314 0 4.208-1.875 4.208-4.188V2h2.149z" />
+    </svg>
+  )
+}

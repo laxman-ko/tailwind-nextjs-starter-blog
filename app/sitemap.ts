@@ -1,6 +1,8 @@
 import { MetadataRoute } from 'next'
 import { allBlogs } from 'contentlayer/generated'
-import siteMetadata from '@/data/siteMetadata'
+import { getSiteHelpers } from 'app/helpers'
+
+const { siteMetadata } = getSiteHelpers()
 
 export const dynamic = 'force-static'
 

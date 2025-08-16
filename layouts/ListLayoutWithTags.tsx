@@ -7,9 +7,9 @@ import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Blog } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
-import siteMetadata from '@/data/siteMetadata'
-import tagData from 'app/tag-data.json'
-import { _t } from '@/data/translations'
+import { getSiteHelpers } from 'app/helpers'
+
+const { siteMetadata, tagData, _t } = getSiteHelpers()
 
 interface PaginationProps {
   totalPages: number

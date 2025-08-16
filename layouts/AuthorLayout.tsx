@@ -2,7 +2,9 @@ import { ReactNode } from 'react'
 import type { Authors } from 'contentlayer/generated'
 import SocialIcon from '@/components/social-icons'
 import Image from '@/components/Image'
-import { _t } from '@/data/translations'
+import { getSiteHelpers } from 'app/helpers'
+
+const { _t } = getSiteHelpers()
 
 interface Props {
   children: ReactNode
@@ -10,7 +12,8 @@ interface Props {
 }
 
 export default function AuthorLayout({ children, content }: Props) {
-  const { name, avatar, occupation, company, email, twitter, bluesky, linkedin, github } = content
+  const { name, avatar, occupation, company, email, twitter, bluesky, linkedin, github, tiktok } =
+    content
 
   return (
     <>
@@ -40,6 +43,7 @@ export default function AuthorLayout({ children, content }: Props) {
               <SocialIcon kind="linkedin" href={linkedin} />
               <SocialIcon kind="x" href={twitter} />
               <SocialIcon kind="bluesky" href={bluesky} />
+              <SocialIcon kind="tiktok" href={tiktok} />
             </div>
           </div>
           <div className="prose dark:prose-invert max-w-none pt-8 pb-8 xl:col-span-2">

@@ -1,5 +1,3 @@
-import siteMetadata from './siteMetadata'
-
 const translations = {
   'Under Construction': {
     en: 'Under Construction',
@@ -195,7 +193,7 @@ const translations = {
 /**
  * Creates a translate function for a given locale
  *
- * @param {LocaleKey} locale - The locale code (e.g. 'en', 'ne')
+ * @param {string} locale - The locale code (e.g. 'en', 'ne')
  * @returns {(text: TranslationKey, ...args: string[]) => string}
  */
 

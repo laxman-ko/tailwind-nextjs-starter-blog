@@ -1,7 +1,9 @@
 'use client'
 
 import { ThemeProvider } from 'next-themes'
-import siteMetadata from '@/data/siteMetadata'
+import { getSiteHelpers } from 'app/helpers'
+
+const { siteMetadata } = getSiteHelpers()
 
 export function ThemeProviders({ children }: { children: React.ReactNode }) {
   return (
