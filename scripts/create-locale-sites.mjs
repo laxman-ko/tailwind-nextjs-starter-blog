@@ -6,6 +6,7 @@ import siteMetadata from '../data/siteMetadata.js' // adjust path
 const rootDir = path.resolve('app', '(root)') // source pages
 const i18nDir = path.resolve('app', '(i18n)') // locale copies
 const componentsDir = path.resolve('components') // components folder
+const layoutDir = path.resolve('layouts') // layouts folder
 const defaultLocale = Object.values(siteMetadata)[0].defaultLocale
 
 // --- Get all locales from siteMetadata ---
@@ -78,6 +79,7 @@ function copyComponent(componentName, locale) {
 
   let content = fs.readFileSync(srcPath, 'utf8')
   content = content.replace(/getSiteHelpers\s*\(\s*\)/g, `getSiteHelpers('${locale}')`)
+  content = content.replace("import Link from './Link'", `import Link from './Link__${locale}'`)
   fs.writeFileSync(destPath, content, 'utf8')
 }
 
@@ -133,6 +135,7 @@ for (const locale of siteLocales) {
   // Update imports in i18n pages
   const localeAppDir = path.join(i18nDir, locale)
   updateImports(localeAppDir, componentsToCopy, locale)
+  updateImports(layoutDir, componentsToCopy, locale)
 }
 
 console.log('\n✅ All locales processed successfully!')
