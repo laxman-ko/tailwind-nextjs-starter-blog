@@ -1,6 +1,6 @@
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { getSiteHelpers } from 'app/helpers'
-import { genPageMetadata } from 'app/seo'
+import { genPageMetadata } from 'app/(root)/seo'
 import ListLayout from '@/layouts/ListLayoutWithTags'
 
 const POSTS_PER_PAGE = 5

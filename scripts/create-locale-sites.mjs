@@ -1,10 +1,9 @@
-// scripts/duplicate-locales.js
 import fs from 'fs'
 import path from 'path'
-import siteMetadata from '../data/siteMetadata.js' // adjust path if needed
+import siteMetadata from '../data/siteMetadata.js' // adjust path
 
-const rootDir = path.resolve('app', '(root)') // source files
-const i18nDir = path.resolve('app', '(i18n)') // locale directories
+const rootDir = path.resolve('app', '(root)')
+const i18nDir = path.resolve('app', '(i18n)')
 const defaultLocale = Object.values(siteMetadata)[0].defaultLocale
 
 // --- Get all locales from siteMetadata ---
@@ -14,22 +13,25 @@ if (!siteLocales.length) {
   process.exit(1)
 }
 
+// --- Clean i18n directory ---
+if (fs.existsSync(i18nDir)) {
+  console.log(`🧹 Cleaning directory: ${i18nDir}`)
+  fs.rmSync(i18nDir, { recursive: true, force: true })
+}
+fs.mkdirSync(i18nDir, { recursive: true })
+
+// --- Utility to copy directories/files recursively ---
 function copyEntry(srcPath, destPath, locale) {
   const stats = fs.statSync(srcPath)
 
   if (stats.isDirectory()) {
-    if (!fs.existsSync(destPath)) {
-      fs.mkdirSync(destPath, { recursive: true })
-    }
+    if (!fs.existsSync(destPath)) fs.mkdirSync(destPath, { recursive: true })
     for (const entry of fs.readdirSync(srcPath)) {
       copyEntry(path.join(srcPath, entry), path.join(destPath, entry), locale)
     }
   } else {
-    // Ensure parent directory exists
     const destDir = path.dirname(destPath)
-    if (!fs.existsSync(destDir)) {
-      fs.mkdirSync(destDir, { recursive: true })
-    }
+    if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true })
 
     let content = fs.readFileSync(srcPath, 'utf8')
     content = content.replace(/getSiteHelpers\s*\(\s*\)/g, `getSiteHelpers('${locale}')`)

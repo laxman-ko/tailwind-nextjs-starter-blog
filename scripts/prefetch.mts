@@ -112,13 +112,12 @@ async function preContent() {
   if (settings.length === 0) throw new Error('Settings not found')
 
   const locales = Object.keys(settings[0].properties).filter((key) => key !== 'Name')
-  const defaultSettingsLocale = 'en'
 
   const settingsJson = {} as Record<string, Record<string, string | object>>
 
   settings.forEach((setting) => {
     const settingName = setting.properties.Name.title[0].plain_text
-    const enValue = setting.properties[defaultSettingsLocale].rich_text?.[0]?.plain_text
+    const defaultValue = setting.properties[DEFAULT_SITE_LOCALE].rich_text?.[0]?.plain_text
 
     locales.forEach((locale) => {
       if (!settingsJson[locale])
@@ -126,7 +125,7 @@ async function preContent() {
           locale,
         }
       // @ts-expect-error 'rich_text'
-      const value = setting.properties[locale].rich_text?.[0]?.plain_text || enValue
+      const value = setting.properties[locale].rich_text?.[0]?.plain_text || defaultValue
       try {
         settingsJson[locale][settingName] = JSON.parse(value)
       } catch (error) {

@@ -2,7 +2,7 @@ import { slug } from 'github-slugger'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import ListLayout from '@/layouts/ListLayoutWithTags'
 import { getSiteHelpers } from 'app/helpers'
-import { genPageMetadata } from 'app/seo'
+import { genPageMetadata } from 'app/(root)/seo'
 import { Metadata } from 'next'
 
 const POSTS_PER_PAGE = 5

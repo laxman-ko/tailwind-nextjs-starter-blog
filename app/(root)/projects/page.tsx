@@ -1,5 +1,5 @@
 import Card from '@/components/Card'
-import { genPageMetadata } from 'app/seo'
+import { genPageMetadata } from 'app/(root)/seo'
 import { getSiteHelpers } from 'app/helpers'
 
 const { projectsData, _t } = getSiteHelpers()
