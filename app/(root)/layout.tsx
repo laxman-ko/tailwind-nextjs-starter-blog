@@ -64,13 +64,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const basePath = process.env.BASE_PATH || ''
 
   if (siteMetadata.isUnderConstruction) {
-    return (
-      <html lang={siteMetadata.language}>
-        <body>
-          <h1>{_t('Under Construction')}</h1>
-        </body>
-      </html>
-    )
+    // return (
+    //   <html lang={siteMetadata.language}>
+    //     <body>
+    //       <h1>{_t('Under Construction')}</h1>
+    //     </body>
+    //   </html>
+    // )
   }
 
   return (

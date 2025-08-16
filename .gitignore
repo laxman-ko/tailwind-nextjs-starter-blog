@@ -52,3 +52,6 @@ data/authors
 
 # wrangler.toml
 .dev.vars
+
+# locales
+app/(i18n)

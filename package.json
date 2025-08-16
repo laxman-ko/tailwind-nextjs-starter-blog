@@ -6,12 +6,13 @@
     "start": "next dev",
     "dev": "cross-env INIT_CWD=$PWD next dev",
     "prefetch": "cross-env INIT_CWD=$PWD tsx --tsconfig ./tsconfig.json ./scripts/prefetch.mts && yarn prettier ./data --write --ignore-path=''",
-    "build": "yarn prefetch && cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
+    "build": "yarn prefetch && yarn create-locale-sites && cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
     "lint": "next lint --fix --dir pages --dir app --dir components --dir lib --dir layouts --dir scripts",
     "prepare": "husky",
-    "save": "yarn prettier . --write && git add . && git commit -m 'save' && git push"
+    "save": "yarn prettier . --write && git add . && git commit -m 'save' && git push",
+    "create-locale-sites": "node scripts/create-locale-sites.mjs"
   },
   "dependencies": {
     "@headlessui/react": "2.2.0",
