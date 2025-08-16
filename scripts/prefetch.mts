@@ -201,7 +201,7 @@ module.exports = siteMetadata
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
       const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
-      await fs.writeFile(`${AUTHORS_DIR}/${slug}.mdx`, mdxContent)
+      await fs.writeFile(`${AUTHORS_DIR}/${slug}__${locale}.mdx`, mdxContent)
     })
   })
 
@@ -274,7 +274,7 @@ module.exports = siteMetadata
       }
       const frontmatterYaml = `---\n${yaml.dump(frontmatter, { lineWidth: 100 })}\n---\n`
       const mdxContent = `${frontmatterYaml}\n\n${mdContent}`
-      const mdxFile = `${ARTICLES_DIR}/${slug}.mdx`
+      const mdxFile = `${ARTICLES_DIR}/${slug}__${locale}.mdx`
       try {
         await fs.access(mdxFile)
         throw new Error(`File ${mdxFile} already exists`)

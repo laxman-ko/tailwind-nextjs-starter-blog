@@ -2,12 +2,13 @@ import { writeFileSync, mkdirSync } from 'fs'
 import path from 'path'
 import { slug } from 'github-slugger'
 import { escape } from 'pliny/utils/htmlEscaper.js'
-import { getSiteHelpers } from 'app/helpers'
-import tagData from '../app/tag-data.json' with { type: 'json' }
+import siteMetadataLocalized from '../data/siteMetadata.js'
+import tagDataLocalized from '../app/tag-data.json' with { type: 'json' }
 import { allBlogs } from '../.contentlayer/generated/index.mjs'
 import { sortPosts } from 'pliny/utils/contentlayer.js'
 
-const { siteMetadata } = getSiteHelpers()
+const tagData = tagDataLocalized['en']
+const siteMetadata = siteMetadataLocalized['en']
 
 const outputFolder = process.env.EXPORT ? 'out' : 'public'
 

@@ -1,6 +1,8 @@
 import { sortPosts, allCoreContent } from 'pliny/utils/contentlayer'
-import { allBlogs } from 'contentlayer/generated'
+import { getSiteHelpers } from 'app/helpers'
 import Main from './Main'
+
+const { allBlogs } = getSiteHelpers()
 
 export default async function Page() {
   const sortedPosts = sortPosts(allBlogs)

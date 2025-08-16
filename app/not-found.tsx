@@ -1,5 +1,7 @@
 import Link from '@/components/Link'
-import { _t } from '@/data/translations'
+import { getSiteHelpers } from 'app/helpers'
+
+const { _t } = getSiteHelpers()
 
 export default function NotFound() {
   return (

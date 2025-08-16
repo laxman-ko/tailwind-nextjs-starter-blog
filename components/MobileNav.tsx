@@ -4,7 +4,9 @@ import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/re
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
 import { Fragment, useState, useEffect, useRef } from 'react'
 import Link from './Link'
-import headerNavLinks from '@/data/headerNavLinks'
+import { getSiteHelpers } from 'app/helpers'
+
+const { headerNavLinks } = getSiteHelpers()
 
 const MobileNav = () => {
   const [navShow, setNavShow] = useState(false)
