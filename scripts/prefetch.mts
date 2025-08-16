@@ -28,30 +28,9 @@ const LANGUAGE_COUNTRY_MATCH_REGEX = /^\/([a-z]{2})(?:\/([a-z]{2}))?(?=\/|$)/
 
 type Locale = keyof typeof locales
 
-export const isValidLocale = (locale: string): boolean => {
-  return Object.keys(locales).includes(locale)
-}
-
-export const getLocaleFromPathname = (pathname?: string): Locale | 400 | null => {
-  if (!pathname) return null
-  // match /us/en/ (country/language) or /en/ (language)
-  const [_, countryOrLanguageCode, languageCode] =
-    pathname.match(LANGUAGE_COUNTRY_MATCH_REGEX) ?? []
-
-  if (!countryOrLanguageCode) return null
-
-  const locale = (
-    languageCode ? `${languageCode}-${countryOrLanguageCode.toUpperCase()}` : countryOrLanguageCode
-  ) as Locale
-
-  if (!isValidLocale(locale)) return 400
-
-  return locale
-}
-
 const DEFAULT_SITE_LOCALE = 'ne'
 const siteMetadata = {
-  locale: getLocaleFromPathname(process.env.BASE_PATH) || DEFAULT_SITE_LOCALE,
+  locale: process.env.SITE_LOCALE || DEFAULT_SITE_LOCALE,
 } as Record<string, string | object>
 
 const getLocaleByName = (language: string): string => {
