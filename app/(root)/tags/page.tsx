@@ -1,7 +1,7 @@
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import { slug } from 'github-slugger'
-import { genPageMetadata } from 'app/(root)/seo'
+import { genPageMetadata } from '../seo'
 import { getSiteHelpers } from 'app/helpers'
 
 const { tagData, _t } = getSiteHelpers()

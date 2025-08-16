@@ -2,7 +2,7 @@ import { Authors } from 'contentlayer/generated'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import AuthorLayout from '@/layouts/AuthorLayout'
 import { coreContent } from 'pliny/utils/contentlayer'
-import { genPageMetadata } from 'app/(root)/seo'
+import { genPageMetadata } from '../seo'
 import { getSiteHelpers } from 'app/helpers'
 
 const { allAuthors, _t } = getSiteHelpers()

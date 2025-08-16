@@ -11,7 +11,7 @@ const siteMetadata = {
       "A thinker, questioner and curious - Laxman's letters filled with thoughts, curiosity and inspirations",
     language: 'en',
     theme: 'system',
-    siteUrl: 'https://akshar.laxmanko.com',
+    siteUrl: 'https://akshar.laxmanko.com/en',
     siteRepo: 'https://github.com/laxmanko/akshar',
     siteLogo: 'static/images/logo.png',
     socialBanner: 'static/images/twitter-card.png',
