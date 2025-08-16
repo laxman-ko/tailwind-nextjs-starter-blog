@@ -46,7 +46,7 @@ function getComponentsUsingGetSiteHelpers() {
   // return fs.readdirSync(componentsDir)
   //   .filter(file => (file.endsWith(".ts") || file.endsWith(".tsx")))
   //   .filter(file => /getSiteHelpers\s*\(/.test(fs.readFileSync(path.join(componentsDir, file), "utf8")));
-  return ['Header.tsx', 'MobileNav.tsx']
+  return ['Header.tsx', 'MobileNav.tsx', 'Link.tsx']
 }
 
 // --- Delete created locale-specific components ---
