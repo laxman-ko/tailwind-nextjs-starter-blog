@@ -66,14 +66,14 @@ export default [
       '@typescript-eslint/no-var-requires': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
       'no-duplicate-imports': 'error',
-    }
-  },
-  {
-    files: ['scripts/**/*.mts'],
-    languageOptions: {
-      parserOptions: {
-        project: null,
-      },
     },
+    overrides: [
+      {
+        files: ['scripts/**/*.mts'],
+        parserOptions: {
+          project: null,
+        },
+      },
+    ],
   },
 ]
