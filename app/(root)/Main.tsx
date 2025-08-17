@@ -47,7 +47,7 @@ export default function Home({ posts }) {
                           </h2>
                           <div className="flex flex-wrap">
                             {tags.map((tag) => (
-                              <Tag key={tag} text={tag} />
+                              <Tag key={tag} text={tag} localePrefix={siteMetadata.localeSlug} />
                             ))}
                           </div>
                         </div>
