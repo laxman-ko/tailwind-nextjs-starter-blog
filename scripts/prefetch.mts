@@ -35,6 +35,18 @@ const getLocaleByName = (language: string): string => {
   return Object.keys(locales).find((locale: string) => locales[locale] === language) as string
 }
 
+export const getLocalePath = (locale: Locale): string => {
+  const [localeCode, countryCode] = locale.split('-')
+  const localeSlugs = [countryCode, localeCode].filter(Boolean)
+  if (locale === DEFAULT_SITE_LOCALE) return ''
+  return '/' + localeSlugs.join('/').toLowerCase()
+}
+
+export const withLocalePath = (path: string, locale: Locale): string => {
+  const localePath = getLocalePath(locale)
+  return localePath + path
+}
+
 const downloadAsset = async (
   url: string,
   relativeSavePathWithoutExt: string,
@@ -368,7 +380,7 @@ module.exports = siteMetadata
     hierarchialNavigationList[navigationName][locale] = navigationItem.children.map((item) => {
       return {
         // @ts-expect-error 'url'
-        href: item.properties.href.url,
+        href: withLocalePath(item.properties.href.url, locale),
         // @ts-expect-error 'title'
         title: item.properties.Name.title[0].plain_text,
       }

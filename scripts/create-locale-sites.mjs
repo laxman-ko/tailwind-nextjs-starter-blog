@@ -47,17 +47,27 @@ function getComponentsUsingGetSiteHelpers() {
   // return fs.readdirSync(componentsDir)
   //   .filter(file => (file.endsWith(".ts") || file.endsWith(".tsx")))
   //   .filter(file => /getSiteHelpers\s*\(/.test(fs.readFileSync(path.join(componentsDir, file), "utf8")));
-  return ['Header.tsx', 'MobileNav.tsx', 'Link.tsx']
+  return ['Header.tsx', 'MobileNav.tsx']
+}
+
+// -- Scan layouts that use getSiteHelpers() --
+function getLayoutsUsingGetSiteHelpers() {
+  return fs
+    .readdirSync(layoutDir)
+    .filter((file) => file.endsWith('.ts') || file.endsWith('.tsx'))
+    .filter((file) =>
+      /getSiteHelpers\s*\(/.test(fs.readFileSync(path.join(layoutDir, file), 'utf8'))
+    )
 }
 
 // --- Delete created locale-specific components ---
-function deleteLocaleComponents(components, locales) {
+function deleteLocaleComponents(components, locales, dir = componentsDir) {
   for (const locale of locales) {
     if (locale === defaultLocale) continue
 
     for (const comp of components) {
       const [name, ext] = comp.split('.')
-      const filePath = path.join(componentsDir, `${name}__${locale}.${ext}`)
+      const filePath = path.join(dir, `${name}__${locale}.${ext}`)
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath)
         console.log(`🗑 Deleted: ${name}__${locale}.${ext}`)
@@ -66,38 +76,38 @@ function deleteLocaleComponents(components, locales) {
   }
 }
 
-deleteLocaleComponents(getComponentsUsingGetSiteHelpers(), siteLocales)
+deleteLocaleComponents(getComponentsUsingGetSiteHelpers(), siteLocales, componentsDir)
+deleteLocaleComponents(getLayoutsUsingGetSiteHelpers(), siteLocales, layoutDir)
 
 // --- Copy and rename components per locale ---
-function copyComponent(componentName, locale) {
-  const srcPath = path.join(componentsDir, componentName)
+function copyComponent(componentName, locale, dir = componentsDir) {
+  const srcPath = path.join(dir, componentName)
   if (!fs.existsSync(srcPath)) return
 
   const [name, ext] = componentName.split('.')
   const destName = `${name}__${locale}.${ext}`
-  const destPath = path.join(componentsDir, destName)
+  const destPath = path.join(dir, destName)
 
   let content = fs.readFileSync(srcPath, 'utf8')
   content = content.replace(/getSiteHelpers\s*\(\s*\)/g, `getSiteHelpers('${locale}')`)
-  content = content.replace("import Link from './Link'", `import Link from './Link__${locale}'`)
   fs.writeFileSync(destPath, content, 'utf8')
 }
 
 // --- Update imports in files recursively ---
-function updateImports(filePath, components, locale) {
+function updateImports(filePath, components, locale, type = 'components') {
   if (!fs.existsSync(filePath)) return
   const stats = fs.statSync(filePath)
 
   if (stats.isDirectory()) {
     for (const entry of fs.readdirSync(filePath)) {
-      updateImports(path.join(filePath, entry), components, locale)
+      updateImports(path.join(filePath, entry), components, locale, type)
     }
   } else if (filePath.endsWith('.ts') || filePath.endsWith('.tsx')) {
     let content = fs.readFileSync(filePath, 'utf8')
     for (const component of components) {
       const [name] = component.split('.')
-      const regex = new RegExp(`from ['"]@/components/${name}['"]`, 'g')
-      content = content.replace(regex, `from '@/components/${name}__${locale}'`)
+      const regex = new RegExp(`from ['"]@/${type}/${name}['"]`, 'g')
+      content = content.replace(regex, `from '@/${type}/${name}__${locale}'`)
     }
     fs.writeFileSync(filePath, content, 'utf8')
   }
@@ -129,12 +139,20 @@ for (const locale of siteLocales) {
 
   // Copy components that use getSiteHelpers()
   for (const comp of componentsToCopy) {
-    copyComponent(comp, locale)
+    copyComponent(comp, locale, componentsDir)
+  }
+
+  // Copy layouts
+  const layoutsToCopy = getLayoutsUsingGetSiteHelpers()
+  console.log('Layouts to copy:', layoutsToCopy.join(', '))
+  for (const layoutName of layoutsToCopy) {
+    copyComponent(layoutName, locale, layoutDir)
   }
 
   // Update imports in i18n pages
   const localeAppDir = path.join(i18nDir, locale)
-  updateImports(localeAppDir, componentsToCopy, locale)
+  updateImports(localeAppDir, componentsToCopy, locale, 'components')
+  updateImports(localeAppDir, layoutsToCopy, locale, 'layouts')
 }
 
 console.log('\n✅ All locales processed successfully!')

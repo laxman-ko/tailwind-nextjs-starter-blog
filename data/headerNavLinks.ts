@@ -1,8 +1,8 @@
 const headerNavLinks = {
   en: [
-    { href: '/about', title: 'About' },
-    { href: '/blog', title: 'Blog' },
-    { href: '/', title: 'Home' },
+    { href: '/en/about', title: 'About' },
+    { href: '/en/blog', title: 'Blog' },
+    { href: '/en/', title: 'Home' },
   ],
   ne: [
     { href: '/about', title: 'मेरो बारेमा' },
