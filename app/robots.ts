@@ -1,7 +1,5 @@
 import { MetadataRoute } from 'next'
-import { getSiteHelpers } from 'app/helpers'
-
-const { siteMetadata } = getSiteHelpers()
+import siteMetadata from '@/data/siteMetadata'
 
 export const dynamic = 'force-static'
 
@@ -11,7 +9,9 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: `${siteMetadata.siteUrl}/sitemap.xml`,
-    host: siteMetadata.siteUrl,
+    sitemap: Object.keys(siteMetadata).map(
+      (locale) => `${siteMetadata[locale].siteUrl}/sitemap.xml`
+    ),
+    host: siteMetadata[Object.values(siteMetadata)[0].defaultLocale].siteUrl,
   }
 }

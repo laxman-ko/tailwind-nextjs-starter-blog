@@ -26,7 +26,7 @@ import siteMetadataLocalized from './data/siteMetadata'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
 import prettier from 'prettier'
 
-const defaultLocale = 'ne'
+const defaultLocale = Object.values(siteMetadataLocalized)[0].defaultLocale
 const siteMetadata = siteMetadataLocalized[defaultLocale]
 
 export const getLocalePath = (locale: string): string => {

@@ -28,7 +28,7 @@ const LANGUAGE_COUNTRY_MATCH_REGEX = /^\/([a-z]{2})(?:\/([a-z]{2}))?(?=\/|$)/
 
 type Locale = keyof typeof locales
 
-const DEFAULT_SITE_LOCALE = 'ne'
+let defaultSiteLocale
 let siteMetadata = {} as Record<string, Record<string, string | object>>
 
 const getLocaleByName = (language: string): string => {
@@ -38,7 +38,7 @@ const getLocaleByName = (language: string): string => {
 export const getLocalePath = (locale: Locale): string => {
   const [localeCode, countryCode] = locale.split('-')
   const localeSlugs = [countryCode, localeCode].filter(Boolean)
-  if (locale === DEFAULT_SITE_LOCALE) return ''
+  if (locale === defaultSiteLocale) return ''
   return '/' + localeSlugs.join('/').toLowerCase()
 }
 
@@ -127,9 +127,15 @@ async function preContent() {
 
   const settingsJson = {} as Record<string, Record<string, string | object>>
 
+  defaultSiteLocale =
+    settings.find((setting) => {
+      return setting.properties.Name.title[0].plain_text === 'defaultLocale'
+    })?.properties['ne'].rich_text?.[0]?.plain_text || 'ne'
+
   settings.forEach((setting) => {
     const settingName = setting.properties.Name.title[0].plain_text
-    const defaultValue = setting.properties[DEFAULT_SITE_LOCALE].rich_text?.[0]?.plain_text
+    // @ts-expect-error 'rich_text'
+    const defaultValue = setting.properties[defaultSiteLocale].rich_text?.[0]?.plain_text
 
     locales.forEach((locale) => {
       if (!settingsJson[locale])
