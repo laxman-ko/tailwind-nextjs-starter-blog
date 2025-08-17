@@ -1,0 +1,33 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Only run if on develop branch
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+if [ "$current_branch" != "develop" ]; then
+  echo "Not on develop branch, skipping automatic merge."
+  exit 0
+fi
+
+echo "Preparing to merge develop → main..."
+
+# Fetch latest changes
+git fetch origin main
+
+# Checkout main branch
+git checkout main || { echo "Failed to checkout main"; exit 1; }
+
+# Merge develop into main
+git merge develop -m "Auto-merge develop into main" || {
+  echo "Merge conflicts detected! Resolve them manually."
+  git merge --abort
+  git checkout develop
+  exit 1
+}
+
+# Push main branch
+git push origin main || { echo "Failed to push main"; exit 1; }
+
+# Return to develop branch
+git checkout develop || { echo "Failed to switch back to develop"; exit 1; }
+
+echo "Automatic merge complete! You are back on develop."
