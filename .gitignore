@@ -46,6 +46,10 @@ yarn-error.log*
 # Contentlayer
 .contentlayer
 
+# Generated data
+data/blog
+data/authors
+
 # locales
 app/(i18n)
 components/*__*.tsx
