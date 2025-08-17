@@ -45,17 +45,24 @@ const icon = fromHtmlIsomorphic(
   { fragment: true }
 )
 
+const getLocaleBlogPath = (locale: string) => {
+  const localePath = getLocalePath(locale)
+  if (!localePath) return ''
+  return localePath.replace(/^\//, '') + '/'
+}
+
 const computedFields: ComputedFields = {
   readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
   slug: {
     type: 'string',
+
     resolve: (doc) =>
-      doc._raw.flattenedPath.replace(/^.+?(\/)/, '').replace(/\__[a-z]{2}(-[A-Z]{2})?$/, ''),
+      doc._raw.flattenedPath.replace(/^.+?(\/)/, '').replace(/__[a-z]{2}(-[A-Z]{2})?$/, ''),
   },
   path: {
     type: 'string',
     resolve: (doc) =>
-      getLocalePath(doc.locale) + doc._raw.flattenedPath.replace(/\__[a-z]{2}(-[A-Z]{2})?$/, ''),
+      getLocaleBlogPath(doc.locale) + doc._raw.flattenedPath.replace(/__[a-z]{2}(-[A-Z]{2})?$/, ''),
   },
   filePath: {
     type: 'string',
