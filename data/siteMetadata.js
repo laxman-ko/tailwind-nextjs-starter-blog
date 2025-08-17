@@ -1,4 +1,4 @@
-/** @type {{ [locale: string]: import("pliny/config").PlinyConfig & { isUnderConstruction: boolean, defaultLocale: string, localeSlug: string }}} */
+/** @type {{ [locale: string]: import("pliny/config").PlinyConfig & { isUnderConstruction: boolean, defaultLocale: string, localeSlug: string, deployHooks: { production: string, preview: string } }}} */
 const siteMetadata = {
   en: {
     locale: 'en',
@@ -33,6 +33,12 @@ const siteMetadata = {
       kbarConfig: {
         searchDocumentsPath: '/search.json',
       },
+    },
+    deployHooks: {
+      production:
+        'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/07c7ba1b-ffdb-4a5d-8e08-ce4a158bc76b',
+      preview:
+        'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/07c7ba1b-ffdb-4a5d-8e08-ce4a158bc76b',
     },
   },
   ne: {
