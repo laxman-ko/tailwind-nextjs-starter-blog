@@ -1,7 +1,9 @@
 import rss from './rss.mjs'
-
+import siteMetadataLocalized from '../data/siteMetadata.js'
 async function postbuild() {
-  await rss()
+  for (const locale of Object.keys(siteMetadataLocalized)) {
+    await rss(siteMetadataLocalized[locale])
+  }
 }
 
 postbuild()

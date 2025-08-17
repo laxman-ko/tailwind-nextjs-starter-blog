@@ -2,15 +2,11 @@ import { writeFileSync, mkdirSync } from 'fs'
 import path from 'path'
 import { slug } from 'github-slugger'
 import { escape } from 'pliny/utils/htmlEscaper.js'
-import siteMetadataLocalized from '../data/siteMetadata.js'
 import tagDataLocalized from '../app/tag-data.json' with { type: 'json' }
 import { allBlogs } from '../.contentlayer/generated/index.mjs'
 import { sortPosts } from 'pliny/utils/contentlayer.js'
 
-const tagData = tagDataLocalized['en']
-const siteMetadata = siteMetadataLocalized['en']
-
-const outputFolder = process.env.EXPORT ? 'out' : 'public'
+const outputFolderDefault = process.env.EXPORT ? 'out' : 'public'
 
 const generateRssItem = (config, post) => `
   <item>
@@ -40,7 +36,7 @@ const generateRss = (config, posts, page = 'feed.xml') => `
   </rss>
 `
 
-async function generateRSS(config, allBlogs, page = 'feed.xml') {
+async function generateRSS(config, allBlogs, outputFolder, page = 'feed.xml') {
   const publishPosts = allBlogs.filter((post) => post.draft !== true)
   // RSS for blog post
   if (publishPosts.length > 0) {
@@ -49,7 +45,7 @@ async function generateRSS(config, allBlogs, page = 'feed.xml') {
   }
 
   if (publishPosts.length > 0) {
-    for (const tag of Object.keys(tagData)) {
+    for (const tag of Object.keys(tagDataLocalized[config.locale])) {
       const filteredPosts = allBlogs.filter((post) => post.tags.map((t) => slug(t)).includes(tag))
       const rss = generateRss(config, filteredPosts, `tags/${tag}/${page}`)
       const rssPath = path.join(outputFolder, 'tags', tag)
@@ -59,8 +55,22 @@ async function generateRSS(config, allBlogs, page = 'feed.xml') {
   }
 }
 
-const rss = () => {
-  generateRSS(siteMetadata, allBlogs)
-  console.log('RSS feed generated...')
+const rss = (siteMetadata) => {
+  let outputFolder = outputFolderDefault + siteMetadata.localeSlug
+
+  if (siteMetadata.localeSlug) {
+    try {
+      mkdirSync(outputFolder)
+    } catch (error) {
+      console.log(outputFolder + ' already exists')
+    }
+  }
+
+  generateRSS(
+    siteMetadata,
+    allBlogs.filter((post) => post.locale === siteMetadata.locale),
+    outputFolder
+  )
+  console.log('RSS feed generated...', siteMetadata.locale)
 }
 export default rss
