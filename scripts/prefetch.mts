@@ -44,7 +44,7 @@ export const getLocalePath = (locale: Locale): string => {
 
 export const withLocalePath = (path: string, locale: Locale): string => {
   const localePath = getLocalePath(locale)
-  return localePath + path
+  return (localePath + path).replace(/\/$/, '')
 }
 
 const downloadAsset = async (
