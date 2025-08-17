@@ -153,6 +153,14 @@ async function preContent() {
     })
   })
 
+  locales.forEach((locale) => {
+    // @ts-expect-error 'giscusConfig'
+    if (settingsJson[locale].comments?.giscusConfig) {
+      // @ts-expect-error 'giscusConfig'
+      settingsJson[locale].comments.giscusConfig.lang = settingsJson[locale].language
+    }
+  })
+
   siteMetadata = settingsJson as typeof siteMetadata
 
   await fs.writeFile(

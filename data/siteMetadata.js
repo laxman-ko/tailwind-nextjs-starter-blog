@@ -3,6 +3,12 @@ const siteMetadata = {
   en: {
     locale: 'en',
     localeSlug: '/en',
+    deployHooks: {
+      production:
+        'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/07c7ba1b-ffdb-4a5d-8e08-ce4a158bc76b',
+      preview:
+        'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/42ca5908-da7f-4ac5-b74d-3e812807d89a',
+    },
     defaultLocale: 'ne',
     isUnderConstruction: true,
     title: 'Laxman ko Aksharharu',
@@ -27,23 +33,38 @@ const siteMetadata = {
       },
     },
     newsletter: {},
-    comments: {},
+    comments: {
+      provider: 'giscus',
+      giscusConfig: {
+        repo: 'laxman-ko/aksharharu',
+        repositoryId: 'R_kgDOPfh5kA',
+        category: 'Blog Comments',
+        categoryId: 'DIC_kwDOPfh5kM4CuRyV',
+        mapping: 'pathname',
+        reactions: '1',
+        metadata: '0',
+        theme: 'light',
+        darkTheme: 'preferred_color_scheme',
+        themeURL: '',
+        lang: 'en',
+      },
+    },
     search: {
       provider: 'kbar',
       kbarConfig: {
         searchDocumentsPath: '/search.json',
       },
     },
+  },
+  ne: {
+    locale: 'ne',
+    localeSlug: '',
     deployHooks: {
       production:
         'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/07c7ba1b-ffdb-4a5d-8e08-ce4a158bc76b',
       preview:
         'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/42ca5908-da7f-4ac5-b74d-3e812807d89a',
     },
-  },
-  ne: {
-    locale: 'ne',
-    localeSlug: '',
     defaultLocale: 'ne',
     isUnderConstruction: true,
     title: 'लक्ष्मणको अक्षरहरू',
@@ -68,7 +89,22 @@ const siteMetadata = {
       },
     },
     newsletter: {},
-    comments: {},
+    comments: {
+      provider: 'giscus',
+      giscusConfig: {
+        repo: 'laxman-ko/aksharharu',
+        repositoryId: 'R_kgDOPfh5kA',
+        category: 'Blog Comments',
+        categoryId: 'DIC_kwDOPfh5kM4CuRyV',
+        mapping: 'pathname',
+        reactions: '1',
+        metadata: '0',
+        theme: 'light',
+        darkTheme: 'preferred_color_scheme',
+        themeURL: '',
+        lang: 'ne',
+      },
+    },
     search: {
       provider: 'kbar',
       kbarConfig: {
