@@ -26,7 +26,15 @@ import siteMetadataLocalized from './data/siteMetadata'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
 import prettier from 'prettier'
 
-const siteMetadata = siteMetadataLocalized['en']
+const defaultLocale = 'ne'
+const siteMetadata = siteMetadataLocalized[defaultLocale]
+
+export const getLocalePath = (locale: string): string => {
+  const [localeCode, countryCode] = locale.split('-')
+  const localeSlugs = [countryCode, localeCode].filter(Boolean)
+  if (locale === defaultLocale) return ''
+  return localeSlugs.join('/').toLowerCase() + '/'
+}
 
 const root = process.cwd()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -53,7 +61,8 @@ const computedFields: ComputedFields = {
   },
   path: {
     type: 'string',
-    resolve: (doc) => doc._raw.flattenedPath.replace(/\__[a-z]{2}(-[A-Z]{2})?$/, ''),
+    resolve: (doc) =>
+      getLocalePath(doc.locale) + doc._raw.flattenedPath.replace(/\__[a-z]{2}(-[A-Z]{2})?$/, ''),
   },
   filePath: {
     type: 'string',

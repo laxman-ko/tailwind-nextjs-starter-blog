@@ -23,6 +23,24 @@ if (fs.existsSync(i18nDir)) {
 }
 fs.mkdirSync(i18nDir, { recursive: true })
 
+// get locale path
+export const getLocalePath = (locale) => {
+  const [localeCode, countryCode] = locale.split('-')
+  const localeSlugs = [countryCode, localeCode].filter(Boolean)
+  if (locale === defaultLocale) return ''
+  return '/' + localeSlugs.join('/').toLowerCase()
+}
+
+// replace content
+export const updateLinkWithLocale = (content, locale) => {
+  const localeSlug = getLocalePath(locale)
+  content = content
+    .replace(new RegExp(`(?<!${localeSlug})/blog`, 'g'), `${localeSlug}/blog`)
+    .replace(new RegExp(`(?<!${localeSlug})/tags`, 'g'), `${localeSlug}/tags`)
+    .replace('href="/"', `href="${localeSlug}"`)
+  return content
+}
+
 // --- Utility to copy directories/files recursively ---
 function copyEntry(srcPath, destPath, locale) {
   const stats = fs.statSync(srcPath)
@@ -37,6 +55,7 @@ function copyEntry(srcPath, destPath, locale) {
     if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true })
 
     let content = fs.readFileSync(srcPath, 'utf8')
+    content = updateLinkWithLocale(content, locale)
     content = content.replace(/getSiteHelpers\s*\(\s*\)/g, `getSiteHelpers('${locale}')`)
     fs.writeFileSync(destPath, content, 'utf8')
   }
@@ -44,9 +63,6 @@ function copyEntry(srcPath, destPath, locale) {
 
 // --- Scan components that use getSiteHelpers() ---
 function getComponentsUsingGetSiteHelpers() {
-  // return fs.readdirSync(componentsDir)
-  //   .filter(file => (file.endsWith(".ts") || file.endsWith(".tsx")))
-  //   .filter(file => /getSiteHelpers\s*\(/.test(fs.readFileSync(path.join(componentsDir, file), "utf8")));
   return ['Header.tsx', 'MobileNav.tsx']
 }
 
@@ -89,6 +105,7 @@ function copyComponent(componentName, locale, dir = componentsDir) {
   const destPath = path.join(dir, destName)
 
   let content = fs.readFileSync(srcPath, 'utf8')
+  content = updateLinkWithLocale(content, locale)
   content = content.replace(/getSiteHelpers\s*\(\s*\)/g, `getSiteHelpers('${locale}')`)
   fs.writeFileSync(destPath, content, 'utf8')
 }
