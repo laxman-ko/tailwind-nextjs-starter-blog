@@ -3,6 +3,7 @@ import Link from 'next/link'
 import type { LinkProps } from 'next/link'
 import { AnchorHTMLAttributes } from 'react'
 import { getSiteHelpers } from 'app/helpers'
+import { defaultLocale } from '@/data/locales'
 
 const { siteMetadata } = getSiteHelpers()
 
@@ -12,7 +13,7 @@ const CustomLink = ({ href, ...rest }: LinkProps & AnchorHTMLAttributes<HTMLAnch
 
   if (isInternalLink) {
     let finalHref = href
-    if (siteMetadata.locale !== siteMetadata.defaultLocale) {
+    if (siteMetadata.locale !== defaultLocale) {
       if (href === '/') finalHref = `/${siteMetadata.locale}`
       else finalHref = `/${siteMetadata.locale}${href}`
     }

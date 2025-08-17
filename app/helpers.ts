@@ -4,6 +4,7 @@ import siteMetadata from '@/data/siteMetadata'
 import { translate } from '@/data/translations'
 import tagData from 'app/tag-data.json'
 import headerNavLinks from '@/data/headerNavLinks'
+import { defaultLocale } from '@/data/locales'
 
 const getAllAuthors = (locale: string) => {
   return allAuthors.filter((item) => item.locale === locale)
@@ -30,7 +31,7 @@ const getHeaderNavLinks = (locale: string) => {
 }
 
 export const getSiteHelpers = (locale?: string) => {
-  const siteLocale = locale || Object.values(siteMetadata)[0].defaultLocale
+  const siteLocale = locale || defaultLocale
   if (!siteLocale) {
     throw new Error('No default locale found')
   }

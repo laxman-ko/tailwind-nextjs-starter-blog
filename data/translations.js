@@ -13,7 +13,7 @@ const translations = {
   },
   'Load Comments': {
     en: 'Load Comments',
-    ne: 'टिप्पणीहरू लोड गर्नुहोस्',
+    ne: 'कमेन्ट्सहरू हेर्नुहोस',
   },
   'Next post': {
     en: 'Next post',

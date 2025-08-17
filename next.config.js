@@ -95,8 +95,6 @@ module.exports = () => {
         use: ['@svgr/webpack'],
       })
 
-      config.resolve.alias.querystring = require.resolve('querystring-es3')
-
       return config
     },
   })

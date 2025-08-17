@@ -1,13 +1,13 @@
 import fs from 'fs'
 import path from 'path'
 import siteMetadata from '../data/siteMetadata.js' // adjust path
+import { defaultLocale, getLocalePath } from '../data/locales.js'
 
 // --- Directories ---
 const rootDir = path.resolve('app', '(root)') // source pages
 const i18nDir = path.resolve('app', '(i18n)') // locale copies
 const componentsDir = path.resolve('components') // components folder
 const layoutDir = path.resolve('layouts') // layouts folder
-const defaultLocale = Object.values(siteMetadata)[0].defaultLocale
 
 // --- Get all locales from siteMetadata ---
 const siteLocales = Object.keys(siteMetadata)
@@ -22,14 +22,6 @@ if (fs.existsSync(i18nDir)) {
   fs.rmSync(i18nDir, { recursive: true, force: true })
 }
 fs.mkdirSync(i18nDir, { recursive: true })
-
-// get locale path
-export const getLocalePath = (locale) => {
-  const [localeCode, countryCode] = locale.split('-')
-  const localeSlugs = [countryCode, localeCode].filter(Boolean)
-  if (locale === defaultLocale) return ''
-  return '/' + localeSlugs.join('/').toLowerCase()
-}
 
 // replace content
 export const updateLinkWithLocale = (content, locale) => {
@@ -63,7 +55,7 @@ function copyEntry(srcPath, destPath, locale) {
 
 // --- Scan components that use getSiteHelpers() ---
 function getComponentsUsingGetSiteHelpers() {
-  return ['Header.tsx', 'MobileNav.tsx']
+  return ['Header.tsx', 'MobileNav.tsx', 'Footer.tsx']
 }
 
 // -- Scan layouts that use getSiteHelpers() --

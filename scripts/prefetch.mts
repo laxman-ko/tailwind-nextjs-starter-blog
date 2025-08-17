@@ -11,6 +11,7 @@ import {
 import yaml from 'js-yaml'
 import { PageObjectResponse } from '@notionhq/client'
 import { ArticleProperties, AuthorProperties } from '../lib/notion/notion.types.js'
+import { locales, defaultLocale, getLocalePath } from '../data/locales.js'
 
 type HierarchialListItem = {
   id: string
@@ -19,27 +20,15 @@ type HierarchialListItem = {
   children: HierarchialListItem[]
 }
 
-const locales = {
-  en: 'English',
-  ne: 'Nepali',
-} as Record<string, string>
-
 const LANGUAGE_COUNTRY_MATCH_REGEX = /^\/([a-z]{2})(?:\/([a-z]{2}))?(?=\/|$)/
 
 type Locale = keyof typeof locales
 
-let defaultSiteLocale
+let defaultSiteLocale = defaultLocale
 let siteMetadata = {} as Record<string, Record<string, string | object>>
 
 const getLocaleByName = (language: string): string => {
   return Object.keys(locales).find((locale: string) => locales[locale] === language) as string
-}
-
-export const getLocalePath = (locale: Locale): string => {
-  const [localeCode, countryCode] = locale.split('-')
-  const localeSlugs = [countryCode, localeCode].filter(Boolean)
-  if (locale === defaultSiteLocale) return ''
-  return '/' + localeSlugs.join('/').toLowerCase()
 }
 
 export const withLocalePath = (path: string, locale: Locale): string => {
@@ -384,8 +373,7 @@ module.exports = siteMetadata
   Object.entries(sortedNavigations).forEach(([_, navigationItem]) => {
     // @ts-expect-error 'title'
     const navigationNameWithLocale = navigationItem.properties.Name.title[0].plain_text
-    const [navigationName, locale = siteMetadata.defaultLocale] =
-      navigationNameWithLocale.split('__')
+    const [navigationName, locale = defaultLocale] = navigationNameWithLocale.split('__')
     if (!hierarchialNavigationList[navigationName]) {
       hierarchialNavigationList[navigationName] = {}
     }

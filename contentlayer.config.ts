@@ -2,7 +2,7 @@ import { defineDocumentType, ComputedFields, makeSource } from 'contentlayer2/so
 import { writeFileSync } from 'fs'
 import readingTime from 'reading-time'
 import { slug } from 'github-slugger'
-import path from 'path'
+import path, { resolve } from 'path'
 import { fromHtmlIsomorphic } from 'hast-util-from-html-isomorphic'
 // Remark packages
 import remarkGfm from 'remark-gfm'
@@ -25,16 +25,9 @@ import rehypePresetMinify from 'rehype-preset-minify'
 import siteMetadataLocalized from './data/siteMetadata'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
 import prettier from 'prettier'
+import { defaultLocale, getLocalePath } from './data/locales'
 
-const defaultLocale = Object.values(siteMetadataLocalized)[0].defaultLocale
 const siteMetadata = siteMetadataLocalized[defaultLocale]
-
-export const getLocalePath = (locale: string): string => {
-  const [localeCode, countryCode] = locale.split('-')
-  const localeSlugs = [countryCode, localeCode].filter(Boolean)
-  if (locale === defaultLocale) return ''
-  return localeSlugs.join('/').toLowerCase() + '/'
-}
 
 const root = process.cwd()
 const isProduction = process.env.NODE_ENV === 'production'

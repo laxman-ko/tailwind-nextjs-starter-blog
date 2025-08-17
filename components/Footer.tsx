@@ -1,6 +1,7 @@
 import Link from './Link'
 import { getSiteHelpers } from 'app/helpers'
 import SocialIcon from '@/components/social-icons'
+import LanguageSwitcher from './LanguageSwitcher'
 
 const { siteMetadata } = getSiteHelpers()
 
@@ -30,9 +31,7 @@ export default function Footer() {
           <Link href="/">{siteMetadata.title}</Link>
         </div>
         <div className="mb-8 text-sm text-gray-500 dark:text-gray-400">
-          {/* <Link href="https://github.com/timlrx/tailwind-nextjs-starter-blog">
-            Tailwind Nextjs Theme
-          </Link> */}
+          <LanguageSwitcher currentLocale={siteMetadata.locale} />
         </div>
       </div>
     </footer>

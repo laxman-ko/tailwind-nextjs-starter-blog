@@ -1,7 +1,8 @@
 import { NextRequest } from 'next/server'
 import siteMetadataLocailzed from '@/data/siteMetadata'
+import { defaultLocale } from '@/data/locales'
 
-const siteMetadata = siteMetadataLocailzed[Object.values(siteMetadataLocailzed)[0].defaultLocale]
+const siteMetadata = siteMetadataLocailzed[defaultLocale]
 
 export const runtime = 'edge'
 
