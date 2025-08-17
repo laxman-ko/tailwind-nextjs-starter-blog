@@ -1,14 +1,8 @@
-/** @type {{ [locale: string]: import("pliny/config").PlinyConfig & { isUnderConstruction: boolean, defaultLocale: string, localeSlug: string }}} */
+/** @type {{ [locale: string]: import("pliny/config").PlinyConfig & { isUnderConstruction: boolean, defaultLocale: string, localeSlug: string, deployHooks: { production: string, preview: string } } }} */
 const siteMetadata = {
   en: {
     locale: 'en',
     localeSlug: '/en',
-    deployHooks: {
-      production:
-        'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/07c7ba1b-ffdb-4a5d-8e08-ce4a158bc76b',
-      preview:
-        'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/42ca5908-da7f-4ac5-b74d-3e812807d89a',
-    },
     defaultLocale: 'ne',
     isUnderConstruction: true,
     title: 'Laxman ko Aksharharu',
@@ -40,16 +34,16 @@ const siteMetadata = {
         searchDocumentsPath: '/search.json',
       },
     },
-  },
-  ne: {
-    locale: 'ne',
-    localeSlug: '',
     deployHooks: {
       production:
         'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/07c7ba1b-ffdb-4a5d-8e08-ce4a158bc76b',
       preview:
         'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/42ca5908-da7f-4ac5-b74d-3e812807d89a',
     },
+  },
+  ne: {
+    locale: 'ne',
+    localeSlug: '',
     defaultLocale: 'ne',
     isUnderConstruction: true,
     title: 'लक्ष्मणको अक्षरहरू',
