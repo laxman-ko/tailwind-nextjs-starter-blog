@@ -4,7 +4,7 @@ import { slug } from 'github-slugger'
 import { genPageMetadata } from '../seo'
 import { getSiteHelpers } from 'app/helpers'
 
-const { tagData, _t } = getSiteHelpers()
+const { tagData, _t, siteMetadata } = getSiteHelpers()
 
 export const metadata = genPageMetadata({
   title: _t('Tags'),
@@ -28,7 +28,7 @@ export default async function Page() {
           {sortedTags.map((t) => {
             return (
               <div key={t} className="mt-2 mr-5 mb-2">
-                <Tag text={t} />
+                <Tag text={t} localePrefix={siteMetadata.localeSlug} />
                 <Link
                   href={`/tags/${slug(t)}`}
                   className="-ml-2 text-sm font-semibold text-gray-600 uppercase dark:text-gray-300"

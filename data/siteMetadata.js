@@ -1,7 +1,8 @@
-/** @type {{ [locale: string]: import("pliny/config").PlinyConfig & { isUnderConstruction: boolean, defaultLocale: string }}} */
+/** @type {{ [locale: string]: import("pliny/config").PlinyConfig & { isUnderConstruction: boolean, defaultLocale: string, localeSlug: string }}} */
 const siteMetadata = {
   en: {
     locale: 'en',
+    localeSlug: '/en',
     defaultLocale: 'ne',
     isUnderConstruction: true,
     title: 'Laxman ko Aksharharu',
@@ -36,6 +37,7 @@ const siteMetadata = {
   },
   ne: {
     locale: 'ne',
+    localeSlug: '',
     defaultLocale: 'ne',
     isUnderConstruction: true,
     title: 'लक्ष्मणको अक्षरहरू',

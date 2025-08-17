@@ -135,6 +135,7 @@ async function preContent() {
       if (!settingsJson[locale])
         settingsJson[locale] = {
           locale,
+          localeSlug: getLocalePath(locale),
         }
       // @ts-expect-error 'rich_text'
       const value = setting.properties[locale].rich_text?.[0]?.plain_text || defaultValue
@@ -151,7 +152,7 @@ async function preContent() {
   await fs.writeFile(
     SITE_METADATA_FILE,
     `
-/** @type {{ [locale: string]: import("pliny/config").PlinyConfig & { isUnderConstruction: boolean, defaultLocale: string }}} */
+/** @type {{ [locale: string]: import("pliny/config").PlinyConfig & { isUnderConstruction: boolean, defaultLocale: string, localeSlug: string }}} */
 const siteMetadata = ${JSON.stringify(siteMetadata, null, 2)}
 
 module.exports = siteMetadata
