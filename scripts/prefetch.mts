@@ -35,31 +35,44 @@ const commitToGithub = async (path: string, content: string) => {
   const githubToken = process.env.GITHUB_TOKEN
   if (!githubToken) throw new Error('Missing GITHUB_TOKEN')
 
-  const fetchGithub = async ({ message, content, method, sha }: { message?: string, content?: string, method?: string, sha?: string }) => {
+  const fetchGithub = async ({
+    message,
+    content,
+    method,
+    sha,
+  }: {
+    message?: string
+    content?: string
+    method?: string
+    sha?: string
+  }) => {
     return await fetch(apiUrl, {
       method: method || 'GET',
       headers: {
         Authorization: `Bearer ${githubToken}`,
         Accept: 'application/vnd.github.v3+json',
       },
-      body: method === 'PUT' ? JSON.stringify({
-        message,
-        content,
-        sha,
-      }) : undefined,
+      body:
+        method === 'PUT'
+          ? JSON.stringify({
+              message,
+              content,
+              sha,
+            })
+          : undefined,
     })
   }
 
   // @ts-expect-error ''
   const apiUrl = `https://api.github.com/repos/${siteMetadata[defaultSiteLocale].comments?.giscusConfig?.repo}/contents/${path}`
 
-  let sha: string;
+  let sha: string
   const responseGet = await fetchGithub({
     message,
     content,
-    method: 'GET'
+    method: 'GET',
   })
-  if(responseGet.ok){
+  if (responseGet.ok) {
     console.log('File already exists', path)
     sha = (await responseGet.json()).sha
   }
@@ -68,9 +81,8 @@ const commitToGithub = async (path: string, content: string) => {
     message,
     content: Buffer.from(content).toString('base64'),
     method: 'PUT',
-    sha
+    sha,
   })
-
 
   if (!responsePut.ok) {
     console.log(responsePut)
