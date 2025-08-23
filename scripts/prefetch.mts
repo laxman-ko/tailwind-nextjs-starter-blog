@@ -27,6 +27,62 @@ type Locale = keyof typeof locales
 let defaultSiteLocale = defaultLocale
 let siteMetadata = {} as Record<string, Record<string, string | object>>
 
+const commitToGithub = async (path: string, content: string) => {
+  const message = `${path}`
+
+  if (!path) return new Response('Missing path', { status: 400 })
+
+  const githubToken = process.env.GITHUB_TOKEN
+  if (!githubToken) throw new Error('Missing GITHUB_TOKEN')
+
+  const fetchGithub = async ({ message, content, method, sha }: { message?: string, content?: string, method?: string, sha?: string }) => {
+    return await fetch(apiUrl, {
+      method: method || 'GET',
+      headers: {
+        Authorization: `Bearer ${githubToken}`,
+        Accept: 'application/vnd.github.v3+json',
+      },
+      body: method === 'PUT' ? JSON.stringify({
+        message,
+        content,
+        sha,
+      }) : undefined,
+    })
+  }
+
+  // @ts-expect-error ''
+  const apiUrl = `https://api.github.com/repos/${siteMetadata[defaultSiteLocale].comments?.giscusConfig?.repo}/contents/${path}`
+
+  let sha: string;
+  const responseGet = await fetchGithub({
+    message,
+    content,
+    method: 'GET'
+  })
+  if(responseGet.ok){
+    console.log('File already exists', path)
+    sha = (await responseGet.json()).sha
+  }
+
+  const responsePut = await fetchGithub({
+    message,
+    content: Buffer.from(content).toString('base64'),
+    method: 'PUT',
+    sha
+  })
+
+
+  if (!responsePut.ok) {
+    console.log(responsePut)
+    const error = await responsePut.json()
+    throw new Error(`GitHub commit failed: ${error.message}`)
+  }
+
+  console.log('Committed to GitHub', path)
+
+  return responsePut.json()
+}
+
 const getLocaleByName = (language: string): string => {
   return Object.keys(locales).find((locale: string) => locales[locale] === language) as string
 }
@@ -302,6 +358,8 @@ module.exports = siteMetadata
       }
 
       await fs.writeFile(mdxFile, mdxContent)
+      const filePath = mdxFile.replace(ARTICLES_DIR, 'data/blog')
+      await commitToGithub(filePath, mdContent)
     })
   })
 

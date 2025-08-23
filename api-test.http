@@ -1,0 +1,33 @@
+@host = http://localhost:3000/api
+@token = {{$dotenv GITHUB_TOKEN}}
+
+### github
+PUT https://api.github.com/repos/laxman-ko/aksharharu/contents/data/blog/test.txt
+Accept: application/vnd.github.v3+json
+Authorization: Bearer {{token}}
+
+{
+      "message": "test.txt",
+      "content": "Cg=="
+    }
+
+### Commit empty file to GitHub (default timestamped filename)
+GET {{host}}/deploy?action=commit
+Accept: application/json
+
+### Commit empty file to GitHub (custom filename)
+GET {{host}}/deploy?action=commit&filename=test.txt
+Accept: application/json
+
+
+### Deploy to Cloudflare (production1)
+GET {{host}}/deploy?action=deploy&cfEnv=production1
+Accept: application/json
+
+### Deploy to Cloudflare (preview1)
+GET {{host}}/deploy?action=deploy&cfEnv=preview1
+Accept: application/json
+
+### Deploy to Cloudflare (invalid env, should return 400)
+GET {{host}}/deploy?action=deploy&cfEnv=staging
+Accept: application/json
