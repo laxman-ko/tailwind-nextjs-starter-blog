@@ -23,7 +23,7 @@ const getSiteSettings = (locale: string) => {
 }
 
 const getAllTags = (locale: string) => {
-  return tagData[locale]
+  return tagData[locale] || {}
 }
 
 const getHeaderNavLinks = (locale: string) => {
@@ -40,7 +40,7 @@ export const getSiteHelpers = (locale?: string) => {
     allBlogs: getAllBlogs(siteLocale),
     projectsData: getAllProjects(siteLocale),
     siteMetadata: getSiteSettings(siteLocale),
-    tagData: getAllTags(siteLocale) || [],
+    tagData: getAllTags(siteLocale),
     headerNavLinks: getHeaderNavLinks(siteLocale),
     _t: translate(siteLocale),
   }
