@@ -9,7 +9,6 @@ const siteMetadata = {
       preview:
         'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/42ca5908-da7f-4ac5-b74d-3e812807d89a',
     },
-    defaultLocale: 'ne',
     isUnderConstruction: true,
     title: 'Laxman ko Aksharharu',
     author: 'Laxman Siwakoti',
@@ -65,7 +64,6 @@ const siteMetadata = {
       preview:
         'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/42ca5908-da7f-4ac5-b74d-3e812807d89a',
     },
-    defaultLocale: 'ne',
     isUnderConstruction: true,
     title: 'लक्ष्मणको अक्षरहरू',
     author: 'लक्ष्मण शिवाकोटी',
