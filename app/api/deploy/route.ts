@@ -6,10 +6,7 @@ const siteMetadata = siteMetadataLocailzed[defaultLocale]
 
 export const runtime = 'edge'
 
-const deployToCloudflare = async (req: NextRequest) => {
-  const url = req.nextUrl
-  const cfEnv = url.searchParams.get('cfEnv')
-
+const deployToCloudflare = async (cfEnv: string) => {
   const redeployHookUrl =
     cfEnv === 'production1'
       ? siteMetadata.deployHooks.production
@@ -29,9 +26,17 @@ const deployToCloudflare = async (req: NextRequest) => {
 export const GET = async (req: NextRequest) => {
   const action = req.nextUrl.searchParams.get('action') || 'deploy'
 
+  const url = req.nextUrl
+  const cfEnv = url.searchParams.get('cfEnv')
+
+  if (!cfEnv) return new Response('Missing cfEnv', { status: 400 })
+
   try {
     if (action === 'deploy') {
-      return await deployToCloudflare(req)
+      await deployToCloudflare(cfEnv)
+      if (cfEnv === 'production1') {
+        deployToCloudflare('preview1')
+      }
     }
     return new Response('Deployed to Cloudflare', { status: 200 })
   } catch (error) {

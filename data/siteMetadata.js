@@ -10,7 +10,7 @@ const siteMetadata = {
         'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/42ca5908-da7f-4ac5-b74d-3e812807d89a',
     },
     isUnderConstruction: true,
-    title: 'Laxman ko Aksharharu',
+    title: 'Laxman ko Akshar',
     author: 'Laxman Siwakoti',
     headerTitle: '',
     description:
@@ -18,7 +18,7 @@ const siteMetadata = {
     language: 'en',
     theme: 'system',
     siteUrl: 'https://akshar.laxmanko.com/en',
-    siteRepo: 'https://github.com/laxman-ko/aksharharu',
+    siteRepo: 'https://github.com/laxman-ko/akshar',
     siteLogo: 'static/images/logo.png',
     socialBanner: 'static/images/twitter-card.png',
     email: 'akshar@laxmanko.com',
@@ -35,7 +35,7 @@ const siteMetadata = {
     comments: {
       provider: 'giscus',
       giscusConfig: {
-        repo: 'laxman-ko/aksharharu',
+        repo: 'laxman-ko/akshar',
         repositoryId: 'R_kgDOPfh5kA',
         category: 'Blog Comments',
         categoryId: 'DIC_kwDOPfh5kM4CuRyV',
@@ -65,7 +65,7 @@ const siteMetadata = {
         'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/42ca5908-da7f-4ac5-b74d-3e812807d89a',
     },
     isUnderConstruction: true,
-    title: 'लक्ष्मणको अक्षरहरू',
+    title: 'लक्ष्मणको अक्षर',
     author: 'लक्ष्मण शिवाकोटी',
     headerTitle: '',
     description:
@@ -73,7 +73,7 @@ const siteMetadata = {
     language: 'ne',
     theme: 'system',
     siteUrl: 'https://akshar.laxmanko.com',
-    siteRepo: 'https://github.com/laxman-ko/aksharharu',
+    siteRepo: 'https://github.com/laxman-ko/akshar',
     siteLogo: 'static/images/logo.png',
     socialBanner: 'static/images/twitter-card.png',
     email: 'akshar@laxmanko.com',
@@ -90,7 +90,7 @@ const siteMetadata = {
     comments: {
       provider: 'giscus',
       giscusConfig: {
-        repo: 'laxman-ko/aksharharu',
+        repo: 'laxman-ko/akshar',
         repositoryId: 'R_kgDOPfh5kA',
         category: 'Blog Comments',
         categoryId: 'DIC_kwDOPfh5kM4CuRyV',

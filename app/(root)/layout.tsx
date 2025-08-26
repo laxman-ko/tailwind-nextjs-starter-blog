@@ -12,7 +12,7 @@ import { ThemeProviders } from './theme-providers'
 import { Metadata } from 'next'
 import { getSiteHelpers } from 'app/helpers'
 
-const { siteMetadata, _t } = getSiteHelpers()
+const { siteMetadata, allBlogs, _t } = getSiteHelpers()
 
 const space_grotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const basePath = process.env.BASE_PATH || ''
 
-  if (siteMetadata.isUnderConstruction && process.env.CF_PAGES_BRANCH === 'main') {
+  if (allBlogs.length < 2 && process.env.CF_PAGES_BRANCH === 'main') {
     return (
       <html lang={siteMetadata.language}>
         <body>

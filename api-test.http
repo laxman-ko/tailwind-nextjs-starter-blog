@@ -2,7 +2,7 @@
 @token = {{$dotenv GITHUB_TOKEN}}
 
 ### github
-PUT https://api.github.com/repos/laxman-ko/aksharharu/contents/data/blog/test.txt
+PUT https://api.github.com/repos/laxman-ko/akshar/contents/data/blog/test.txt
 Accept: application/vnd.github.v3+json
 Authorization: Bearer {{token}}
 
