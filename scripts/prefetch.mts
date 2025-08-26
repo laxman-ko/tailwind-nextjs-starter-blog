@@ -35,6 +35,9 @@ const commitToGithub = async (path: string, content: string) => {
   const githubToken = process.env.GITHUB_TOKEN
   if (!githubToken) throw new Error('Missing GITHUB_TOKEN')
 
+  // @ts-expect-error ''
+  const apiUrl = `https://api.github.com/repos/${siteMetadata[defaultSiteLocale].comments?.giscusConfig?.repo}/contents/${path}`
+
   const fetchGithub = async ({
     message,
     content,
@@ -55,16 +58,14 @@ const commitToGithub = async (path: string, content: string) => {
       body:
         method === 'PUT'
           ? JSON.stringify({
-              message,
-              content,
-              sha,
-            })
+            message,
+            content,
+            sha,
+          })
           : undefined,
     })
   }
 
-  // @ts-expect-error ''
-  const apiUrl = `https://api.github.com/repos/${siteMetadata[defaultSiteLocale].comments?.giscusConfig?.repo}/contents/${path}`
 
   let sha: string
   const responseGet = await fetchGithub({
