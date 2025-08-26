@@ -58,14 +58,13 @@ const commitToGithub = async (path: string, content: string) => {
       body:
         method === 'PUT'
           ? JSON.stringify({
-            message,
-            content,
-            sha,
-          })
+              message,
+              content,
+              sha,
+            })
           : undefined,
     })
   }
-
 
   let sha: string
   const responseGet = await fetchGithub({
@@ -86,9 +85,9 @@ const commitToGithub = async (path: string, content: string) => {
   })
 
   if (!responsePut.ok) {
-    console.log(responsePut)
     const error = await responsePut.json()
-    throw new Error(`GitHub commit failed: ${error.message}`)
+    console.log(error)
+    return error
   }
 
   console.log('Committed to GitHub', path)
