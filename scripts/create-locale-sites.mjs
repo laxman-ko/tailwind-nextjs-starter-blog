@@ -96,9 +96,12 @@ function copyComponent(componentName, locale, dir = componentsDir) {
   const destName = `${name}__${locale}.${ext}`
   const destPath = path.join(dir, destName)
 
+  const regex = new RegExp(`from ['"]./MobileNav['"]`, 'g')
+
   let content = fs.readFileSync(srcPath, 'utf8')
   content = updateLinkWithLocale(content, locale)
   content = content.replace(/getSiteHelpers\s*\(\s*\)/g, `getSiteHelpers('${locale}')`)
+  content = content.replace(regex, `from './MobileNav__${locale}'`)
   fs.writeFileSync(destPath, content, 'utf8')
 }
 
